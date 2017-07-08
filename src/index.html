@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>GOYO Admin</title>
+
+    <!-- JS -->
+
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.js"></script>
+    <script src="assets/js/bootstrap-select.js"></script>
+    <script src="assets/js/moment.min.js"></script>
+    <script src="assets/js/bootstrap-colorpicker.js"></script>
+    <script src="assets/js/jspdf.min.js"></script>
+    <script src="assets/js/jquery.slimscroll.js"></script>
+    <script src="assets/js/jquery.validate.js"></script>
+    <script src="assets/js/waves.js"></script>
+    <script src="assets/js/script.js"></script>
+    <script src="assets/js/jquery.countTo.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA82-J9f4u3b0uYLEHHQ_MwoQXUCGGGqys" type="text/javascript"></script>
+    <script src="assets/js/form-validation.js"></script>
+    <script src="assets/js/chart.js"></script>
+    <script src="assets/js/fullcalendar.min.js"></script>
+
+    <script src="assets/js/admin.js?v=4"></script>
+    <script src="assets/js/demo.js?v=3"></script>
+    <script src="assets/js/common.js?v=3"></script>
+
+    <meta name="description" content="<%= htmlWebpackPlugin.options.title %>">
+
+    <% if (webpackConfig.htmlElements.headTags) { %>
+        <%= webpackConfig.htmlElements.headTags %>
+            <% } %>
+
+                <base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>">
+</head>
+
+<body class="theme-green">
+    <app>Loading...</app>
+
+    <% if (htmlWebpackPlugin.options.metadata.isDevServer && htmlWebpackPlugin.options.metadata.HMR !== true){ %>
+        <script src="/webpack-dev-server.js"></script>
+        <% } %>
+</body>
+
+</html>

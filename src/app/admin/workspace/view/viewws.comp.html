@@ -1,0 +1,130 @@
+<!--For Workspace Admin-->
+
+<div class="card" *ngIf="!loginUser.issysadmin">
+    <div class="header">
+        <h4>My Workspace</h4>
+    </div>
+    <div class="body">
+        <div *ngFor="let row of workspaceDT">
+            <div class="form-group">
+                <div class="row clearfix">
+                    <h4 class="pull-left"><a role="button" (click)="getMainForm(row)">{{row.wsname}}</a></h4>
+                    <span class="pull-left" style="padding: 5px 10px;">
+                        <button type="button" class="btn btn-theme btn-xs" (click)="getMainForm(row)">
+                        <i class="material-icons">arrow_forward</i></button>
+                    </span>
+                </div>
+            </div>
+
+            <div class="row clearfix">
+                <div class="col-md-3">
+                    <img class="logo pull-left" src="{{uploadconfig.uploadurl + row.wslogo}}" onerror="this.src='assets/img/nologo.gif';" height="215px">
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label>Total Entity : </label> {{row.countentity}}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Workspace Type : </label> {{row.wstype}}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Workspace Code : </label> {{row.lgcode + "." + row.wscode}}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description : </label> {{row.wsdesc}}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Contact Person : </label> {{row.cpname}}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mobile : </label> {{row.mobileno1}}<span *ngIf="row.mobileno2 !== ''">{{", " + row.mobileno2}}</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email : </label> {{row.email1}}
+                        <span *ngIf="row.email2 !== ''">{{", " + row.email2}}</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Address : </label>
+                        <span *ngIf="row.address !== ''">{{row.address}}</span><span *ngIf="row.city !== ''">{{", " + row.city}}</span><span *ngIf="row.state !== ''">{{", " + row.state}}</span><span *ngIf="row.country !== ''">{{", " + row.country}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--For System Admin-->
+
+<div class="card" *ngIf="loginUser.issysadmin">
+    <div class="header">
+        <div class="row clearfix">
+            <div class="col-md-4">
+                <h4>
+                    <a role="button" (click)="openForm()">{{headertitle}}</a>
+                    <a role="button" class="btn btn-theme btn-xs" (click)="openForm()">
+                        <i class="material-icons">arrow_forward</i>
+                    </a>
+                </h4>
+            </div>
+            <div class="col-md-5">
+                <div class="form-group">
+                    <div class="form-line">
+                        <label class="control-label">Search Workspace Name : </label>
+                        <p-autoComplete id="autowsname" name="autowsname" [(ngModel)]="autowsname" [tabindex]="9" (onSelect)="selectAutoWorkspaceData($event)" [suggestions]="autoWorkspaceDT" (completeMethod)="getAutoWorkspaceData($event)" field="label" [minLength]="1" [size]="30"
+                            class="form-controlAutoComplete autowsname"></p-autoComplete>
+                        <span class="material-icons inputserachico">search</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1" style="padding-top: 10px;">
+                <button type="button" class="btn btn-theme btn-xs" (click)="resetWorkspaceDetails()">
+                    <span class="material-icons">restore</span>
+                </button>
+            </div>
+            <div class="col-md-2" align="right" style="padding-top: 10px;">
+                <button type="button" class="btn btn-theme btn-xs" (click)="addWorkspaceForm()">
+                   <span class="material-icons">add</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row clearfix" *ngIf="loginUser.issysadmin">
+    <div *ngFor="let row of workspaceDT" class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="card" style="height: 200px;">
+            <div class="header">
+                <h2 class="title">
+                    <img class="logo pull-left" src="{{uploadconfig.uploadurl + row.wslogo}}" onerror="this.src='assets/img/nologo.gif';" height="40px" style="margin-right: 7px;">
+                    <a role="button" (click)="getMainForm(row)">{{row.wsname}}</a> <small></small>
+                </h2>
+                <ul class="header-dropdown m-r--5" style="top:20px">
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="material-icons">more_vert</i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a role="button" (click)="getMainForm(row)"><i class="material-icons">arrow_forward</i> Go</a></li>
+                            <li><a role="button" (click)="editWorkspaceForm(row)"><i class="material-icons">edit</i> Edit</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="body">
+                <ul>
+                    <li>Total Entity : {{row.countentity}}</li>
+                    <li>{{row.name}} ({{row.mobileno1}})</li>
+                    <li>{{row.wstype}}</li>
+                    <li>{{row.email1}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
