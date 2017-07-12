@@ -7012,6 +7012,10 @@ fieldset[disabled] .form-control {
     border-color: #2196F3;
 }
 
+.list-group li {
+    padding: 10px!important;
+}
+
 .list-group .active:hover,
 .list-group .active:focus,
 .list-group .active:active {
