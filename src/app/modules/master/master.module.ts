@@ -18,7 +18,7 @@ export const routes = [
                     { path: 'entity', loadChildren: './entity#EntityModule' },
                     { path: 'batch', loadChildren: './batch#BatchModule' },
                     { path: 'holiday', loadChildren: './holiday#HolidayModule' },
-                    { path: 'driver', loadChildren: './driver#DriverModule' },
+                    { path: 'employee', loadChildren: './driver#DriverModule' },
                     { path: 'vehicle', loadChildren: './vehicle#VehicleModule' },
                     { path: 'passenger', loadChildren: './passenger#PassengerModule' },
                     { path: 'user', loadChildren: './users#UserModule' },

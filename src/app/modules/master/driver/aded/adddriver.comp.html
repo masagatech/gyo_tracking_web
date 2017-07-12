@@ -1,6 +1,6 @@
 <div class="card">
     <div class="header">
-        <h4>Driver</h4>
+        <h4>Employee</h4>
         <ul class="header-dropdown m-r--5">
             <li *ngIf="driverid !== 0">
                 <span class="switch">
@@ -33,7 +33,8 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="form-line">
-                                <label class="control-label">Driver Code <strong>*</strong>{{loginid}}</label>
+                                <!--{{loginid}}-->
+                                <label class="control-label">Employee Code <strong>*</strong></label>
                                 <input type="text" [(ngModel)]="drivercode" class="form-control drivercode" maxlength="10" tabindex="2" />
                             </div>
                         </div>
@@ -52,7 +53,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="form-line">
-                                <label class="control-label">Driver Name <strong>*</strong></label>
+                                <label class="control-label">Employee Name <strong>*</strong></label>
                                 <input type="text" [(ngModel)]="drivername" class="form-control drivername" maxlength="20" tabindex="4" />
                             </div>
                         </div>
@@ -192,7 +193,7 @@
                     </div>
                 </div>
 
-                <div class="row clearfix">
+                <div class="row clearfix hide">
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="form-line">
@@ -206,8 +207,8 @@
         </div>
 
         <div class="row clearfix">
-            <div class="col-md-8">
-                <p-fileUpload name="fileUploaded" url="{{uploadconfig.server}}" (onUpload)="onUpload($event)" multiple="multiple" accept="{{uploadconfig.acceptedFiles}}" maxFileSize="{{uploadconfig.maxFilesize}}" auto="auto">
+            <div class="col-md-2">
+                <p-fileUpload name="fileUploaded"  url="{{uploadconfig.server}}" (onUpload)="onUpload($event)" multiple="multiple" accept="{{uploadconfig.acceptedFiles}}" maxFileSize="{{uploadconfig.maxFilesize}}" auto="auto">
                     <template pTemplate type="content">
                         <div *ngIf="attachDocsDT.length">
                             <div *ngFor="let file of attachDocsDT" class="box">

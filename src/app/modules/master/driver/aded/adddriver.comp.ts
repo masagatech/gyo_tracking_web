@@ -471,6 +471,6 @@ export class AddDriverComponent implements OnInit {
     // Back For View Data
 
     backViewData() {
-        this._router.navigate(['/master/driver']);
+        this._router.navigate(['/master/employee']);
     }
 }

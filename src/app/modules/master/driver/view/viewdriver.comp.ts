@@ -131,10 +131,10 @@ export class ViewDriverComponent implements OnInit {
     }
 
     public addDriverForm() {
-        this._router.navigate(['/master/driver/add']);
+        this._router.navigate(['/master/employee/add']);
     }
 
     public editDriverForm(row) {
-        this._router.navigate(['/master/driver/edit', row.autoid]);
+        this._router.navigate(['/master/employee/edit', row.autoid]);
     }
 }
