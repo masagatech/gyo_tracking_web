@@ -14,10 +14,6 @@ export class ModuleComponent implements OnDestroy {
         if (sessionid == null && sessionid == undefined) {
             this._router.navigate(['/login']);
         }
-
-        if (_wsdetails == null && _wsdetails == undefined) {
-            this._router.navigate(['/workspace']);
-        }
     }
 
     public ngOnInit() {
