@@ -7005,6 +7005,7 @@ fieldset[disabled] .form-control {
     -o-transition: 0.5s;
     -webkit-transition: 0.5s;
     transition: 0.5s;
+    padding: 10px!important;
 }
 
 .list-group .active {
