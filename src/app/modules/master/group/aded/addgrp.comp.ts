@@ -116,17 +116,21 @@ export class AddGroupComponent implements OnInit {
 
     getGroupDetails() {
         var that = this;
+        var params = {};
+
         commonfun.loader();
 
         that.subscribeParameters = that._routeParams.params.subscribe(params => {
             if (params['id'] !== undefined) {
                 that.grpid = params['id'];
 
-                that._grpservice.getGroupDetails({
+                params = {
                     "flag": "edit",
-                    "id": that.grpid,
+                    "grpid": that.grpid,
                     "wsautoid": that._wsdetails.wsautoid
-                }).subscribe(data => {
+                }
+
+                that._grpservice.getGroupDetails(params).subscribe(data => {
                     try {
                         that.grpid = data.data[0].grpid;
                         that.grpnm = data.data[0].grpnm;
