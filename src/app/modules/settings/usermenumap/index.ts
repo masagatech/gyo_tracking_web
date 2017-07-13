@@ -5,8 +5,7 @@ import { RouterModule } from '@angular/router';
 import { SharedComponentModule } from '../../../_shared/sharedcomp.module';
 import { AuthGuard } from '../../../_services/authguard-service';
 
-import { AddUserMenuMapComponent } from './aded/addumm.comp';
-import { ViewUserMenuMapComponent } from './view/viewumm.comp';
+import { AddUserMenuMapComponent } from './addumm.comp';
 
 import { UserService } from '@services/master';
 
@@ -15,18 +14,17 @@ import { LazyLoadEvent, DataTableModule, CheckboxModule, AutoCompleteModule } fr
 export const routes = [
   {
     path: '', children: [
-      { path: '', component: AddUserMenuMapComponent, canActivate: [AuthGuard], data: { "module": "set", "submodule": "umm", "rights": "view", "urlname": "/usermenumap" } },
-      { path: 'add', component: AddUserMenuMapComponent, canActivate: [AuthGuard], data: { "module": "set", "submodule": "umm", "rights": "add", "urlname": "/add" } },
-      { path: 'details/:id', component: AddUserMenuMapComponent, canActivate: [AuthGuard], data: { "module": "set", "submodule": "umm", "rights": "edit", "urlname": "/edit" } },
-      { path: 'edit/:id', component: AddUserMenuMapComponent, canActivate: [AuthGuard], data: { "module": "set", "submodule": "umm", "rights": "edit", "urlname": "/edit" } }
+      {
+        path: '', component: AddUserMenuMapComponent, canActivate: [AuthGuard],
+        data: { "module": "set", "submodule": "umm", "rights": "view", "urlname": "/usermenumap" }
+      },
     ]
   },
 ];
 
 @NgModule({
   declarations: [
-    AddUserMenuMapComponent,
-    ViewUserMenuMapComponent
+    AddUserMenuMapComponent
   ],
 
   imports: [
