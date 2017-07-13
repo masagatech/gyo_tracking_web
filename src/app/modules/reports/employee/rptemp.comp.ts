@@ -2,19 +2,19 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { DriverService } from '@services/master';
+import { EmployeeService } from '@services/master';
 import { LazyLoadEvent } from 'primeng/primeng';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import jsPDF from 'jspdf'
 
 @Component({
-    templateUrl: 'rptdriver.comp.html',
+    templateUrl: 'rptemp.comp.html',
     providers: [MenuService, CommonService]
 })
 
-export class DriverReportsComponent implements OnInit, OnDestroy {
-    driverDT: any = [];
+export class EmployeeReportsComponent implements OnInit, OnDestroy {
+    employeeDT: any = [];
     loginUser: LoginUserModel;
 
     _wsdetails: any = [];
@@ -27,13 +27,13 @@ export class DriverReportsComponent implements OnInit, OnDestroy {
     acteditrights: string = "";
     actviewrights: string = "";
 
-    @ViewChild('driver') driver: ElementRef;
+    @ViewChild('Employee') Employee: ElementRef;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, public _menuservice: MenuService,
-        private _loginservice: LoginService, private _autoservice: CommonService, private _driverservice: DriverService) {
+        private _loginservice: LoginService, private _autoservice: CommonService, private _Employeeservice: EmployeeService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
-        this.viewDriverDataRights();
+        this.viewEmployeeDataRights();
     }
 
     public ngOnInit() {
@@ -50,7 +50,7 @@ export class DriverReportsComponent implements OnInit, OnDestroy {
     // Export
 
     public exportToCSV() {
-        new Angular2Csv(this.driverDT, 'DriverReports', { "showLabels": true });
+        new Angular2Csv(this.employeeDT, 'EmployeeReports', { "showLabels": true });
     }
 
     public exportToPDF() {
@@ -58,8 +58,8 @@ export class DriverReportsComponent implements OnInit, OnDestroy {
         let options = {
             pagesplit: true
         };
-        pdf.addHTML(this.driver.nativeElement, 0, 0, options, () => {
-            pdf.save("DriverReports.pdf");
+        pdf.addHTML(this.Employee.nativeElement, 0, 0, options, () => {
+            pdf.save("EmployeeReports.pdf");
         });
     }
 
@@ -94,10 +94,10 @@ export class DriverReportsComponent implements OnInit, OnDestroy {
         Cookie.set("_enttid_", this.entityid.toString());
         Cookie.set("_enttnm_", this.entityname);
 
-        this.getDriverDetails();
+        this.getEmployeeDetails();
     }
 
-    public viewDriverDataRights() {
+    public viewEmployeeDataRights() {
         var that = this;
         var addRights = [];
         var editRights = [];
@@ -117,7 +117,7 @@ export class DriverReportsComponent implements OnInit, OnDestroy {
             if (Cookie.get('_enttnm_') != null) {
                 that.entityid = parseInt(Cookie.get('_enttid_'));
                 that.entityname = Cookie.get('_enttnm_');
-                that.getDriverDetails();
+                that.getEmployeeDetails();
             }
         }, err => {
             that._msg.Show(messageType.error, "Error", err);
@@ -126,18 +126,18 @@ export class DriverReportsComponent implements OnInit, OnDestroy {
         })
     }
 
-    getDriverDetails() {
+    getEmployeeDetails() {
         var that = this;
 
         if (that.actviewrights === "view") {
             commonfun.loader();
 
-            that._driverservice.getDriverDetails({
+            that._Employeeservice.getEmployeeDetails({
                 "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
                 "enttid": that.entityid, "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid
             }).subscribe(data => {
                 try {
-                    that.driverDT = data.data;
+                    that.employeeDT = data.data;
                 }
                 catch (e) {
                     that._msg.Show(messageType.error, "Error", e);

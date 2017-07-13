@@ -2,13 +2,13 @@
     <div class="header">
         <h4>Employee</h4>
         <ul class="header-dropdown m-r--5">
-            <li *ngIf="driverid !== 0">
+            <li *ngIf="empid !== 0">
                 <span class="switch">
-                    <label class="control-label"><input type="checkbox" [(ngModel)]="isactive" (ngModelChange)="active_deactiveDriverInfo()"><span class="lever"></span></label>
+                    <label class="control-label"><input type="checkbox" [(ngModel)]="isactive" (ngModelChange)="active_deactiveempInfo()"><span class="lever"></span></label>
                 </span>
             </li>
             <li>
-                <a role="button" class="btn btn-theme btn-xs" (click)="saveDriverInfo()">
+                <a role="button" class="btn btn-theme btn-xs" (click)="saveEmployeeInfo()">
                     <i class="material-icons">save</i></a>
             </li>
             <li>
@@ -35,7 +35,7 @@
                             <div class="form-line">
                                 <!--{{loginid}}-->
                                 <label class="control-label">Employee Code <strong>*</strong></label>
-                                <input type="text" [(ngModel)]="drivercode" class="form-control drivercode" maxlength="10" tabindex="2" />
+                                <input type="text" [(ngModel)]="empcode" class="form-control empcode" maxlength="10" tabindex="2" />
                             </div>
                         </div>
                     </div>
@@ -43,7 +43,7 @@
                         <div class="form-group">
                             <div class="form-line">
                                 <label class="control-label">Password <strong>*</strong></label>
-                                <input type="password" [(ngModel)]="driverpwd" class="form-control driverpwd" maxlength="10" tabindex="3" />
+                                <input type="password" [(ngModel)]="emppwd" class="form-control emppwd" maxlength="10" tabindex="3" />
                             </div>
                         </div>
                     </div>
@@ -54,21 +54,10 @@
                         <div class="form-group">
                             <div class="form-line">
                                 <label class="control-label">Employee Name <strong>*</strong></label>
-                                <input type="text" [(ngModel)]="drivername" class="form-control drivername" maxlength="20" tabindex="4" />
+                                <input type="text" [(ngModel)]="empname" class="form-control empname" maxlength="20" tabindex="4" />
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <div class="form-line">
-                                <label class="control-label">License No</label>
-                                <input type="text" [(ngModel)]="licenseno" class="form-control" maxlength="15" tabindex="5" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row clearfix">
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="form-line">
@@ -76,6 +65,21 @@
                                 <input type="text" [(ngModel)]="aadharno" class="form-control" maxlength="15" tabindex="6" />
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="row clearfix">
+                    <div class="col-md-12">
+                        <p-fileUpload name="fileUploaded" url="{{uploadconfig.server}}" (onUpload)="onUpload($event)" accept="{{uploadconfig.acceptedFiles}}" maxFileSize="{{uploadconfig.maxFilesize}}" auto="auto">
+                            <template pTemplate type="content">
+                                <div *ngIf="uploadPhotoDT.length">
+                                    <div *ngFor="let file of uploadPhotoDT" class="box">
+                                        <img src="{{uploadconfig.uploadurl + file.athurl}}" onerror="this.src='assets/img/default.gif';" height="40px" />
+                                    </div>
+                                </div>
+                                <span *ngIf="!uploadPhotoDT.length">Logo....</span>
+                            </template>
+                        </p-fileUpload>
                     </div>
                 </div>
 
@@ -203,32 +207,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="row clearfix">
-            <div class="col-md-2">
-                <p-fileUpload name="fileUploaded"  url="{{uploadconfig.server}}" (onUpload)="onUpload($event)" multiple="multiple" accept="{{uploadconfig.acceptedFiles}}" maxFileSize="{{uploadconfig.maxFilesize}}" auto="auto">
-                    <template pTemplate type="content">
-                        <div *ngIf="attachDocsDT.length">
-                            <div *ngFor="let file of attachDocsDT" class="box">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <img src="http://localhost:8082/images/{{file.athurl}}" height="80px" />
-                                    </div>
-                                    <div class="col-md-8">
-                                        <b>Size : </b> {{formatSizeUnits(file.athsize)}}
-                                    </div>
-                                    <div class="col-md-1">
-                                        <a role="button" (click)="removeFileUpload()"><i class="fa fa-remove"></i></a>
-                                    </div>
-                                </div>
-                                <hr />
-                            </div>
-                        </div>
-                        <span>Drag File Here....</span>
-                    </template>
-                </p-fileUpload>
             </div>
         </div>
     </div>

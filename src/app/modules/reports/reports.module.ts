@@ -29,10 +29,8 @@ export const routes = [
                     { path: 'users', loadChildren: './users#UserReportsModule' },
                     { path: 'location', loadChildren: './location#LocationReportsModule' },
 
-                    { path: 'batch', loadChildren: './batch#BatchReportsModule' },
                     { path: 'route', loadChildren: './route#RouteReportsModule' },
-                    { path: 'passenger', loadChildren: './passenger#PassengerReportsModule' },
-                    { path: 'driver', loadChildren: './driver#DriverReportsModule' },
+                    { path: 'employee', loadChildren: './employee#EmployeeReportsModule' },
                     { path: 'vehicle', loadChildren: './vehicle#VehicleReportsModule' },
                     { path: 'holiday', loadChildren: './holiday#HolidayReportsModule' },
                 ]

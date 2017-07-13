@@ -5,8 +5,8 @@ import { RouterModule } from '@angular/router';
 import { SharedComponentModule } from '../../../_shared/sharedcomp.module';
 import { AuthGuard } from '../../../_services/authguard-service';
 
-import { BatchReportsComponent } from './rptbatch.comp';
-import { BatchService } from '@services/master';
+import { EmployeeReportsComponent } from './rptemp.comp';
+import { EmployeeService } from '@services/master';
 
 import { LazyLoadEvent, DataTableModule, AutoCompleteModule } from 'primeng/primeng';
 
@@ -14,8 +14,8 @@ export const routes = [
   {
     path: '', children: [
       {
-        path: '', component: BatchReportsComponent, canActivate: [AuthGuard],
-        data: { "module": "rpt", "submodule": "rptbatch", "rights": "view", "urlname": "/batch" }
+        path: '', component: EmployeeReportsComponent, canActivate: [AuthGuard],
+        data: { "module": "rpt", "submodule": "rptemp", "rights": "view", "urlname": "/employee" }
       }
     ]
   },
@@ -23,16 +23,16 @@ export const routes = [
 
 @NgModule({
   declarations: [
-    BatchReportsComponent
+    EmployeeReportsComponent
   ],
 
   imports: [
     CommonModule, FormsModule, SharedComponentModule, RouterModule.forChild(routes), DataTableModule, AutoCompleteModule
   ],
 
-  providers: [AuthGuard, BatchService]
+  providers: [AuthGuard, EmployeeService]
 })
 
-export class BatchReportsModule {
+export class EmployeeReportsModule {
   public static routes = routes;
 }

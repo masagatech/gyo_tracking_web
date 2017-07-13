@@ -2,17 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { DriverService } from '@services/master';
+import { EmployeeService } from '@services/master';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 declare var google: any;
 
 @Component({
-    templateUrl: 'adddriver.comp.html',
+    templateUrl: 'addemp.comp.html',
     providers: [CommonService]
 })
 
-export class AddDriverComponent implements OnInit {
+export class AddEmployeeComponent implements OnInit {
     loginUser: LoginUserModel;
 
     entityDT: any = [];
@@ -23,11 +23,11 @@ export class AddDriverComponent implements OnInit {
     cityDT: any = [];
     areaDT: any = [];
 
-    driverid: number = 0;
+    empid: number = 0;
     loginid: number = 0;
-    drivercode: string = "";
-    driverpwd: string = "";
-    drivername: string = "";
+    empcode: string = "";
+    emppwd: string = "";
+    empname: string = "";
     aadharno: string = "";
     licenseno: string = "";
     mobileno1: string = "";
@@ -47,14 +47,14 @@ export class AddDriverComponent implements OnInit {
     mode: string = "";
     isactive: boolean = true;
 
+    uploadPhotoDT: any = [];
     global = new Globals();
-
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
 
     _wsdetails: any = [];
     private subscribeParameters: any;
 
-    constructor(private _driverservice: DriverService, private _routeParams: ActivatedRoute, private _router: Router,
+    constructor(private _empservice: EmployeeService, private _routeParams: ActivatedRoute, private _router: Router,
         private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
@@ -71,7 +71,7 @@ export class AddDriverComponent implements OnInit {
             $(".enttname input").focus();
         }, 100);
 
-        this.getDriverDetails();
+        this.getEmployeeDetails();
     }
 
     // Auto Completed Entity
@@ -185,12 +185,45 @@ export class AddDriverComponent implements OnInit {
         })
     }
 
+    // Active / Deactive Data
+
+    active_deactiveEmployeeInfo() {
+        var that = this;
+
+        var act_deactemp = {
+            "empid": that.empid,
+            "isactive": that.isactive,
+            "mode": that.mode
+        }
+
+        this._empservice.saveEmployeeInfo(act_deactemp).subscribe(data => {
+            try {
+                var dataResult = data.data;
+
+                if (dataResult[0].funsave_empinfo.msgid != "-1") {
+                    that._msg.Show(messageType.success, "Success", dataResult[0].funsave_empinfo.msg);
+                    that.getEmployeeDetails();
+                }
+                else {
+                    that._msg.Show(messageType.error, "Error", dataResult[0].funsave_empinfo.msg);
+                }
+            }
+            catch (e) {
+                that._msg.Show(messageType.error, "Error", e);
+            }
+        }, err => {
+            console.log(err);
+        }, () => {
+            // console.log("Complete");
+        });
+    }
+
     // File upload
 
     getUploadConfig() {
         var that = this;
 
-        that._autoservice.getMOM({ "flag": "allfile" }).subscribe(data => {
+        that._autoservice.getMOM({ "flag": "filebyid", "id": "29" }).subscribe(data => {
             that.uploadconfig.server = that.global.serviceurl + "uploads";
             that.uploadconfig.serverpath = that.global.serviceurl;
             that.uploadconfig.uploadurl = that.global.uploadurl;
@@ -207,13 +240,14 @@ export class AddDriverComponent implements OnInit {
     onUpload(event) {
         var that = this;
         var imgfile = [];
+        that.uploadPhotoDT = [];
+
         imgfile = JSON.parse(event.xhr.response);
 
+        console.log(imgfile);
+
         for (var i = 0; i < imgfile.length; i++) {
-            that.attachDocsDT.push({
-                "athid": "0", "athname": imgfile[i].name, "athurl": imgfile[i].path.replace(that.uploadconfig.filepath, ""),
-                "athsize": imgfile[i].size, "athtype": imgfile[i].type, "ptype": "driver", "cuid": that.loginUser.ucode,
-            })
+            that.uploadPhotoDT.push({ "athurl": imgfile[i].path.replace(that.uploadconfig.filepath, "") })
         }
     }
 
@@ -243,51 +277,18 @@ export class AddDriverComponent implements OnInit {
     }
 
     removeFileUpload() {
-        this.attachDocsDT.splice(0, 1);
-    }
-
-    // Active / Deactive Data
-
-    active_deactiveDriverInfo() {
-        var that = this;
-
-        var act_deactDriver = {
-            "autoid": that.driverid,
-            "isactive": that.isactive,
-            "mode": that.mode
-        }
-
-        this._driverservice.saveDriverInfo(act_deactDriver).subscribe(data => {
-            try {
-                var dataResult = data.data;
-
-                if (dataResult[0].funsave_driverinfo.msgid != "-1") {
-                    that._msg.Show(messageType.success, "Success", dataResult[0].funsave_driverinfo.msg);
-                    that.getDriverDetails();
-                }
-                else {
-                    that._msg.Show(messageType.error, "Error", dataResult[0].funsave_driverinfo.msg);
-                }
-            }
-            catch (e) {
-                that._msg.Show(messageType.error, "Error", e);
-            }
-        }, err => {
-            console.log(err);
-        }, () => {
-            // console.log("Complete");
-        });
+        this.uploadPhotoDT.splice(0, 1);
     }
 
     // Clear Fields
 
-    resetDriverFields() {
+    resetEmployeeFields() {
         var that = this;
 
-        that.driverid = 0;
-        that.drivercode = "";
-        that.driverpwd = "";
-        that.drivername = "";
+        that.empid = 0;
+        that.empcode = "";
+        that.emppwd = "";
+        that.empname = "";
         that.aadharno = "";
         that.mobileno1 = "";
         that.mobileno2 = "";
@@ -303,24 +304,24 @@ export class AddDriverComponent implements OnInit {
 
     // Save Data
 
-    saveDriverInfo() {
+    saveEmployeeInfo() {
         var that = this;
 
         if (that.enttid == 0) {
             that._msg.Show(messageType.error, "Error", "Select Entity");
             $(".enttid").focus();
         }
-        else if (that.drivercode == "") {
-            that._msg.Show(messageType.error, "Error", "Enter Driver Code");
-            $(".drivercode").focus();
+        else if (that.empcode == "") {
+            that._msg.Show(messageType.error, "Error", "Enter emp Code");
+            $(".empcode").focus();
         }
-        else if (that.driverpwd == "") {
+        else if (that.emppwd == "") {
             that._msg.Show(messageType.error, "Error", "Enter Password");
-            $(".driverpwd").focus();
+            $(".emppwd").focus();
         }
-        else if (that.drivername == "") {
-            that._msg.Show(messageType.error, "Error", "Enter Driver Name");
-            $(".drivername").focus();
+        else if (that.empname == "") {
+            that._msg.Show(messageType.error, "Error", "Enter emp Name");
+            $(".empname").focus();
         }
         else if (that.mobileno1 == "") {
             that._msg.Show(messageType.error, "Error", "Enter Mobile No");
@@ -333,14 +334,15 @@ export class AddDriverComponent implements OnInit {
         else {
             commonfun.loader();
 
-            var saveDriver = {
-                "autoid": that.driverid,
+            var saveemp = {
+                "empid": that.empid,
                 "loginid": that.loginid,
-                "drivercode": that.drivercode,
-                "driverpwd": that.driverpwd,
-                "drivername": that.drivername,
+                "empcode": that.empcode,
+                "emppwd": that.emppwd,
+                "empname": that.empname,
                 "aadharno": that.aadharno,
                 "licenseno": that.licenseno,
+                "filepath": that.uploadPhotoDT.length > 0 ? that.uploadPhotoDT[0].athurl : "",
                 "mobileno1": that.mobileno1,
                 "mobileno2": that.mobileno2,
                 "email1": that.email1,
@@ -360,9 +362,9 @@ export class AddDriverComponent implements OnInit {
                 "mode": ""
             }
 
-            this._driverservice.saveDriverInfo(saveDriver).subscribe(data => {
+            this._empservice.saveEmployeeInfo(saveemp).subscribe(data => {
                 try {
-                    var dataResult = data.data[0].funsave_driverinfo;
+                    var dataResult = data.data[0].funsave_employeeinfo;
                     var msg = dataResult.msg;
                     var msgid = dataResult.msgid;
 
@@ -370,7 +372,7 @@ export class AddDriverComponent implements OnInit {
                         that._msg.Show(messageType.success, "Success", msg);
 
                         if (msgid === "1") {
-                            that.resetDriverFields();
+                            that.resetEmployeeFields();
                         }
                         else {
                             that.backViewData();
@@ -395,53 +397,53 @@ export class AddDriverComponent implements OnInit {
         }
     }
 
-    // Get Driver Data
+    // Get emp Data
 
-    getDriverDetails() {
+    getEmployeeDetails() {
         var that = this;
         commonfun.loader();
 
         that.subscribeParameters = that._routeParams.params.subscribe(params => {
             if (params['id'] !== undefined) {
-                that.driverid = params['id'];
+                that.empid = params['id'];
 
-                that._driverservice.getDriverDetails({
+                that._empservice.getEmployeeDetails({
                     "flag": "edit",
-                    "id": that.driverid,
+                    "id": that.empid,
                     "wsautoid": that._wsdetails.wsautoid
                 }).subscribe(data => {
                     try {
-                        var _driverdata = data.data[0]._driverdata;
-                        var _attachdocs = data.data[0]._attachdocs;
+                        var _empdata = data.data;
 
-                        console.log(_driverdata);
+                        that.empid = _empdata[0].empid;
+                        that.loginid = _empdata[0].loginid;
+                        that.empcode = _empdata[0].empcode;
+                        that.emppwd = _empdata[0].emppwd;
+                        that.empname = _empdata[0].empname;
 
-                        that.driverid = _driverdata[0].autoid;
-                        that.loginid = _driverdata[0].loginid;
-                        that.drivercode = _driverdata[0].drivercode;
-                        that.driverpwd = _driverdata[0].driverpwd;
-                        that.drivername = _driverdata[0].drivername;
-                        that.aadharno = _driverdata[0].aadharno;
-                        that.licenseno = _driverdata[0].licenseno;
-                        that.email1 = _driverdata[0].email1;
-                        that.email2 = _driverdata[0].email2;
-                        that.mobileno1 = _driverdata[0].mobileno1;
-                        that.mobileno2 = _driverdata[0].mobileno2;
-                        that.address = _driverdata[0].address;
-                        that.country = _driverdata[0].country;
-                        that.state = _driverdata[0].state;
+                        if (data.data[0].FilePath !== "") {
+                            that.uploadPhotoDT.push({ "athurl": data.data[0].FilePath });
+                        }
+
+                        that.aadharno = _empdata[0].aadharno;
+                        that.licenseno = _empdata[0].licenseno;
+                        that.email1 = _empdata[0].email1;
+                        that.email2 = _empdata[0].email2;
+                        that.mobileno1 = _empdata[0].mobileno1;
+                        that.mobileno2 = _empdata[0].mobileno2;
+                        that.address = _empdata[0].address;
+                        that.country = _empdata[0].country;
+                        that.state = _empdata[0].state;
                         that.fillCityDropDown();
-                        that.city = _driverdata[0].city;
+                        that.city = _empdata[0].city;
                         that.fillAreaDropDown();
-                        that.area = _driverdata[0].area;
-                        that.pincode = _driverdata[0].pincode;
-                        that.enttid = _driverdata[0].enttid;
-                        that.enttname = _driverdata[0].enttname;
-                        that.remark1 = _driverdata[0].remark1;
-                        that.isactive = _driverdata[0].isactive;
-                        that.mode = _driverdata[0].mode;
-
-                        that.attachDocsDT = _attachdocs === null ? [] : _attachdocs;
+                        that.area = _empdata[0].area;
+                        that.pincode = _empdata[0].pincode;
+                        that.enttid = _empdata[0].enttid;
+                        that.enttname = _empdata[0].enttname;
+                        that.remark1 = _empdata[0].remark1;
+                        that.isactive = _empdata[0].isactive;
+                        that.mode = _empdata[0].mode;;
                     }
                     catch (e) {
                         that._msg.Show(messageType.error, "Error", e);
@@ -462,7 +464,7 @@ export class AddDriverComponent implements OnInit {
                     that.enttname = Cookie.get('_enttnm_');
                 }
 
-                that.resetDriverFields();
+                that.resetEmployeeFields();
                 commonfun.loaderhide();
             }
         });

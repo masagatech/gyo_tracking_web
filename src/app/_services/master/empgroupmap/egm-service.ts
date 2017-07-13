@@ -3,14 +3,14 @@ import { DataService } from '../../dataconnect';
 import { Router } from '@angular/router';
 
 @Injectable()
-export class DriverService {
+export class EmpGroupMapService {
     constructor(private _dataserver: DataService, private _router: Router) { }
 
-    getDriverDetails(req: any) {
-        return this._dataserver.post("getDriverDetails", req)
+    getEmpGroupMap(req: any) {
+        return this._dataserver.post("getEmpGroupMap", req)
     }
 
-    saveDriverInfo(req: any) {
-        return this._dataserver.post("saveDriverInfo", req)
+    saveEmpGroupMap(req: any) {
+        return this._dataserver.post("saveEmpGroupMap", req)
     }
 }
