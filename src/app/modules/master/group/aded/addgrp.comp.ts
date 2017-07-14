@@ -29,10 +29,11 @@ export class AddGroupComponent implements OnInit {
     private subscribeParameters: any;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
-        private _grpservice: GroupService, private _autoservice: CommonService) {
+        private _grpservice: GroupService, private _autoservice: CommonService) 
+        {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
-    }
+        }
 
     public ngOnInit() {
         setTimeout(function () {
