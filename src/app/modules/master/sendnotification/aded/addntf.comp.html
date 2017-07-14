@@ -1,0 +1,56 @@
+<div class="card">
+    <div class="header">
+        <h4>Send Notification</h4>
+        <ul class="header-dropdown m-r--5">
+            <li>
+                <a role="button" class="btn btn-theme btn-xs" (click)="saveNotification()">
+                    <i class="material-icons">save</i></a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="body">
+        <div class="row clearfix">
+            <div class="col-md-6 border">
+                <div class="form-group">
+                    <div class="form-line">
+                        <label class="control-label">Entity Name <strong>*</strong></label>
+                        <p-autoComplete id="enttname" name="enttname" [(ngModel)]="enttname" [tabindex]="1" (onSelect)="selectEntityData($event)" [suggestions]="entityDT" (completeMethod)="getEntityData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete enttname"></p-autoComplete>
+                        <span class="material-icons inputserachico">search</span>
+                    </div>
+                </div>
+                <div class="form-group" id="divGroup">
+                    <div class="form-line">
+                        <label class="control-label">Group Name <strong>*</strong></label>
+                        <p-autoComplete id="grpname" name="grpname" [(ngModel)]="grpname" [tabindex]="1" (onSelect)="selectGroupData($event)" [suggestions]="groupDT" (completeMethod)="getGroupData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete grpname"></p-autoComplete>
+                        <span class="material-icons inputserachico">search</span>
+                    </div>
+                </div>
+                <div class="form-group" id="divEmployee">
+                    <div class="form-line">
+                        <label class="control-label">Employee Name <strong>*</strong></label>
+                        <p-autoComplete id="empname" name="empname" [(ngModel)]="empname" [tabindex]="2" (onSelect)="selectEmployeeData($event)" [suggestions]="employeeDT" (completeMethod)="getEmployeeData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete empname"></p-autoComplete>
+                        <span class="material-icons inputserachico">search</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-line">
+                        <label class="control-label">Message <strong>*</strong></label>
+                        <textarea [(ngModel)]="msg" rows="5" class="form-control no-resize auto-growth msg" maxlength="500" tabindex="3"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div *ngIf="employeeList.length">
+                    <ul class="list-group">
+                        <li class="list-group-item" *ngFor="let row of employeeList">
+                            {{row.empname}}
+                            <button type="button" class="btn btn-danger btn-xs pull-right" (click)="deleteEmployee(row)">
+                                <i class="material-icons">delete</i></button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
