@@ -2,9 +2,9 @@
     <div class="header">
         <div class="row clearfix">
             <div class="col-md-3">
-                <h4>Route Wise Passenger</h4>
+                <h4>Group Wise Employee</h4>
             </div>
-            <div class="col-md-6" *ngIf="actviewrights === 'view'">
+            <div class="col-md-6">
                 <div class="form-group">
                     <div class="form-line">
                         <label class="control-label">Entity Name</label>
@@ -13,7 +13,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3" style="padding-top: 12px;">
+            <div class="col-md-3" style="padding-top: 20px;">
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Export <span class="caret"></span>
@@ -29,40 +29,46 @@
     </div>
 </div>
 
-<div #rtwisepsngr class="row clearfix">
-    <div *ngFor="let row of routesDT | groupBy:'rtname'; let i = index;" class="col-md-3 col-xs-6">
+<div #grpwiseemp class="row clearfix">
+    <div *ngFor="let row of groupDT; let i = index;" class="col-md-2 col-xs-4">
         <div class="card">
             <div class="header">
-                <h4>{{row.key}}</h4>
+                <h4>{{row.grpnm}}</h4>
+                <ul class="header-dropdown m-r--5">
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" (click)="getGroupWiseEmployee(row)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="material-icons">more_vert</i>
+                        </a>
+                        <ul id="ddlemp" class="dropdown-menu pull-right">
+                            <li *ngFor="let erow of row.empDT; let i = index;">
+                                <a role="button">{{erow.empname}}</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
             <div class="body">
-                <div *ngFor="let drow of row.value">
-                    <div class="row clearfix">
-                        <div class="col-md-10">
-                            <b>Batch :</b> {{drow.batchname}}
-                            <br /> <b>Timing :</b> {{drow.batchtime}}
-                            <br /> <b>Stops :</b> ({{drow.countstops}})
-                            <br /> <b>Passenger :</b> ({{drow.countstuds}})
-                        </div>
-                        <div class="col-md-2" align="right">
-                            <a href="javascript:void(0);" (click)="getRouteWiseStops(drow)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                <i class="material-icons">more_vert</i>
-                            </a>
-                            <ul id="ddlstops" class="dropdown-menu pull-right">
-                                <li *ngFor="let srow of drow.stopsDT; let i = index;">
-                                    <a role="button" (click)="getStopsWisePassenger(srow)"><b>{{srow.stpname}} :</b> {{srow.countstuds}}</a>
-                                </li>
-                            </ul>
+                <div class="row clearfix">
+                    <div class="col-md-12">
+                        <b>Owner</b>
+                        <div class="bar"></div>
+                        <div *ngFor="let drow of row.owner">
+                            {{drow.onrnm}}
+                            <div class="line-bar"></div>
                         </div>
                     </div>
-                    <hr />
+                </div>
+                <div class="row clearfix">
+                    <div class="col-md-12">
+                        <b>Employee</b> ({{row.countemp}})
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="passengerModal" tabindex="-1" role="dialog">
+<!-- <div class="modal fade" id="EmployeeModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document" style="width: 1050px;">
         <div class="modal-content">
             <div class="modal-header">
@@ -70,9 +76,9 @@
                     Route : {{rtname}} > Stops : {{stpname}} > Batch : {{batchname}}
                 </h4>
             </div>
-            <div class="modal-body" id="passenger">
-                <p-dataTable [value]="passengerDT">
-                    <p-column field="psngrname" header="Passenger Name" [style]="{'text-align': 'left'}"></p-column>
+            <div class="modal-body" id="Employee">
+                <p-dataTable [value]="employeeDT">
+                    <p-column field="empname" header="Employee Name" [style]="{'text-align': 'left'}"></p-column>
                     <p-column field="standard" header="Standard" [style]="{'width': '80px', 'text-align': 'left'}"></p-column>
                     <p-column field="division" header="Division" [style]="{'width': '80px', 'text-align': 'left'}"></p-column>
                     <p-column field="mothername" header="Mother Name" [style]="{'width': '150px', 'text-align': 'left'}"></p-column>
@@ -95,36 +101,4 @@
             </div>
         </div>
     </div>
-</div>
-
-<!--<div class="row clearfix">
-    <div class="col-md-2">
-        <div class="card" *ngIf="stopsDT.length">
-            <div class="header">
-                <h4>{{rtname}}</h4>
-            </div>
-            <div class="body">
-                <p *ngFor="let row of stopsDT; let i = index;">
-                    <a role="button" (click)="getStopsWisePassenger(row)">
-                        <b>{{row.stpname}} :</b> {{row.countstuds}}
-                    </a>
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-10" *ngIf="passengerDT.length">
-        <div class="card">
-            <div class="header">
-                <h4>{{stpname}}</h4>
-            </div>
-            <div class="body no-padding">
-                <div class="row clearfix">
-                    <div class="col-md-12">
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>-->
+</div> -->

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { NotificationService } from '@services/master';
+import { EmpGroupMapService, NotificationService } from '@services/master';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 declare var google: any;
@@ -36,8 +36,8 @@ export class AddNotificationComponent implements OnInit {
     _wsdetails: any = [];
     private subscribeParameters: any;
 
-    constructor(private _ntfservice: NotificationService, private _routeParams: ActivatedRoute, private _router: Router,
-        private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService) {
+    constructor(private _egmservice: EmpGroupMapService, private _ntfservice: NotificationService, private _routeParams: ActivatedRoute,
+        private _router: Router, private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
     }
@@ -102,77 +102,54 @@ export class AddNotificationComponent implements OnInit {
     selectGroupData(event) {
         this.grpid = event.value;
         this.grpname = event.label;
+        this.getGroupEmployee();
     }
 
-    // Auto Completed Employee
+    // Get Group Employee Data
 
-    getEmployeeData(event) {
-        let query = event.query;
+    getGroupEmployee() {
+        var that = this;
+        commonfun.loader("#divGroup");
 
-        this._autoservice.getAutoData({
-            "flag": "groupemp",
-            "enttid": this.enttid,
-            "grpid": this.grpid,
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
-        }).subscribe((data) => {
-            this.employeeDT = data.data;
+        that._egmservice.getEmpGroupMap({
+            "flag": "edit",
+            "enttid": that.enttid,
+            "grpid": that.grpid,
+            "wsautoid": that._wsdetails.wsautoid
+        }).subscribe(data => {
+            try {
+                if (data.data.length > 0) {
+                    that.employeeList = data.data;
+                }
+                else {
+                    that._msg.Show(messageType.error, "Error", "There are no Employee");
+                    that.grpid = 0;
+                    that.grpname = "";
+                    that.employeeList = [];
+                    $(".grpname input").focus();
+                }
+            }
+            catch (e) {
+                that._msg.Show(messageType.error, "Error", e);
+            }
+
+            commonfun.loaderhide("#divGroup");
         }, err => {
-            this._msg.Show(messageType.error, "Error", err);
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+            commonfun.loaderhide("#divGroup");
         }, () => {
 
-        });
+        })
     }
 
-    // Selected Employee
-
-    selectEmployeeData(event) {
-        this.empid = event.value;
-        this.empname = event.label;
-
-        this.addEmployeeList();
-    }
-
-    // Check Duplicate Employee
-
-    isDuplicateEmployee() {
-        var that = this;
-
-        for (var i = 0; i < that.employeeList.length; i++) {
-            var field = that.employeeList[i];
-
-            if (field.empid == this.empid) {
-                this._msg.Show(messageType.error, "Error", "Duplicate Employee not Allowed");
-                return true;
-            }
+    private selectAndDeselectAllCheckboxes() {
+        if ($("#selectall").is(':checked')) {
+            $(".allcheckboxes input[type=checkbox]").prop('checked', true);
         }
-
-        return false;
-    }
-
-    // Read Get Employee
-
-    addEmployeeList() {
-        var that = this;
-        commonfun.loader("#divEmployee");
-
-        var duplicateEmployee = that.isDuplicateEmployee();
-
-        if (!duplicateEmployee) {
-            that.employeeList.push({ "empid": that.empid, "empname": that.empname });
+        else {
+            $(".allcheckboxes input[type=checkbox]").prop('checked', false);
         }
-
-        that.empid = 0;
-        that.empname = "";
-        $(".empname input").focus();
-        commonfun.loaderhide("#divEmployee");
-    }
-
-    // Delete Employee
-
-    deleteEmployee(row) {
-        this.employeeList.splice(this.employeeList.indexOf(row), 1);
-        row.isactive = false;
     }
 
     // Clear Fields
@@ -188,10 +165,35 @@ export class AddNotificationComponent implements OnInit {
         that.employeeList = [];
     }
 
+    // Selected Employee
+
+    getSelectedEmployee() {
+        var _giverights = [];
+        var emplist = null;
+        var selemp = "";
+        var selemplist = {};
+
+        for (var i = 0; i <= this.employeeList.length - 1; i++) {
+            emplist = null;
+            emplist = this.employeeList[i];
+
+            if (emplist !== null) {
+                $("#emp" + emplist.empid).find("input[type=checkbox]").each(function () {
+                    selemp += (this.checked ? $(this).val() + "," : "");
+                });
+
+                selemplist = "{" + selemp.slice(0, -1) + "}";
+            }
+        }
+
+        return selemplist;
+    }
+
     // Save Data
 
     saveNotification() {
         var that = this;
+        var selemplist = {};
 
         if (that.enttid == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Entity");
@@ -205,58 +207,62 @@ export class AddNotificationComponent implements OnInit {
             that._msg.Show(messageType.error, "Error", "Enter Message");
             $(".msg").focus();
         }
-        else if (that.employeeList.length == 0) {
-            that._msg.Show(messageType.error, "Error", "Select Atleast 1 Employee");
-            $(".frmtm").focus();
-        }
         else {
-            commonfun.loader();
-            var _emplist: string[] = [];
+            // _emplist = Object.keys(that.employeeList).map(function (k) { return that.employeeList[k].empid });
 
-            _emplist = Object.keys(that.employeeList).map(function (k) { return that.employeeList[k].empid });
+            selemplist = that.getSelectedEmployee();
+            console.log(selemplist);
 
-            var saveemp = {
-                "ntfid": that.ntfid,
-                "enttid": that.enttid,
-                "grpid": that.grpid,
-                "empid": _emplist,
-                "msg": that.msg,
-                "cuid": that.loginUser.ucode,
-                "wsautoid": that._wsdetails.wsautoid
+            if (selemplist == "{}") {
+                that._msg.Show(messageType.error, "Error", "Select Atleast 1 Employee");
+                $(".frmtm").focus();
             }
+            else {
+                commonfun.loader();
 
-            this._ntfservice.saveNotification(saveemp).subscribe(data => {
-                try {
-                    var dataResult = data.data[0].funsave_notification;
-                    var msg = dataResult.msg;
-                    var msgid = dataResult.msgid;
+                var saveemp = {
+                    "ntfid": that.ntfid,
+                    "enttid": that.enttid,
+                    "grpid": that.grpid,
+                    "empid": selemplist,
+                    "msg": that.msg,
+                    "cuid": that.loginUser.ucode,
+                    "wsautoid": that._wsdetails.wsautoid
+                }
 
-                    if (msgid != "-1") {
-                        that._msg.Show(messageType.success, "Success", msg);
+                this._ntfservice.saveNotification(saveemp).subscribe(data => {
+                    try {
+                        var dataResult = data.data[0].funsave_notification;
+                        var msg = dataResult.msg;
+                        var msgid = dataResult.msgid;
 
-                        if (msgid === "1") {
-                            that.resetNotificationFields();
+                        if (msgid != "-1") {
+                            that._msg.Show(messageType.success, "Success", msg);
+
+                            if (msgid === "1") {
+                                that.resetNotificationFields();
+                            }
+                            else {
+                                that.backViewData();
+                            }
                         }
                         else {
-                            that.backViewData();
+                            that._msg.Show(messageType.error, "Error", msg);
                         }
-                    }
-                    else {
-                        that._msg.Show(messageType.error, "Error", msg);
-                    }
 
+                        commonfun.loaderhide();
+                    }
+                    catch (e) {
+                        that._msg.Show(messageType.error, "Error", e);
+                    }
+                }, err => {
+                    that._msg.Show(messageType.error, "Error", err);
+                    console.log(err);
                     commonfun.loaderhide();
-                }
-                catch (e) {
-                    that._msg.Show(messageType.error, "Error", e);
-                }
-            }, err => {
-                that._msg.Show(messageType.error, "Error", err);
-                console.log(err);
-                commonfun.loaderhide();
-            }, () => {
-                // console.log("Complete");
-            });
+                }, () => {
+                    // console.log("Complete");
+                });
+            }
         }
     }
 

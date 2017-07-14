@@ -7,7 +7,7 @@ import { AuthGuard } from '../../../_services/authguard-service';
 import { AddNotificationComponent } from './aded/addntf.comp';
 import { ViewNotificationComponent } from './view/viewntf.comp';
 
-import { NotificationService } from '@services/master';
+import { EmpGroupMapService, NotificationService } from '@services/master';
 
 import { LazyLoadEvent, DataTableModule, AutoCompleteModule, FileUploadModule } from 'primeng/primeng';
 
@@ -32,7 +32,7 @@ export const routes = [
     CommonModule, FormsModule, RouterModule.forChild(routes), DataTableModule, AutoCompleteModule, FileUploadModule
   ],
 
-  providers: [AuthGuard, NotificationService]
+  providers: [AuthGuard, EmpGroupMapService, NotificationService]
 })
 
 export class SendNotificationModule {

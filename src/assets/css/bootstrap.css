@@ -1471,9 +1471,19 @@ hr {
     border-top: 1px solid #eee;
 }
 
-br {
-    margin: 5px;
+.bar {
     border: 0;
+    margin: 5px 0;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+.line-bar {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 5px 0;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
 }
 
 .sr-only {
