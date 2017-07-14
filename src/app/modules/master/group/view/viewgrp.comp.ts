@@ -25,7 +25,8 @@ export class ViewGroupComponent implements OnInit {
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
-        private _loginservice: LoginService, private _grpservice: GroupService) {
+        private _loginservice: LoginService, private _grpservice: GroupService) 
+        {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
 
@@ -43,7 +44,8 @@ export class ViewGroupComponent implements OnInit {
         commonfun.loader();
 
         params = {
-            "flag": "all"
+            "flag": "all",
+            "wsautoid": this._wsdetails.wsautoid,
         }
 
         that._grpservice.getGroupDetails(params).subscribe(data => {
