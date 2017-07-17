@@ -17,8 +17,8 @@ export const routes = [
                 children: [
                     { path: 'entity', loadChildren: './entity#EntityModule' },
                     { path: 'employee', loadChildren: './employee#EmployeeModule' },
-                    { path: 'employeegroupmap', loadChildren: './empgroupmap#EmployeeGroupMapModule' },
-                    { path: 'ownershipgroupmap', loadChildren: './onrgroupmap#OwnershipGroupMapModule' },
+                    { path: 'teamemployeemap', loadChildren: './teamemployeemap#EmployeeGroupMapModule' },
+                    { path: 'teamownershipmap', loadChildren: './teamownermap#OwnershipGroupMapModule' },
                     { path: 'allocatetask', loadChildren: './allocatetask#AllocateTaskModule' },
                     { path: 'sendnotification', loadChildren: './sendnotification#SendNotificationModule' },
 

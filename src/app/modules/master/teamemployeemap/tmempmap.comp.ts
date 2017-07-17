@@ -8,11 +8,11 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 declare var google: any;
 
 @Component({
-    templateUrl: 'empgrpmap.comp.html',
+    templateUrl: 'tmempmap.comp.html',
     providers: [CommonService]
 })
 
-export class EmpGroupMapComponent implements OnInit {
+export class TeamEmployeeMapComponent implements OnInit {
     loginUser: LoginUserModel;
 
     egmid: number = 0;

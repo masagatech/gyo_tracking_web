@@ -2,17 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { EmpGroupMapService, OwnershipGroupMapService } from '@services/master';
+import { EmpGroupMapService, OwnershipTeamMapService } from '@services/master';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 declare var google: any;
 
 @Component({
-    templateUrl: 'onrgrpmap.comp.html',
+    templateUrl: 'tmonrmap.comp.html',
     providers: [CommonService]
 })
 
-export class GroupOwnershipComponent implements OnInit {
+export class TeamOwnershipComponent implements OnInit {
     loginUser: LoginUserModel;
 
     egmid: number = 0;
@@ -35,7 +35,7 @@ export class GroupOwnershipComponent implements OnInit {
     _wsdetails: any = [];
     private subscribeParameters: any;
 
-    constructor(private _egmservice: EmpGroupMapService, private _ogmservice: OwnershipGroupMapService, private _routeParams: ActivatedRoute,
+    constructor(private _egmservice: EmpGroupMapService, private _ogmservice: OwnershipTeamMapService, private _routeParams: ActivatedRoute,
         private _router: Router, private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
@@ -46,7 +46,7 @@ export class GroupOwnershipComponent implements OnInit {
             $(".enttname input").focus();
         }, 100);
 
-        this.getGroupOwnership();
+        this.getTeamOwnership();
     }
 
     // Auto Completed Entity
@@ -107,7 +107,7 @@ export class GroupOwnershipComponent implements OnInit {
         this.grpname = event.label;
 
         this.getGroupEmployee();
-        this.getGroupOwnership();
+        this.getTeamOwnership();
     }
 
     // Get Group Employee Data
@@ -265,7 +265,7 @@ export class GroupOwnershipComponent implements OnInit {
                 "ogmdata": that.ownershipList
             }
 
-            this._ogmservice.saveOwnerGroupMap(saveogm).subscribe(data => {
+            this._ogmservice.saveOwnerTeamMap(saveogm).subscribe(data => {
                 try {
                     var dataResult = data.data[0].funsave_onrgroupmap;
                     var msg = dataResult.msg;
@@ -296,11 +296,11 @@ export class GroupOwnershipComponent implements OnInit {
 
     // Get Ownership Data
 
-    getGroupOwnership() {
+    getTeamOwnership() {
         var that = this;
         commonfun.loader("#divGroup");
 
-        that._ogmservice.getOwnerGroupMap({
+        that._ogmservice.getOwnerTeamMap({
             "flag": "edit",
             "enttid": that.enttid,
             "grpid": that.grpid,
