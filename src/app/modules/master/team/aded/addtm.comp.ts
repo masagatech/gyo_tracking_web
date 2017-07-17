@@ -2,18 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { GroupService } from '@services/master';
+import { TeamService } from '@services/master';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 declare var $: any;
 declare var commonfun: any;
 
 @Component({
-    templateUrl: 'addgrp.comp.html',
+    templateUrl: 'addtm.comp.html',
     providers: [CommonService]
 })
 
-export class AddGroupComponent implements OnInit {
+export class AddTeamComponent implements OnInit {
     loginUser: LoginUserModel;
 
     _wsdetails: any = [];
@@ -29,7 +29,7 @@ export class AddGroupComponent implements OnInit {
     private subscribeParameters: any;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
-        private _grpservice: GroupService, private _autoservice: CommonService) 
+        private _tmservice: TeamService, private _autoservice: CommonService) 
         {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
@@ -40,12 +40,12 @@ export class AddGroupComponent implements OnInit {
             $(".frmdt").focus();
         }, 100);
 
-        this.getGroupDetails();
+        this.getTeamDetails();
     }
 
     // Clear Fields
 
-    resetGroupFields() {
+    resetTeamFields() {
         this.grpid = 0;
         this.grpnm = "";
         this.purpose = "";
@@ -54,11 +54,11 @@ export class AddGroupComponent implements OnInit {
 
     // Save Data
 
-    saveGroupInfo() {
+    saveTeamInfo() {
         var that = this;
 
         if (that.grpnm == "") {
-            that._msg.Show(messageType.error, "Error", "Enter Group Title");
+            that._msg.Show(messageType.error, "Error", "Enter Team Title");
             $(".grpnm").focus();
         }
         else if (that.purpose == "") {
@@ -68,7 +68,7 @@ export class AddGroupComponent implements OnInit {
         else {
             commonfun.loader();
 
-            var saveGroup = {
+            var saveTeam = {
                 "grpid": that.grpid,
                 "grpnm": that.grpnm,
                 "purpose": that.purpose,
@@ -78,17 +78,17 @@ export class AddGroupComponent implements OnInit {
                 "mode": ""
             }
 
-            that._grpservice.saveGroupInfo(saveGroup).subscribe(data => {
+            that._tmservice.saveTeamInfo(saveTeam).subscribe(data => {
                 try {
                     var dataResult = data.data;
-                    var msg = dataResult[0].funsave_groupinfo.msg;
-                    var msgid = dataResult[0].funsave_groupinfo.msgid;
+                    var msg = dataResult[0].funsave_Teaminfo.msg;
+                    var msgid = dataResult[0].funsave_Teaminfo.msgid;
 
                     if (msgid != "-1") {
                         that._msg.Show(messageType.success, "Success", msg);
 
                         if (msgid == "1") {
-                            that.resetGroupFields();
+                            that.resetTeamFields();
                         }
                         else {
                             that.backViewData();
@@ -113,9 +113,9 @@ export class AddGroupComponent implements OnInit {
         }
     }
 
-    // Get Group Data
+    // Get Team Data
 
-    getGroupDetails() {
+    getTeamDetails() {
         var that = this;
         var params = {};
 
@@ -131,7 +131,7 @@ export class AddGroupComponent implements OnInit {
                     "wsautoid": that._wsdetails.wsautoid
                 }
 
-                that._grpservice.getGroupDetails(params).subscribe(data => {
+                that._tmservice.getTeamDetails(params).subscribe(data => {
                     try {
                         that.grpid = data.data[0].grpid;
                         that.grpnm = data.data[0].grpnm;
@@ -151,7 +151,7 @@ export class AddGroupComponent implements OnInit {
                 })
             }
             else {
-                that.resetGroupFields();
+                that.resetTeamFields();
                 commonfun.loaderhide();
             }
         });
@@ -160,6 +160,6 @@ export class AddGroupComponent implements OnInit {
     // Back For View Data
 
     backViewData() {
-        this._router.navigate(['/master/group']);
+        this._router.navigate(['/master/Team']);
     }
 }

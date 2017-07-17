@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { EmpGroupMapService } from '@services/master';
+import { TeamEmployeeMapService } from '@services/master';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 declare var google: any;
@@ -26,14 +26,14 @@ export class TeamEmployeeMapComponent implements OnInit {
     empid: number = 0;
     empname: string = "";
 
-    groupDT: any = [];
+    teamDT: any = [];
     grpid: number = 0;
     grpname: string = "";
 
     _wsdetails: any = [];
     private subscribeParameters: any;
 
-    constructor(private _egmservice: EmpGroupMapService, private _routeParams: ActivatedRoute, private _router: Router,
+    constructor(private _temservice: TeamEmployeeMapService, private _routeParams: ActivatedRoute, private _router: Router,
         private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
@@ -44,7 +44,7 @@ export class TeamEmployeeMapComponent implements OnInit {
             $(".enttname input").focus();
         }, 100);
 
-        this.getEmpGroupMap();
+        this.getTeamEmployeeMap();
     }
 
     // Auto Completed Entity
@@ -76,9 +76,9 @@ export class TeamEmployeeMapComponent implements OnInit {
         this.enttname = event.label;
     }
 
-    // Auto Completed Group
+    // Auto Completed Team
 
-    getGroupData(event) {
+    getTeamData(event) {
         let query = event.query;
 
         this._autoservice.getAutoData({
@@ -90,7 +90,7 @@ export class TeamEmployeeMapComponent implements OnInit {
             "wsautoid": this._wsdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
-            this.groupDT = data.data;
+            this.teamDT = data.data;
         }, err => {
             this._msg.Show(messageType.error, "Error", err);
         }, () => {
@@ -98,13 +98,13 @@ export class TeamEmployeeMapComponent implements OnInit {
         });
     }
 
-    // Selected Group
+    // Selected Team
 
-    selectGroupData(event) {
+    selectTeamData(event) {
         this.grpid = event.value;
         this.grpname = event.label;
 
-        this.getEmpGroupMap();
+        this.getTeamEmployeeMap();
     }
 
     // Auto Completed Employee
@@ -201,7 +201,7 @@ export class TeamEmployeeMapComponent implements OnInit {
 
     // Save Data
 
-    saveEmpGroupMap() {
+    saveTeamEmployeeMap() {
         var that = this;
 
         if (that.enttid == 0) {
@@ -209,7 +209,7 @@ export class TeamEmployeeMapComponent implements OnInit {
             $(".enttid").focus();
         }
         else if (that.grpid == 0) {
-            that._msg.Show(messageType.error, "Error", "Enter Group Name");
+            that._msg.Show(messageType.error, "Error", "Enter Team Name");
             $(".grpname").focus();
         }
         else if (that.employeeList.length == 0) {
@@ -223,7 +223,7 @@ export class TeamEmployeeMapComponent implements OnInit {
                 "egmdata": that.employeeList
             }
 
-            this._egmservice.saveEmpGroupMap(saveegm).subscribe(data => {
+            this._temservice.saveTeamEmployeeMap(saveegm).subscribe(data => {
                 try {
                     var dataResult = data.data[0].funsave_empgroupmap;
                     var msg = dataResult.msg;
@@ -254,11 +254,11 @@ export class TeamEmployeeMapComponent implements OnInit {
 
     // Get Employee Data
 
-    getEmpGroupMap() {
+    getTeamEmployeeMap() {
         var that = this;
-        commonfun.loader("#divGroup");
+        commonfun.loader("#divTeam");
 
-        that._egmservice.getEmpGroupMap({
+        that._temservice.getTeamEmployeeMap({
             "flag": "edit",
             "enttid": that.enttid,
             "grpid": that.grpid,
@@ -271,11 +271,11 @@ export class TeamEmployeeMapComponent implements OnInit {
                 that._msg.Show(messageType.error, "Error", e);
             }
 
-            commonfun.loaderhide("#divGroup");
+            commonfun.loaderhide("#divTeam");
         }, err => {
             that._msg.Show(messageType.error, "Error", err);
             console.log(err);
-            commonfun.loaderhide("#divGroup");
+            commonfun.loaderhide("#divTeam");
         }, () => {
 
         })

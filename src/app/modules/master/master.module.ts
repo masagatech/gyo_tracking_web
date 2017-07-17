@@ -16,17 +16,18 @@ export const routes = [
                 path: '',
                 children: [
                     { path: 'entity', loadChildren: './entity#EntityModule' },
-                    { path: 'employee', loadChildren: './employee#EmployeeModule' },
-                    { path: 'teamemployeemap', loadChildren: './teamemployeemap#TeamEmployeeMapModule' },
-                    { path: 'teamownershipmap', loadChildren: './teamownermap#TeamOwnershipMapModule' },
-                    { path: 'allocatetask', loadChildren: './allocatetask#AllocateTaskModule' },
-                    { path: 'sendnotification', loadChildren: './sendnotification#SendNotificationModule' },
-
-                    { path: 'group', loadChildren: './group#GroupModule' },
                     { path: 'vehicle', loadChildren: './vehicle#VehicleModule' },
                     { path: 'holiday', loadChildren: './holiday#HolidayModule' },
                     { path: 'user', loadChildren: './users#UserModule' },
                     { path: 'location', loadChildren: './location#LocationModule' },
+
+                    { path: 'team', loadChildren: './team#TeamModule' },
+                    { path: 'employee', loadChildren: './employee#EmployeeModule' },
+                    { path: 'teamemployeemap', loadChildren: './teamemployeemap#TeamEmployeeMapModule' },
+                    { path: 'teamownershipmap', loadChildren: './teamownermap#TeamOwnershipMapModule' },
+                    
+                    { path: 'allocatetask', loadChildren: './allocatetask#AllocateTaskModule' },
+                    { path: 'sendnotification', loadChildren: './sendnotification#SendNotificationModule' },
                 ]
             }
         ]

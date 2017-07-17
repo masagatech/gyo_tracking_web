@@ -19,7 +19,7 @@ export const routes = [
                     { path: 'dailyattendance', loadChildren: './dailyattendance#DailyAttendanceReportsModule' },
                     { path: 'driverattendance', loadChildren: './driverattendance#DriverAttendanceReportsModule' },
                     { path: 'attendantattendance', loadChildren: './attendentattendance#AttendentAttendanceReportsModule' },
-                    { path: 'groupwiseemployee', loadChildren: './groupwiseemployee#GroupWiseEmployeeModule' },
+                    { path: 'teamwiseemployee', loadChildren: './teamwiseemployee#TeamWiseEmployeeModule' },
                     { path: 'directpassenger', loadChildren: './directpassenger#DirectPassengerComponent' },
                     { path: 'unschedulepassenger', loadChildren: './unschedulepassenger#UnschedulePassengerModule' },
                     

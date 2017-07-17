@@ -8,11 +8,11 @@ import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import jsPDF from 'jspdf'
 
 @Component({
-    templateUrl: 'grpwiseemp.comp.html',
+    templateUrl: 'tmwiseemp.comp.html',
     providers: [MenuService, CommonService]
 })
 
-export class GroupWiseEmployeeComponent implements OnInit, OnDestroy {
+export class TeamWiseEmployeeComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
     _wsdetails: any = [];
 
@@ -24,7 +24,7 @@ export class GroupWiseEmployeeComponent implements OnInit, OnDestroy {
     batchid: number = 0;
 
     exportData: any = [];
-    groupDT: any = [];
+    teamDT: any = [];
     employeeDT: any = [];
 
     grpname: string = "";
@@ -37,7 +37,7 @@ export class GroupWiseEmployeeComponent implements OnInit, OnDestroy {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
 
-        this.viewGroupWiseEmployee();
+        this.viewTeamWiseEmployee();
     }
 
     public ngOnInit() {
@@ -51,13 +51,13 @@ export class GroupWiseEmployeeComponent implements OnInit, OnDestroy {
         }, 100);
     }
 
-    public viewGroupWiseEmployee() {
+    public viewTeamWiseEmployee() {
         var that = this;
 
         that.enttid = parseInt(Cookie.get('_enttid_'));
         that.enttname = Cookie.get('_enttnm_');
 
-        that.getEntityWiseGroup();
+        that.getEntityWiseTeam();
     }
 
     // Auto Completed Entity
@@ -91,20 +91,20 @@ export class GroupWiseEmployeeComponent implements OnInit, OnDestroy {
         Cookie.set("_enttid_", this.enttid.toString());
         Cookie.set("_enttnm_", this.enttname);
 
-        this.getEntityWiseGroup();
+        this.getEntityWiseTeam();
     }
 
-    // View Group List
+    // View Team List
 
-    getEntityWiseGroup() {
+    getEntityWiseTeam() {
         var that = this;
         commonfun.loader();
 
-        that._rptservice.getGroupWiseEmployeeReports({
+        that._rptservice.getTeamWiseEmployeeReports({
             "flag": "group", "enttid": that.enttid, "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {
             try {
-                that.groupDT = data.data;
+                that.teamDT = data.data;
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -122,12 +122,12 @@ export class GroupWiseEmployeeComponent implements OnInit, OnDestroy {
 
     // View Employee List
 
-    getGroupWiseEmployee(row) {
+    getTeamWiseEmployeeReports(row) {
         var that = this;
 
         commonfun.loader("#ddlemp");
 
-        that._rptservice.getGroupWiseEmployeeReports({
+        that._rptservice.getTeamWiseEmployeeReports({
             "flag": "employee", "enttid": that.enttid, "grpid": row.grpid, "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {
             try {
@@ -157,7 +157,7 @@ export class GroupWiseEmployeeComponent implements OnInit, OnDestroy {
 
         that.employeeDT = [];
 
-        that._rptservice.getGroupWiseEmployeeReports({
+        that._rptservice.getTeamWiseEmployeeReports({
             "flag": "rtwise", "stpid": row.stpid, "enttid": row.schoolid, "rtid": row.rtid,
             "batchid": row.batchid, "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {
@@ -193,7 +193,7 @@ export class GroupWiseEmployeeComponent implements OnInit, OnDestroy {
 
         commonfun.loader("#exportemp");
 
-        that._rptservice.getGroupWiseEmployeeReports({
+        that._rptservice.getTeamWiseEmployeeReports({
             "flag": "export", "enttid": that.enttid, "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {
             try {

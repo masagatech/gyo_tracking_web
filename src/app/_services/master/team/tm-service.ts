@@ -3,14 +3,14 @@ import { DataService } from '../../dataconnect';
 import { Router } from '@angular/router';
 
 @Injectable()
-export class GroupService {
+export class TeamService {
     constructor(private _dataserver: DataService, private _router: Router) { }
 
-    getGroupDetails(req: any) {
-        return this._dataserver.post("getGroupDetails", req)
+    getTeamDetails(req: any) {
+        return this._dataserver.post("getTeamDetails", req)
     }
 
-    saveGroupInfo(req: any) {
-        return this._dataserver.post("saveGroupInfo", req)
+    saveTeamInfo(req: any) {
+        return this._dataserver.post("saveTeamInfo", req)
     }
 }

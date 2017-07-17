@@ -127,7 +127,7 @@ export class UnschedulePassengerComponent implements OnInit, OnDestroy {
         if (that.actviewrights === "view") {
             commonfun.loader();
 
-            that._rptservice.getGroupWiseEmployeeReports({
+            that._rptservice.getTeamWiseEmployeeReports({
                 "flag": "unschedule", "enttid": that.enttid, "wsautoid": that._wsdetails.wsautoid
             }).subscribe(data => {
                 try {

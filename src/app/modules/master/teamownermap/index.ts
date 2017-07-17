@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { AuthGuard } from '../../../_services/authguard-service';
 
 import { TeamOwnershipComponent } from './tmonrmap.comp';
-import { EmpGroupMapService, OwnershipTeamMapService } from '@services/master';
+import { TeamEmployeeMapService, TeamOwnershipMapService } from '@services/master';
 
 import { LazyLoadEvent, DataTableModule, AutoCompleteModule, FileUploadModule } from 'primeng/primeng';
 
@@ -29,7 +29,7 @@ export const routes = [
     CommonModule, FormsModule, RouterModule.forChild(routes), DataTableModule, AutoCompleteModule, FileUploadModule
   ],
 
-  providers: [AuthGuard, EmpGroupMapService, OwnershipTeamMapService]
+  providers: [AuthGuard, TeamEmployeeMapService, TeamOwnershipMapService]
 })
 
 export class TeamOwnershipMapModule {

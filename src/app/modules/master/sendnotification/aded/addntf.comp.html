@@ -19,10 +19,10 @@
                         <span class="material-icons inputserachico">search</span>
                     </div>
                 </div>
-                <div class="form-group" id="divGroup">
+                <div class="form-group" id="divTeam">
                     <div class="form-line">
                         <label class="control-label">Group Name <strong>*</strong></label>
-                        <p-autoComplete id="grpname" name="grpname" [(ngModel)]="grpname" [tabindex]="1" (onSelect)="selectGroupData($event)" [suggestions]="groupDT" (completeMethod)="getGroupData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete grpname"></p-autoComplete>
+                        <p-autoComplete id="grpname" name="grpname" [(ngModel)]="grpname" [tabindex]="1" (onSelect)="selectGroupData($event)" [suggestions]="teamDT" (completeMethod)="getGroupData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete grpname"></p-autoComplete>
                         <span class="material-icons inputserachico">search</span>
                     </div>
                 </div>

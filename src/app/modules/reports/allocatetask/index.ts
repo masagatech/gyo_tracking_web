@@ -6,7 +6,7 @@ import { AuthGuard } from '../../../_services/authguard-service';
 
 import { AllocateTaskComponent } from './rptat.comp';
 
-import { GroupService } from '@services/master';
+import { TeamService } from '@services/master';
 
 import { LazyLoadEvent, DataTableModule, AutoCompleteModule, FileUploadModule } from 'primeng/primeng';
 
@@ -30,7 +30,7 @@ export const routes = [
     CommonModule, FormsModule, RouterModule.forChild(routes), DataTableModule, AutoCompleteModule, FileUploadModule
   ],
 
-  providers: [AuthGuard, GroupService]
+  providers: [AuthGuard, TeamService]
 })
 
 export class AllocateTaskReportsModule {

@@ -17,7 +17,7 @@ export class AddMOMComponent implements OnInit, OnDestroy {
     validSuccess: Boolean = true;
 
     momid: number = 0;
-    groupdt: any = [];
+    teamDT: any = [];
     group: string = "";
     key: string = "";
     val: string = "";
@@ -56,7 +56,7 @@ export class AddMOMComponent implements OnInit, OnDestroy {
         var that = this;
 
         that._commonservice.getMOM({ "flag": "group" }).subscribe(data => {
-            that.groupdt = data.data;
+            that.teamDT = data.data;
         }, err => {
             that._message.Show(messageType.error, 'Error', err);
         }, () => {

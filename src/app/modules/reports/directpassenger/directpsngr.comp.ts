@@ -130,7 +130,7 @@ export class DirectPassengerComponent implements OnInit, OnDestroy {
     fillBatchDropDown() {
         var that = this;
 
-        that._rptservice.getGroupWiseEmployeeReports({
+        that._rptservice.getTeamWiseEmployeeReports({
             "flag": "batch",
             "id": that.enttid,
             "wsautoid": that._wsdetails.wsautoid
@@ -157,7 +157,7 @@ export class DirectPassengerComponent implements OnInit, OnDestroy {
         if (that.actviewrights === "view") {
             commonfun.loader();
 
-            that._rptservice.getGroupWiseEmployeeReports({
+            that._rptservice.getTeamWiseEmployeeReports({
                 "flag": "nortwise", "enttid": that.enttid, "batchid": that.batchid, "wsautoid": that._wsdetails.wsautoid
             }).subscribe(data => {
                 try {

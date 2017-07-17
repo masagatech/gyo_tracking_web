@@ -2,17 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { GroupService } from '@services/master';
+import { TeamService } from '@services/master';
 import { LazyLoadEvent } from 'primeng/primeng';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 @Component({
-    templateUrl: 'viewgrp.comp.html',
+    templateUrl: 'viewtm.comp.html',
     providers: [MenuService, CommonService]
 })
 
-export class ViewGroupComponent implements OnInit {
-    groupDT: any = [];
+export class ViewTeamComponent implements OnInit {
+    teamDT: any = [];
     loginUser: LoginUserModel;
 
     _wsdetails: any = [];
@@ -25,19 +25,19 @@ export class ViewGroupComponent implements OnInit {
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
-        private _loginservice: LoginService, private _grpservice: GroupService) 
+        private _loginservice: LoginService, private _tmservice: TeamService) 
         {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
 
-        this.getGroupDetails();
+        this.getTeamDetails();
     }
 
     public ngOnInit() {
 
     }
 
-    getGroupDetails() {
+    getTeamDetails() {
         var that = this;
         var params = {};
 
@@ -48,9 +48,9 @@ export class ViewGroupComponent implements OnInit {
             "wsautoid": this._wsdetails.wsautoid,
         }
 
-        that._grpservice.getGroupDetails(params).subscribe(data => {
+        that._tmservice.getTeamDetails(params).subscribe(data => {
             try {
-                that.groupDT = data.data;
+                that.teamDT = data.data;
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -66,11 +66,11 @@ export class ViewGroupComponent implements OnInit {
         })
     }
 
-    public addGroupForm() {
-        this._router.navigate(['/master/group/add']);
+    public addTeamForm() {
+        this._router.navigate(['/master/team/add']);
     }
 
-    public editGroupForm(row) {
-        this._router.navigate(['/master/group/edit', row.grpid]);
+    public editTeamForm(row) {
+        this._router.navigate(['/master/team/edit', row.grpid]);
     }
 }

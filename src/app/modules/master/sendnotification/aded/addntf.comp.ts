@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { EmpGroupMapService, NotificationService } from '@services/master';
+import { TeamEmployeeMapService, NotificationService } from '@services/master';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 declare var google: any;
@@ -21,7 +21,7 @@ export class AddNotificationComponent implements OnInit {
     enttid: number = 0;
     enttname: string = "";
 
-    groupDT: any = [];
+    teamDT: any = [];
     grpid: number = 0;
     grpname: string = "";
 
@@ -36,7 +36,7 @@ export class AddNotificationComponent implements OnInit {
     _wsdetails: any = [];
     private subscribeParameters: any;
 
-    constructor(private _egmservice: EmpGroupMapService, private _ntfservice: NotificationService, private _routeParams: ActivatedRoute,
+    constructor(private _temservice: TeamEmployeeMapService, private _ntfservice: NotificationService, private _routeParams: ActivatedRoute,
         private _router: Router, private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
@@ -89,7 +89,7 @@ export class AddNotificationComponent implements OnInit {
             "wsautoid": this._wsdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
-            this.groupDT = data.data;
+            this.teamDT = data.data;
         }, err => {
             this._msg.Show(messageType.error, "Error", err);
         }, () => {
@@ -102,16 +102,16 @@ export class AddNotificationComponent implements OnInit {
     selectGroupData(event) {
         this.grpid = event.value;
         this.grpname = event.label;
-        this.getGroupEmployee();
+        this.getTeamEmployeeMap();
     }
 
     // Get Group Employee Data
 
-    getGroupEmployee() {
+    getTeamEmployeeMap() {
         var that = this;
-        commonfun.loader("#divGroup");
+        commonfun.loader("#divTeam");
 
-        that._egmservice.getEmpGroupMap({
+        that._temservice.getTeamEmployeeMap({
             "flag": "edit",
             "enttid": that.enttid,
             "grpid": that.grpid,
@@ -133,11 +133,11 @@ export class AddNotificationComponent implements OnInit {
                 that._msg.Show(messageType.error, "Error", e);
             }
 
-            commonfun.loaderhide("#divGroup");
+            commonfun.loaderhide("#");
         }, err => {
             that._msg.Show(messageType.error, "Error", err);
             console.log(err);
-            commonfun.loaderhide("#divGroup");
+            commonfun.loaderhide("#divTeam");
         }, () => {
 
         })
