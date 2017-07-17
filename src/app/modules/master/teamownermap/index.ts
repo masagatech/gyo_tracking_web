@@ -32,6 +32,6 @@ export const routes = [
   providers: [AuthGuard, EmpGroupMapService, OwnershipTeamMapService]
 })
 
-export class OwnershipGroupMapModule {
+export class TeamOwnershipMapModule {
   public static routes = routes;
 }
