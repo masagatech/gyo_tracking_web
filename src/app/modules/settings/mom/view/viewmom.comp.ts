@@ -43,7 +43,7 @@ export class ViewMOMComponent implements OnInit, OnDestroy {
             "flag": "grid", "group": row.grpcd
         }).subscribe(data => {
             try {
-                that.headertitle = row.grpnm;
+                that.headertitle = row.tmnm;
                 that.momDT = data.data;
             }
             catch (e) {

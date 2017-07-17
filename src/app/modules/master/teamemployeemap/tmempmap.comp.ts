@@ -15,7 +15,7 @@ declare var google: any;
 export class TeamEmployeeMapComponent implements OnInit {
     loginUser: LoginUserModel;
 
-    egmid: number = 0;
+    temid: number = 0;
 
     entityDT: any = [];
     enttid: number = 0;
@@ -27,8 +27,8 @@ export class TeamEmployeeMapComponent implements OnInit {
     empname: string = "";
 
     teamDT: any = [];
-    grpid: number = 0;
-    grpname: string = "";
+    tmid: number = 0;
+    tmnm: string = "";
 
     _wsdetails: any = [];
     private subscribeParameters: any;
@@ -82,7 +82,7 @@ export class TeamEmployeeMapComponent implements OnInit {
         let query = event.query;
 
         this._autoservice.getAutoData({
-            "flag": "group",
+            "flag": "team",
             "uid": this.loginUser.uid,
             "ucode": this.loginUser.ucode,
             "utype": this.loginUser.utype,
@@ -101,8 +101,8 @@ export class TeamEmployeeMapComponent implements OnInit {
     // Selected Team
 
     selectTeamData(event) {
-        this.grpid = event.value;
-        this.grpname = event.label;
+        this.tmid = event.value;
+        this.tmnm = event.label;
 
         this.getTeamEmployeeMap();
     }
@@ -166,9 +166,9 @@ export class TeamEmployeeMapComponent implements OnInit {
 
         if (!duplicateEmployee) {
             that.employeeList.push({
-                "egmid": that.egmid,
+                "temid": that.temid,
                 "enttid": that.enttid, "enttname": that.enttname,
-                "grpid": that.grpid, "grpname": that.grpname,
+                "tmid": that.tmid, "tmnm": that.tmnm,
                 "empid": that.empid, "empname": that.empname,
                 "wsautoid": that._wsdetails.wsautoid, "isactive": true
             });
@@ -192,8 +192,8 @@ export class TeamEmployeeMapComponent implements OnInit {
     resetEmployeeFields() {
         var that = this;
 
-        that.grpid = 0;
-        that.grpname = "";
+        that.tmid = 0;
+        that.tmnm = "";
         that.empid = 0;
         that.empname = "";
         that.employeeList = [];
@@ -208,9 +208,9 @@ export class TeamEmployeeMapComponent implements OnInit {
             that._msg.Show(messageType.error, "Error", "Select Entity");
             $(".enttid").focus();
         }
-        else if (that.grpid == 0) {
+        else if (that.tmid == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Team Name");
-            $(".grpname").focus();
+            $(".tmnm").focus();
         }
         else if (that.employeeList.length == 0) {
             that._msg.Show(messageType.error, "Error", "Enter atleast 1 Employee");
@@ -220,12 +220,12 @@ export class TeamEmployeeMapComponent implements OnInit {
             commonfun.loader();
 
             var saveegm = {
-                "egmdata": that.employeeList
+                "temdata": that.employeeList
             }
 
             this._temservice.saveTeamEmployeeMap(saveegm).subscribe(data => {
                 try {
-                    var dataResult = data.data[0].funsave_empgroupmap;
+                    var dataResult = data.data[0].funsave_teamempmap;
                     var msg = dataResult.msg;
                     var msgid = dataResult.msgid;
 
@@ -261,7 +261,7 @@ export class TeamEmployeeMapComponent implements OnInit {
         that._temservice.getTeamEmployeeMap({
             "flag": "edit",
             "enttid": that.enttid,
-            "grpid": that.grpid,
+            "tmid": that.tmid,
             "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {
             try {

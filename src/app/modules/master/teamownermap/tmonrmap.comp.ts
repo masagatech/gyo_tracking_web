@@ -15,7 +15,7 @@ declare var google: any;
 export class TeamOwnershipComponent implements OnInit {
     loginUser: LoginUserModel;
 
-    egmid: number = 0;
+    tomid: number = 0;
 
     entityDT: any = [];
     enttid: number = 0;
@@ -29,8 +29,8 @@ export class TeamOwnershipComponent implements OnInit {
     onrname: string = "";
 
     teamDT: any = [];
-    grpid: number = 0;
-    grpname: string = "";
+    tmid: number = 0;
+    tmnm: string = "";
 
     _wsdetails: any = [];
     private subscribeParameters: any;
@@ -84,7 +84,7 @@ export class TeamOwnershipComponent implements OnInit {
         let query = event.query;
 
         this._autoservice.getAutoData({
-            "flag": "group",
+            "flag": "team",
             "uid": this.loginUser.uid,
             "ucode": this.loginUser.ucode,
             "utype": this.loginUser.utype,
@@ -103,8 +103,8 @@ export class TeamOwnershipComponent implements OnInit {
     // Selected Team
 
     selectTeamData(event) {
-        this.grpid = event.value;
-        this.grpname = event.label;
+        this.tmid = event.value;
+        this.tmnm = event.label;
 
         this.getTeamEmployeeMap();
         this.getTeamOwnershipMap();
@@ -119,7 +119,7 @@ export class TeamOwnershipComponent implements OnInit {
         that._temservice.getTeamEmployeeMap({
             "flag": "edit",
             "enttid": that.enttid,
-            "grpid": that.grpid,
+            "tmid": that.tmid,
             "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {
             try {
@@ -128,10 +128,10 @@ export class TeamOwnershipComponent implements OnInit {
                 }
                 else {
                     that._msg.Show(messageType.error, "Error", "There are no Employee");
-                    that.grpid = 0;
-                    that.grpname = "";
+                    that.tmid = 0;
+                    that.tmnm = "";
                     that.employeeList = [];
-                    $(".grpname input").focus();
+                    $(".tmnm input").focus();
                 }
             }
             catch (e) {
@@ -207,9 +207,9 @@ export class TeamOwnershipComponent implements OnInit {
 
         if (!duplicateOwnership) {
             that.ownershipList.push({
-                "ogmid": that.egmid,
+                "tomid": that.tomid,
                 "enttid": that.enttid, "enttname": that.enttname,
-                "grpid": that.grpid, "grpname": that.grpname,
+                "tmid": that.tmid, "tmnm": that.tmnm,
                 "onrid": that.onrid, "onrname": that.onrname,
                 "wsautoid": that._wsdetails.wsautoid, "isactive": true
             });
@@ -233,8 +233,8 @@ export class TeamOwnershipComponent implements OnInit {
     resetOwnershipFields() {
         var that = this;
 
-        that.grpid = 0;
-        that.grpname = "";
+        that.tmid = 0;
+        that.tmnm = "";
         that.onrid = 0;
         that.onrname = "";
         that.employeeList = [];
@@ -250,9 +250,9 @@ export class TeamOwnershipComponent implements OnInit {
             that._msg.Show(messageType.error, "Error", "Select Entity");
             $(".enttid").focus();
         }
-        else if (that.grpid == 0) {
+        else if (that.tmid == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Team Name");
-            $(".grpname").focus();
+            $(".tmnm").focus();
         }
         else if (that.employeeList.length == 0) {
             that._msg.Show(messageType.error, "Error", "Enter atleast 1 Ownership");
@@ -262,12 +262,12 @@ export class TeamOwnershipComponent implements OnInit {
             commonfun.loader();
 
             var saveogm = {
-                "ogmdata": that.ownershipList
+                "tomdata": that.ownershipList
             }
 
             this._tomservice.saveTeamOwnershipMap(saveogm).subscribe(data => {
                 try {
-                    var dataResult = data.data[0].funsave_onrgroupmap;
+                    var dataResult = data.data[0].funsave_teamownermap;
                     var msg = dataResult.msg;
                     var msgid = dataResult.msgid;
 
@@ -303,7 +303,7 @@ export class TeamOwnershipComponent implements OnInit {
         that._tomservice.getTeamOwnershipMap({
             "flag": "edit",
             "enttid": that.enttid,
-            "grpid": that.grpid,
+            "tmid": that.tmid,
             "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {
             try {

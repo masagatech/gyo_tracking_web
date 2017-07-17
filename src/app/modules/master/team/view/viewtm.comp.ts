@@ -25,8 +25,7 @@ export class ViewTeamComponent implements OnInit {
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
-        private _loginservice: LoginService, private _tmservice: TeamService) 
-        {
+        private _loginservice: LoginService, private _tmservice: TeamService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
 
@@ -71,6 +70,6 @@ export class ViewTeamComponent implements OnInit {
     }
 
     public editTeamForm(row) {
-        this._router.navigate(['/master/team/edit', row.grpid]);
+        this._router.navigate(['/master/team/edit', row.tmid]);
     }
 }

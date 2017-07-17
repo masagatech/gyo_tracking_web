@@ -18,8 +18,8 @@ export class AddTeamComponent implements OnInit {
 
     _wsdetails: any = [];
 
-    grpid: number = 0;
-    grpnm: string = "";
+    tmid: number = 0;
+    tmnm: string = "";
     purpose: string = "";
     remark: string = "";
 
@@ -46,8 +46,8 @@ export class AddTeamComponent implements OnInit {
     // Clear Fields
 
     resetTeamFields() {
-        this.grpid = 0;
-        this.grpnm = "";
+        this.tmid = 0;
+        this.tmnm = "";
         this.purpose = "";
         this.remark = "";
     }
@@ -57,9 +57,9 @@ export class AddTeamComponent implements OnInit {
     saveTeamInfo() {
         var that = this;
 
-        if (that.grpnm == "") {
+        if (that.tmnm == "") {
             that._msg.Show(messageType.error, "Error", "Enter Team Title");
-            $(".grpnm").focus();
+            $(".tmnm").focus();
         }
         else if (that.purpose == "") {
             that._msg.Show(messageType.error, "Error", "Enter Purpose");
@@ -69,8 +69,8 @@ export class AddTeamComponent implements OnInit {
             commonfun.loader();
 
             var saveTeam = {
-                "grpid": that.grpid,
-                "grpnm": that.grpnm,
+                "tmid": that.tmid,
+                "tmnm": that.tmnm,
                 "purpose": that.purpose,
                 "cuid": that.loginUser.ucode,
                 "wsautoid": that._wsdetails.wsautoid,
@@ -80,9 +80,9 @@ export class AddTeamComponent implements OnInit {
 
             that._tmservice.saveTeamInfo(saveTeam).subscribe(data => {
                 try {
-                    var dataResult = data.data;
-                    var msg = dataResult[0].funsave_Teaminfo.msg;
-                    var msgid = dataResult[0].funsave_Teaminfo.msgid;
+                    var dataResult = data.data[0].funsave_teaminfo;
+                    var msg = dataResult.msg;
+                    var msgid = dataResult.msgid;
 
                     if (msgid != "-1") {
                         that._msg.Show(messageType.success, "Success", msg);
@@ -123,18 +123,18 @@ export class AddTeamComponent implements OnInit {
 
         that.subscribeParameters = that._routeParams.params.subscribe(params => {
             if (params['id'] !== undefined) {
-                that.grpid = params['id'];
+                that.tmid = params['id'];
 
                 params = {
                     "flag": "edit",
-                    "grpid": that.grpid,
+                    "tmid": that.tmid,
                     "wsautoid": that._wsdetails.wsautoid
                 }
 
                 that._tmservice.getTeamDetails(params).subscribe(data => {
                     try {
-                        that.grpid = data.data[0].grpid;
-                        that.grpnm = data.data[0].grpnm;
+                        that.tmid = data.data[0].tmid;
+                        that.tmnm = data.data[0].tmnm;
                         that.purpose = data.data[0].purpose;
                     }
                     catch (e) {
@@ -160,6 +160,6 @@ export class AddTeamComponent implements OnInit {
     // Back For View Data
 
     backViewData() {
-        this._router.navigate(['/master/Team']);
+        this._router.navigate(['/master/team']);
     }
 }

@@ -27,7 +27,7 @@ export class TeamWiseEmployeeComponent implements OnInit, OnDestroy {
     teamDT: any = [];
     employeeDT: any = [];
 
-    grpname: string = "";
+    tmnm: string = "";
     empname: string = "";
 
     @ViewChild('grpwiseemp') grpwiseemp: ElementRef;
@@ -128,7 +128,7 @@ export class TeamWiseEmployeeComponent implements OnInit, OnDestroy {
         commonfun.loader("#ddlemp");
 
         that._rptservice.getTeamWiseEmployeeReports({
-            "flag": "employee", "enttid": that.enttid, "grpid": row.grpid, "wsautoid": that._wsdetails.wsautoid
+            "flag": "employee", "enttid": that.enttid, "tmid": row.tmid, "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {
             try {
                 row.empDT = data.data;
@@ -164,12 +164,12 @@ export class TeamWiseEmployeeComponent implements OnInit, OnDestroy {
             try {
                 if (data.data.length > 0) {
                     that.employeeDT = data.data;
-                    that.grpname = data.data[0].grpname;
+                    that.tmnm = data.data[0].tmnm;
                     that.empname = data.data[0].empname;
                 }
                 else {
                     that.employeeDT = [];
-                    that.grpname = "";
+                    that.tmnm = "";
                     that.empname = "";
                 }
             }

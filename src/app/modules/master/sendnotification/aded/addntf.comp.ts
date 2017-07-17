@@ -22,8 +22,8 @@ export class AddNotificationComponent implements OnInit {
     enttname: string = "";
 
     teamDT: any = [];
-    grpid: number = 0;
-    grpname: string = "";
+    tmid: number = 0;
+    tmnm: string = "";
 
     employeeDT: any = [];
     empid: number = 0;
@@ -100,8 +100,8 @@ export class AddNotificationComponent implements OnInit {
     // Selected Group
 
     selectGroupData(event) {
-        this.grpid = event.value;
-        this.grpname = event.label;
+        this.tmid = event.value;
+        this.tmnm = event.label;
         this.getTeamEmployeeMap();
     }
 
@@ -114,7 +114,7 @@ export class AddNotificationComponent implements OnInit {
         that._temservice.getTeamEmployeeMap({
             "flag": "edit",
             "enttid": that.enttid,
-            "grpid": that.grpid,
+            "tmid": that.tmid,
             "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {
             try {
@@ -123,10 +123,10 @@ export class AddNotificationComponent implements OnInit {
                 }
                 else {
                     that._msg.Show(messageType.error, "Error", "There are no Employee");
-                    that.grpid = 0;
-                    that.grpname = "";
+                    that.tmid = 0;
+                    that.tmnm = "";
                     that.employeeList = [];
-                    $(".grpname input").focus();
+                    $(".tmnm input").focus();
                 }
             }
             catch (e) {
@@ -157,8 +157,8 @@ export class AddNotificationComponent implements OnInit {
     resetNotificationFields() {
         var that = this;
 
-        that.grpid = 0;
-        that.grpname = "";
+        that.tmid = 0;
+        that.tmnm = "";
         that.empid = 0;
         that.empname = "";
         that.msg = "";
@@ -199,9 +199,9 @@ export class AddNotificationComponent implements OnInit {
             that._msg.Show(messageType.error, "Error", "Enter Entity");
             $(".empname input").focus();
         }
-        else if (that.grpid == 0) {
+        else if (that.tmid == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Group");
-            $(".grpname input").focus();
+            $(".tmnm input").focus();
         }
         else if (that.msg == "") {
             that._msg.Show(messageType.error, "Error", "Enter Message");
@@ -223,7 +223,7 @@ export class AddNotificationComponent implements OnInit {
                 var saveemp = {
                     "ntfid": that.ntfid,
                     "enttid": that.enttid,
-                    "grpid": that.grpid,
+                    "tmid": that.tmid,
                     "empid": selemplist,
                     "msg": that.msg,
                     "cuid": that.loginUser.ucode,
@@ -283,8 +283,8 @@ export class AddNotificationComponent implements OnInit {
                 }).subscribe(data => {
                     try {
                         that.ntfid = data.data[0].ntfid;
-                        that.grpid = data.data[0].grpid;
-                        that.grpname = data.data[0].grpname;
+                        that.tmid = data.data[0].tmid;
+                        that.tmnm = data.data[0].tmnm;
                         that.empid = data.data[0].empid;
                         that.empname = data.data[0].empname;
                         that.msg = data.data[0].msg;
