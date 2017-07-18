@@ -11,14 +11,14 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 })
 
 export class ViewStatusComponent implements OnInit {
-    StatusDT: any = [];
+    statusDT: any = [];
     loginUser: LoginUserModel;
 
     _wsdetails: any = [];
 
     entityDT: any = [];
-    entityid: number = 0;
-    entityname: string = "";
+    enttid: number = 0;
+    enttname: string = "";
 
     global = new Globals();
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
@@ -27,11 +27,55 @@ export class ViewStatusComponent implements OnInit {
         private _loginservice: LoginService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
-        this.getStatusDetails();
+        this.viewStatusDataRights();
     }
 
     public ngOnInit() {
 
+    }
+
+    // Auto Completed Entity
+
+    getEntityData(event) {
+        let query = event.query;
+
+        this._autoservice.getAutoData({
+            "flag": "entity",
+            "uid": this.loginUser.uid,
+            "ucode": this.loginUser.ucode,
+            "utype": this.loginUser.utype,
+            "issysadmin": this.loginUser.issysadmin,
+            "wsautoid": this._wsdetails.wsautoid,
+            "search": query
+        }).subscribe((data) => {
+            this.entityDT = data.data;
+        }, err => {
+            this._msg.Show(messageType.error, "Error", err);
+        }, () => {
+
+        });
+    }
+
+    // Selected Entity
+
+    selectEntityData(event) {
+        this.enttid = event.value;
+        this.enttname = event.label;
+
+        Cookie.set("_enttid_", this.enttid.toString());
+        Cookie.set("_enttnm_", this.enttname);
+
+        this.getStatusDetails();
+    }
+
+    public viewStatusDataRights() {
+        var that = this;
+
+        if (Cookie.get('_enttnm_') != null) {
+            that.enttid = parseInt(Cookie.get('_enttid_'));
+            that.enttname = Cookie.get('_enttnm_');
+            that.getStatusDetails();
+        }
     }
 
     getStatusDetails() {
@@ -43,12 +87,13 @@ export class ViewStatusComponent implements OnInit {
         params = {
             "flag": "all",
             "group": "taskstatus",
-            "wsautoid": this._wsdetails.wsautoid,
+            "enttid": that.enttid,
+            "wsautoid": that._wsdetails.wsautoid
         }
 
         that._autoservice.getMOM(params).subscribe(data => {
             try {
-                that.StatusDT = data.data;
+                that.statusDT = data.data;
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -69,6 +114,6 @@ export class ViewStatusComponent implements OnInit {
     }
 
     public editStatusForm(row) {
-        this._router.navigate(['/master/status/edit', row.statusid]);
+        this._router.navigate(['/master/status/edit', row.autoid]);
     }
 }

@@ -15,7 +15,7 @@ declare var commonfun: any;
 export class AddStatusComponent implements OnInit {
     loginUser: LoginUserModel;
 
-   entityDT: any = [];
+    entityDT: any = [];
     enttid: number = 0;
     enttname: string = "";
 
@@ -23,20 +23,19 @@ export class AddStatusComponent implements OnInit {
 
     statusid: number = 0;
     statusnm: string = "";
-    purpose: string = "";
+    ordno: number = 0;
     remark: string = "";
 
-   mode: string = "";
+    mode: string = "";
     isactive: boolean = true;
 
     private subscribeParameters: any;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
-     private _autoservice: CommonService) 
-        {
+        private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
-        }
+    }
 
     public ngOnInit() {
         setTimeout(function () {
@@ -51,7 +50,7 @@ export class AddStatusComponent implements OnInit {
     resetStatusFields() {
         this.statusid = 0;
         this.statusnm = "";
-        this.purpose = "";
+        this.ordno = 0;
         this.remark = "";
     }
 
@@ -93,25 +92,29 @@ export class AddStatusComponent implements OnInit {
             that._msg.Show(messageType.error, "Error", "Enter Status Title");
             $(".statusnm").focus();
         }
-        else if (that.purpose == "") {
-            that._msg.Show(messageType.error, "Error", "Enter Purpose");
-            $(".enttname input").focus();
+        else if (that.ordno == 0) {
+            that._msg.Show(messageType.error, "Error", "Enter Order No");
+            $(".ordno input").focus();
         }
         else {
             commonfun.loader();
 
             var saveStatus = {
-                "statusid": that.statusid,
-                "statusnm": that.statusnm,
+                "autoid": that.statusid,
+                "key": that.statusnm,
+                "val": that.statusnm,
+                "ordno": that.ordno,
+                "group": "taskstatus",
                 "cuid": that.loginUser.ucode,
+                "enttid": that.enttid,
                 "wsautoid": that._wsdetails.wsautoid,
                 "isactive": that.isactive,
                 "mode": ""
             }
 
-           this._autoservice.saveMOM(saveStatus).subscribe(data => {
+            this._autoservice.saveMOM(saveStatus).subscribe(data => {
                 try {
-                    var dataResult = data.data[0].funsave_Statusinfo;
+                    var dataResult = data.data[0].funsave_mom;
                     var msg = dataResult.msg;
                     var msgid = dataResult.msgid;
 
@@ -157,16 +160,20 @@ export class AddStatusComponent implements OnInit {
                 that.statusid = params['id'];
 
                 params = {
-                    "flag": "edit",
-                    "statusid": that.statusid,
+                    "flag": "id",
+                    "group": "taskstatus",
+                    "id": that.statusid,
                     "wsautoid": that._wsdetails.wsautoid
                 }
 
                 that._autoservice.getMOM(params).subscribe(data => {
                     try {
-                        that.statusid = data.data[0].statusid;
-                        that.statusnm = data.data[0].statusnm;
-                        that.purpose = data.data[0].purpose;
+                        that.enttid = data.data[0].enttid;
+                        that.enttname = data.data[0].enttname;
+                        that.statusid = data.data[0].autoid;
+                        that.statusnm = data.data[0].val;
+                        that.ordno = data.data[0].ordno;
+                        that.enttid = data.data[0].enttid;
                     }
                     catch (e) {
                         that._msg.Show(messageType.error, "Error", e);
