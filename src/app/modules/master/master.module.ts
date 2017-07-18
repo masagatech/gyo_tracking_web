@@ -20,6 +20,7 @@ export const routes = [
                     { path: 'holiday', loadChildren: './holiday#HolidayModule' },
                     { path: 'user', loadChildren: './users#UserModule' },
                     { path: 'location', loadChildren: './location#LocationModule' },
+                    { path: 'status', loadChildren: './status#StatusModule' },
 
                     { path: 'team', loadChildren: './team#TeamModule' },
                     { path: 'employee', loadChildren: './employee#EmployeeModule' },
