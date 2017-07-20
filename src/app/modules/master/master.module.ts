@@ -22,6 +22,7 @@ export const routes = [
                     { path: 'location', loadChildren: './location#LocationModule' },
                     { path: 'status', loadChildren: './status#StatusModule' },
 
+                    { path: 'tag', loadChildren: './tag#TagModule' },
                     { path: 'team', loadChildren: './team#TeamModule' },
                     { path: 'employee', loadChildren: './employee#EmployeeModule' },
                     { path: 'teamemployeemap', loadChildren: './teamemployeemap#TeamEmployeeMapModule' },
