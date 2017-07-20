@@ -15,12 +15,17 @@ declare var commonfun: any;
 
 export class AddTagComponent implements OnInit {
     loginUser: LoginUserModel;
-
     _wsdetails: any = [];
+
+    entityDT: any = [];
+    enttid: number = 0;
+    enttname: string = "";
 
     tagid: number = 0;
     tagnm: string = "";
-    remark: string = "";
+    remark1: string = "";
+    remark2: string = "";
+    remark3: string = "";
 
     mode: string = "";
     isactive: boolean = true;
@@ -28,11 +33,10 @@ export class AddTagComponent implements OnInit {
     private subscribeParameters: any;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
-        private _tagservice: TagService, private _autoservice: CommonService) 
-        {
+        private _tagservice: TagService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
-        }
+    }
 
     public ngOnInit() {
         setTimeout(function () {
@@ -42,12 +46,43 @@ export class AddTagComponent implements OnInit {
         this.getTagDetails();
     }
 
+    // Auto Completed Entity
+
+    getEntityData(event) {
+        let query = event.query;
+
+        this._autoservice.getAutoData({
+            "flag": "entity",
+            "uid": this.loginUser.uid,
+            "ucode": this.loginUser.ucode,
+            "utype": this.loginUser.utype,
+            "issysadmin": this.loginUser.issysadmin,
+            "wsautoid": this._wsdetails.wsautoid,
+            "search": query
+        }).subscribe((data) => {
+            this.entityDT = data.data;
+        }, err => {
+            this._msg.Show(messageType.error, "Error", err);
+        }, () => {
+
+        });
+    }
+
+    // Selected Entity
+
+    selectEntityData(event) {
+        this.enttid = event.value;
+        this.enttname = event.label;
+    }
+
     // Clear Fields
 
     resetTagFields() {
         this.tagid = 0;
         this.tagnm = "";
-        this.remark = "";
+        this.remark1 = "";
+        this.remark2 = "";
+        this.remark3 = "";
     }
 
     // Save Data
@@ -55,11 +90,15 @@ export class AddTagComponent implements OnInit {
     saveTagInfo() {
         var that = this;
 
-        if (that.tagnm == "") {
+        if (that.enttid == 0) {
+            that._msg.Show(messageType.error, "Error", "Enter Entity Name");
+            $(".enttname input").focus();
+        }
+        else if (that.tagnm == "") {
             that._msg.Show(messageType.error, "Error", "Enter Tag Name");
             $(".tagnm").focus();
         }
-        else if (that.remark == "") {
+        else if (that.remark1 == "") {
             that._msg.Show(messageType.error, "Error", "Enter Remark");
             $(".enttname input").focus();
         }
@@ -69,6 +108,10 @@ export class AddTagComponent implements OnInit {
             var saveTag = {
                 "tagid": that.tagid,
                 "tagnm": that.tagnm,
+                "enttid": that.enttid,
+                "remark1": that.remark1,
+                "remark2": that.remark2,
+                "remark3": that.remark3,
                 "cuid": that.loginUser.ucode,
                 "wsautoid": that._wsdetails.wsautoid,
                 "isactive": that.isactive,
@@ -77,7 +120,7 @@ export class AddTagComponent implements OnInit {
 
             that._tagservice.saveTagInfo(saveTag).subscribe(data => {
                 try {
-                    var dataResult = data.data[0].funsave_Taginfo;
+                    var dataResult = data.data[0].funsave_taginfo;
                     var msg = dataResult.msg;
                     var msgid = dataResult.msgid;
 
@@ -132,6 +175,11 @@ export class AddTagComponent implements OnInit {
                     try {
                         that.tagid = data.data[0].tagid;
                         that.tagnm = data.data[0].tagnm;
+                        that.enttid = data.data[0].enttid;
+                        that.enttname = data.data[0].enttname;
+                        that.remark1 = data.data[0].remark1;
+                        that.remark2 = data.data[0].remark2;
+                        that.remark3 = data.data[0].remark3;
                     }
                     catch (e) {
                         that._msg.Show(messageType.error, "Error", e);

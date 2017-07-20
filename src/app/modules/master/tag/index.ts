@@ -14,7 +14,7 @@ import { LazyLoadEvent, DataTableModule, AutoCompleteModule, FileUploadModule } 
 export const routes = [
   {
     path: '', children: [
-      { path: '', component: ViewTagComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "tag", "rights": "view", "urlname": "/Tag" } },
+      { path: '', component: ViewTagComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "tag", "rights": "view", "urlname": "/tag" } },
       { path: 'add', component: AddTagComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "tag", "rights": "add", "urlname": "/add" } },
       { path: 'details/:id', component: AddTagComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "tag", "rights": "edit", "urlname": "/edit" } },
       { path: 'edit/:id', component: AddTagComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "tag", "rights": "edit", "urlname": "/edit" } }

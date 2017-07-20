@@ -18,14 +18,14 @@ export class ViewTagComponent implements OnInit {
     _wsdetails: any = [];
 
     entityDT: any = [];
-    entityid: number = 0;
-    entityname: string = "";
+    enttid: number = 0;
+    enttname: string = "";
 
     global = new Globals();
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
 
-    constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
-        private _loginservice: LoginService, private _tmservice: TagService) {
+    constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
+        private _tmservice: TagService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
 
@@ -36,6 +36,37 @@ export class ViewTagComponent implements OnInit {
 
     }
 
+    // Auto Completed Entity
+
+    getEntityData(event) {
+        let query = event.query;
+
+        this._autoservice.getAutoData({
+            "flag": "entity",
+            "uid": this.loginUser.uid,
+            "ucode": this.loginUser.ucode,
+            "utype": this.loginUser.utype,
+            "issysadmin": this.loginUser.issysadmin,
+            "wsautoid": this._wsdetails.wsautoid,
+            "search": query
+        }).subscribe((data) => {
+            this.entityDT = data.data;
+        }, err => {
+            this._msg.Show(messageType.error, "Error", err);
+        }, () => {
+
+        });
+    }
+
+    // Selected Entity
+
+    selectEntityData(event) {
+        this.enttid = event.value;
+        this.enttname = event.label;
+
+        this.getTagDetails();
+    }
+
     getTagDetails() {
         var that = this;
         var params = {};
@@ -44,7 +75,8 @@ export class ViewTagComponent implements OnInit {
 
         params = {
             "flag": "all",
-            "wsautoid": this._wsdetails.wsautoid,
+            "enttid": that.enttid,
+            "wsautoid": that._wsdetails.wsautoid
         }
 
         that._tmservice.getTagDetails(params).subscribe(data => {
