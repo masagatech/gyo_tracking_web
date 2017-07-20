@@ -31,6 +31,7 @@ export class AddNotificationComponent implements OnInit {
 
     employeeList: any = [];
 
+    title: string = "";
     msg: string = "";
 
     _wsdetails: any = [];
@@ -79,13 +80,13 @@ export class AddNotificationComponent implements OnInit {
         this.enttname = event.label;
     }
 
-    // Auto Completed Group
+    // Auto Completed Team
 
-    getGroupData(event) {
+    getTeamData(event) {
         let query = event.query;
 
         this._autoservice.getAutoData({
-            "flag": "group",
+            "flag": "team",
             "wsautoid": this._wsdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
@@ -97,15 +98,15 @@ export class AddNotificationComponent implements OnInit {
         });
     }
 
-    // Selected Group
+    // Selected Team
 
-    selectGroupData(event) {
+    selectTeamData(event) {
         this.tmid = event.value;
         this.tmnm = event.label;
         this.getTeamEmployeeMap();
     }
 
-    // Get Group Employee Data
+    // Get Team Employee Data
 
     getTeamEmployeeMap() {
         var that = this;
@@ -133,7 +134,7 @@ export class AddNotificationComponent implements OnInit {
                 that._msg.Show(messageType.error, "Error", e);
             }
 
-            commonfun.loaderhide("#");
+            commonfun.loaderhide("#divTeam");
         }, err => {
             that._msg.Show(messageType.error, "Error", err);
             console.log(err);
@@ -161,6 +162,7 @@ export class AddNotificationComponent implements OnInit {
         that.tmnm = "";
         that.empid = 0;
         that.empname = "";
+        that.title = "";
         that.msg = "";
         that.employeeList = [];
     }
@@ -200,8 +202,12 @@ export class AddNotificationComponent implements OnInit {
             $(".empname input").focus();
         }
         else if (that.tmid == 0) {
-            that._msg.Show(messageType.error, "Error", "Enter Group");
+            that._msg.Show(messageType.error, "Error", "Enter Team");
             $(".tmnm input").focus();
+        }
+        else if (that.title == "") {
+            that._msg.Show(messageType.error, "Error", "Enter Title");
+            $(".title").focus();
         }
         else if (that.msg == "") {
             that._msg.Show(messageType.error, "Error", "Enter Message");
@@ -225,6 +231,7 @@ export class AddNotificationComponent implements OnInit {
                     "enttid": that.enttid,
                     "tmid": that.tmid,
                     "empid": selemplist,
+                    "title": that.title,
                     "msg": that.msg,
                     "cuid": that.loginUser.ucode,
                     "wsautoid": that._wsdetails.wsautoid
@@ -274,7 +281,7 @@ export class AddNotificationComponent implements OnInit {
 
         that.subscribeParameters = that._routeParams.params.subscribe(params => {
             if (params['id'] !== undefined) {
-                that.empid = params['id'];
+                that.ntfid = params['id'];
 
                 that._ntfservice.getNotification({
                     "flag": "edit",
@@ -283,10 +290,14 @@ export class AddNotificationComponent implements OnInit {
                 }).subscribe(data => {
                     try {
                         that.ntfid = data.data[0].ntfid;
+                        that.enttid = data.data[0].enttid;
+                        that.enttname = data.data[0].enttname;
                         that.tmid = data.data[0].tmid;
                         that.tmnm = data.data[0].tmnm;
-                        that.empid = data.data[0].empid;
-                        that.empname = data.data[0].empname;
+                        // that.employeeList = data.data[0].empdata;
+                        that.getTeamEmployeeMap();
+
+                        that.title = data.data[0].title;
                         that.msg = data.data[0].msg;
                     }
                     catch (e) {
@@ -317,6 +328,6 @@ export class AddNotificationComponent implements OnInit {
     // Back For View Data
 
     backViewData() {
-        this._router.navigate(['/master/sendnotification']);
+        this._router.navigate(['/master/notification']);
     }
 }

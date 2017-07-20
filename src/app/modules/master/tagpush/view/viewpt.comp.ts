@@ -2,16 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { NotificationService } from '@services/master';
+import { PushTagService } from '@services/master';
 import { LazyLoadEvent } from 'primeng/primeng';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 @Component({
-    templateUrl: 'viewntf.comp.html',
+    templateUrl: 'viewpt.comp.html',
     providers: [CommonService]
 })
 
-export class ViewNotificationComponent implements OnInit {
+export class ViewPushTagComponent implements OnInit {
     notificationDT: any = [];
     loginUser: LoginUserModel;
 
@@ -22,22 +22,22 @@ export class ViewNotificationComponent implements OnInit {
     entityname: string = "";
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
-        private _loginservice: LoginService, private _autoservice: CommonService, private _ntfservice: NotificationService) {
+        private _loginservice: LoginService, private _autoservice: CommonService, private _ptservice: PushTagService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
 
-        this.getNotification();
+        this.getPushTagDetails();
     }
 
     public ngOnInit() {
 
     }
 
-    getNotification() {
+    getPushTagDetails() {
         var that = this;
         commonfun.loader();
 
-        that._ntfservice.getNotification({ "flag": "all", "wsautoid": that._wsdetails.wsautoid }).subscribe(data => {
+        that._ptservice.getPushTagDetails({ "flag": "all", "wsautoid": that._wsdetails.wsautoid }).subscribe(data => {
             try {
                 that.notificationDT = data.data;
             }
@@ -55,11 +55,11 @@ export class ViewNotificationComponent implements OnInit {
         })
     }
 
-    public addNotification() {
-        this._router.navigate(['/master/notification/add']);
+    public addPushTag() {
+        this._router.navigate(['/master/pushtag/add']);
     }
 
-    public editNotification(row) {
-        this._router.navigate(['/master/notification/edit', row.ntfid]);
+    public editPushTag(row) {
+        this._router.navigate(['/master/pushtag/edit', row.ptid]);
     }
 }

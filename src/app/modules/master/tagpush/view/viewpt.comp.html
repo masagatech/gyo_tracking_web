@@ -2,12 +2,12 @@
     <div class="header">
         <div class="row clearfix">
             <div class="col-md-2">
-                <h4>Notification</h4>
+                <h4>Push Tag</h4>
             </div>
             <div class="col-md-9 col-xs-9">
             </div>
             <div class="col-md-1 col-xs-1" align="right">
-                <button type="button" class="btn btn-theme btn-xs" (click)="addNotification()">
+                <button type="button" class="btn btn-theme btn-xs" (click)="addPushTag()">
                     <i class="material-icons">add</i></button>
             </div>
         </div>
@@ -16,14 +16,14 @@
     <div class="body no-padding">
         <div class="row clearfix">
             <div class="col-md-12">
-                <p-dataTable [value]="notificationDT" [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,30,40]">
+                <p-dataTable [value]="pushtagDT" [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,30,40]">
                     <p-column field="empname" header="Employee Name" [style]="{'width':'200px','text-align':'left'}"></p-column>
                     <p-column field="task" header="Task" [style]="{'text-align':'left'}"></p-column>
                     <p-column field="frmtm" header="From Time" [style]="{'width':'100px', 'text-align':'left'}"></p-column>
                     <p-column field="totm" header="To Time" [style]="{'width':'100px', 'text-align':'left'}"></p-column>
                     <p-column [style]="{'width': '50px', 'align': 'left'}">
                         <template let-row="rowData" pTemplate type="body">
-                            <button type="button" class="btn btn-theme btn-xs" (click)="editNotification(row)">
+                            <button type="button" class="btn btn-theme btn-xs" (click)="editPushTag(row)">
                                 <i class="material-icons">edit</i>
                             </button>
                         </template>

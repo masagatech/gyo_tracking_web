@@ -186,7 +186,7 @@ export class AddWorkspaceComponent implements OnInit {
         })
     }
 
-    // File upload
+    // File Upload
 
     getUploadConfig() {
         var that = this;

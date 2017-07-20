@@ -23,13 +23,14 @@ export const routes = [
                     { path: 'status', loadChildren: './status#StatusModule' },
 
                     { path: 'tag', loadChildren: './tag#TagModule' },
+                    { path: 'pushtag', loadChildren: './tagpush#TagPushModule' },
                     { path: 'team', loadChildren: './team#TeamModule' },
                     { path: 'employee', loadChildren: './employee#EmployeeModule' },
                     { path: 'teamemployeemap', loadChildren: './teamemployeemap#TeamEmployeeMapModule' },
                     { path: 'teamownershipmap', loadChildren: './teamownermap#TeamOwnershipMapModule' },
                     
                     { path: 'allocatetask', loadChildren: './allocatetask#AllocateTaskModule' },
-                    { path: 'sendnotification', loadChildren: './sendnotification#SendNotificationModule' },
+                    { path: 'notification', loadChildren: './notification#NotificationModule' },
                 ]
             }
         ]

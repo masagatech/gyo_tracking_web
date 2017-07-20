@@ -15,8 +15,12 @@ export const routes = [
   {
     path: '', children: [
       {
-        path: '', component: AddNotificationComponent, canActivate: [AuthGuard],
-        data: { "module": "pentt", "submodule": "ntf", "rights": "view", "urlname": "/sendnotification" }
+        path: '', component: ViewNotificationComponent, canActivate: [AuthGuard],
+        data: { "module": "pentt", "submodule": "ntf", "rights": "view", "urlname": "/notification" }
+      },
+      {
+        path: 'add', component: AddNotificationComponent, canActivate: [AuthGuard],
+        data: { "module": "pentt", "submodule": "ntf", "rights": "add", "urlname": "/add" }
       }
     ]
   },
@@ -35,6 +39,6 @@ export const routes = [
   providers: [AuthGuard, TeamEmployeeMapService, NotificationService]
 })
 
-export class SendNotificationModule {
+export class NotificationModule {
   public static routes = routes;
 }
