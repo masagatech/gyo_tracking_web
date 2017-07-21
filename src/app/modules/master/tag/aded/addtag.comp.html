@@ -1,53 +1,54 @@
 <div class="card">
-    <div class="header">
-        <h4>Tag</h4>
-        <ul class="header-dropdown m-r--5">
-            <li>
-                <a role="button" class="btn btn-theme btn-xs" (click)="saveTagInfo()">
-                    <i class="material-icons">save</i></a>
-            </li>
-            <li>
-                <a role="button" class="btn btn-theme btn-xs" (click)="backViewData()">
-                    <i class="material-icons">arrow_back</i></a>
-            </li>
-        </ul>
-    </div>
+	<div class="header">
+		<h4>Tag</h4>
+		<ul class="header-dropdown m-r--5">
+			<li>
+				<a role="button" class="btn btn-theme btn-xs" (click)="saveTagInfo()">
+					<i class="material-icons">save</i></a>
+			</li>
+			<li>
+				<a role="button" class="btn btn-theme btn-xs" (click)="backViewData()">
+					<i class="material-icons">arrow_back</i></a>
+			</li>
+		</ul>
+	</div>
 
-    <div class="body">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <div class="form-line">
-                        <label>Entity</label>
-                        <p-autoComplete id="enttname" name="enttname" [(ngModel)]="enttname" [tabindex]="1" (onSelect)="selectEntityData($event)" [suggestions]="entityDT" (completeMethod)="getEntityData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete enttname"></p-autoComplete>
-                        <span class="material-icons inputserachico">search</span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Tag Name:</label>
-                    <div class="form-line">
-                        <input type="text" class="form-control" [(ngModel)]="tagnm">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Remark 1:</label>
-                    <div class="form-line">
-                        <textarea class="form-control" rows="5" [(ngModel)]="remark1"></textarea>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Remark 2:</label>
-                    <div class="form-line">
-                        <textarea class="form-control" rows="5" [(ngModel)]="remark2"></textarea>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Remark 3:</label>
-                    <div class="form-line">
-                        <textarea class="form-control" rows="5" [(ngModel)]="remark3"></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="body">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group">
+					<div class="form-line">
+						<label>Entity</label>
+						<p-autoComplete id="enttname" name="enttname" [(ngModel)]="enttname" [tabindex]="1" (onSelect)="selectEntityData($event)"
+							[suggestions]="entityDT" (completeMethod)="getEntityData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete enttname"></p-autoComplete>
+						<span class="material-icons inputserachico">search</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label>Tag Name:</label>
+					<div class="form-line">
+						<input type="text" class="form-control" [(ngModel)]="tagnm">
+					</div>
+				</div>
+				<div class="form-group">
+					<label>Remark 1:</label>
+					<div class="form-line">
+						<textarea class="form-control" rows="5" [(ngModel)]="remark1"></textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<label>Remark 2:</label>
+					<div class="form-line">
+						<textarea class="form-control" rows="5" [(ngModel)]="remark2"></textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<label>Remark 3:</label>
+					<div class="form-line">
+						<textarea class="form-control" rows="5" [(ngModel)]="remark3"></textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
