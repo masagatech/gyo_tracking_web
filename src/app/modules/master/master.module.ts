@@ -31,6 +31,8 @@ export const routes = [
                     
                     { path: 'allocatetask', loadChildren: './allocatetask#AllocateTaskModule' },
                     { path: 'notification', loadChildren: './notification#NotificationModule' },
+                    { path: 'expense', loadChildren: './expense#ExpenseModule' },
+                    
                 ]
             }
         ]
