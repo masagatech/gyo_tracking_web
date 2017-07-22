@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="col-md-2" align="right">
-                <button type="button" class="btn btn-theme btn-xs" (click)="addTagForm()">
+                <button type="button" class="btn btn-theme btn-xs" (click)="addExpenseForm()">
 					<span class="material-icons">add</span>
 				</button>
             </div>
@@ -31,7 +31,7 @@
                     <p-column field="amt" header="Amount" [style]="{'width':'300px', 'text-align':'left'}"></p-column>
                     <p-column [style]="{'width': '50px', 'align': 'left'}">
                         <template let-row="rowData" pTemplate type="body">
-							<button type="button" class="btn btn-theme btn-xs" (click)="editTagForm(row)">
+							<button type="button" class="btn btn-theme btn-xs" (click)="editExpenseForm(row)">
                                 <i class="material-icons">edit</i>
                             </button>
 						</template>
