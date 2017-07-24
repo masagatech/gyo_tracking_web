@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthGuard } from '../../../_services/authguard-service';
 
-import { TeamEmployeeMapComponent } from './tmempmap.comp';
+import { AddTeamEmployeeMapComponent } from './addtem.comp';
 import { TeamEmployeeMapService } from '@services/master';
 
 import { LazyLoadEvent, DataTableModule, AutoCompleteModule, FileUploadModule } from 'primeng/primeng';
@@ -13,7 +13,7 @@ export const routes = [
   {
     path: '', children: [
       {
-        path: '', component: TeamEmployeeMapComponent, canActivate: [AuthGuard],
+        path: '', component: AddTeamEmployeeMapComponent, canActivate: [AuthGuard],
         data: { "module": "pentt", "submodule": "egm", "rights": "view", "urlname": "/teamemployeepmap" }
       }
     ]
@@ -22,7 +22,7 @@ export const routes = [
 
 @NgModule({
   declarations: [
-    TeamEmployeeMapComponent
+    AddTeamEmployeeMapComponent
   ],
 
   imports: [
