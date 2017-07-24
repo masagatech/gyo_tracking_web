@@ -1,0 +1,63 @@
+<div class="card">
+    <div class="header">
+        <h4>Voucher</h4>
+        <ul class="header-dropdown m-r--5">
+            <li>
+                <a role="button" class="btn btn-theme btn-xs" (click)="saveVouchereInfo()">
+                    <i class="material-icons">save</i></a>
+            </li>
+            <li>
+                <a role="button" class="btn btn-theme btn-xs" (click)="backViewData()">
+                    <i class="material-icons">arrow_back</i></a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="form-line">
+                        <label>Entity</label>
+                        <p-autoComplete id="enttname" name="enttname" [(ngModel)]="enttname" [tabindex]="1" (onSelect)="selectEntityData($event)" [suggestions]="entityDT" (completeMethod)="getEntityData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete enttname"></p-autoComplete>
+                        <span class="material-icons inputserachico">search</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Employee:</label>
+                    <div class="form-line">
+                        <p-autoComplete id="empae" name="empae" [(ngModel)]="empae" [tabindex]="1" (onSelect)="selectEmployeeData($event)" [suggestions]="empDT" (completeMethod)="getEmployeeData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete empae"></p-autoComplete>
+                        <span class="material-icons inputserachico">search</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Expense:</label>
+                    <div class="form-line">
+                       <p-autoComplete id="expae" name="expae" [(ngModel)]="expae" [tabindex]="1" (onSelect)="selectExpenseData($event)" [suggestions]="expDT" (completeMethod)="getExpenseData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete expae"></p-autoComplete>
+                        <span class="material-icons inputserachico">search</span>
+                    </div>
+                </div>
+             </div>
+             <div class="form-group">
+                    <label>Amount:</label>
+                    <div class="form-line">
+                        <input type="text" class="form-control" [(ngModel)]="amt" OnlyNumber="true" min="0" tabindex="6">
+                    </div>
+                </div>
+              <div class="form-group">
+                    <label>No.doc</label>
+                    <div class="form-line">
+                        <input type="text" class="form-control" [(ngModel)]="nodoc" OnlyNumber="true" min="0" tabindex="6">
+                    </div>
+                </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Remark:</label>
+                    <div class="form-line">
+                        <textarea class="form-control" rows="5" [(ngModel)]="remark" tabindex="5"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
