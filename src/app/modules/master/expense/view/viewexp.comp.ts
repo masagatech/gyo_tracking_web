@@ -28,6 +28,7 @@ export class ViewExpenseComponent implements OnInit {
         private _expservice: ExpenseService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+        this.viewExpenseDataRights();
     }
 
     public ngOnInit() {
@@ -62,7 +63,23 @@ export class ViewExpenseComponent implements OnInit {
         this.enttid = event.value;
         this.enttname = event.label;
 
+        Cookie.set("_enttid_", this.enttid.toString());
+        Cookie.set("_enttnm_", this.enttname);
+
         this.getExpenseDetails();
+    }
+
+    // View Data Rights
+
+    public viewExpenseDataRights() {
+        var that = this;
+
+        if (Cookie.get('_enttnm_') != null) {
+            that.enttid = parseInt(Cookie.get('_enttid_'));
+            that.enttname = Cookie.get('_enttnm_');
+            
+            that.getExpenseDetails();
+        }
     }
 
     getExpenseDetails() {

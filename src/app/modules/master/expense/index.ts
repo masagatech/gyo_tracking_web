@@ -2,12 +2,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { SharedComponentModule } from '../../../_shared/sharedcomp.module';
 import { AuthGuard } from '../../../_services/authguard-service';
 
 import { AddExpenseComponent } from './aded/addexp.comp';
 import { ViewExpenseComponent } from './view/viewexp.comp';
 
 import { ExpenseService } from '@services/master';
+
+import { OnlyNumber } from '@directives';
 
 import { LazyLoadEvent, DataTableModule, AutoCompleteModule, FileUploadModule } from 'primeng/primeng';
 
@@ -25,11 +28,12 @@ export const routes = [
 @NgModule({
   declarations: [
     AddExpenseComponent,
-    ViewExpenseComponent
+    ViewExpenseComponent,
+    OnlyNumber
   ],
 
   imports: [
-    CommonModule, FormsModule, RouterModule.forChild(routes), DataTableModule, AutoCompleteModule, FileUploadModule
+    CommonModule, FormsModule, SharedComponentModule, RouterModule.forChild(routes), DataTableModule, AutoCompleteModule, FileUploadModule
   ],
 
   providers: [AuthGuard, ExpenseService]

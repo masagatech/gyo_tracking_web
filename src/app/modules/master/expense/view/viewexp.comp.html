@@ -30,7 +30,7 @@
                     <p-column field="exptype" header="Expense Type" [style]="{'width':'300px', 'text-align':'left'}"></p-column>
                     <p-column header="Amount" [style]="{'width': '150px', 'align': 'left'}">
                         <template let-row="rowData" pTemplate type="body">
-							{{row.expamt}}
+							{{row.expamt | _currency:loginUser.globsettings[0]}}
 						</template>
                     </p-column>
                     <p-column [style]="{'width': '50px', 'align': 'left'}">

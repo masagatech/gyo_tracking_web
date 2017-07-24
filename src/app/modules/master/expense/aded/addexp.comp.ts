@@ -28,8 +28,10 @@ export class AddExpenseComponent implements OnInit {
     expdesc: string = "";
     exptype: string = "";
     expamt: any = 0;
+    amttype: string = "";
 
     exptypeDT: any = [];
+    amttypeDT: any = [];
 
     private subscribeParameters: any;
 
@@ -84,7 +86,8 @@ export class AddExpenseComponent implements OnInit {
 
         that._expservice.getExpenseDetails({ "flag": "dropdown" }).subscribe(data => {
             try {
-                that.exptypeDT = data.data;
+                that.exptypeDT = data.data.filter(a => a.group === "exptype");
+                that.amttypeDT = data.data.filter(a => a.group === "amttype");
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -108,7 +111,7 @@ export class AddExpenseComponent implements OnInit {
         this.expdesc = "";
         this.exptype = "";
         this.expamt = 0;
-
+        this.amttype = "";
     }
 
     // Save Data
@@ -132,6 +135,10 @@ export class AddExpenseComponent implements OnInit {
             that._msg.Show(messageType.error, "Error", "Select Expense Type");
             $(".exptype ").focus();
         }
+        else if (that.amttype == "") {
+            that._msg.Show(messageType.error, "Error", "Select Amount Type");
+            $(".amttype ").focus();
+        }
         else {
             commonfun.loader();
 
@@ -141,6 +148,7 @@ export class AddExpenseComponent implements OnInit {
                 "expnm": that.expnm,
                 "expdesc": that.expdesc,
                 "exptype": that.exptype,
+                "amttype": that.amttype,
                 "expamt": that.expamt,
                 "enttid": that.enttid,
                 "cuid": that.loginUser.ucode,
@@ -211,6 +219,7 @@ export class AddExpenseComponent implements OnInit {
                         that.expdesc = data.data[0].expdesc;
                         that.exptype = data.data[0].exptype;
                         that.expamt = data.data[0].expamt;
+                        that.amttype = data.data[0].amttype;
                     }
                     catch (e) {
                         that._msg.Show(messageType.error, "Error", e);

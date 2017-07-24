@@ -46,6 +46,8 @@
 						</select>
                     </div>
                 </div>
+            </div>
+            <div class="col-md-6">
                 <div class="form-group">
                     <label>Description:</label>
                     <div class="form-line">
@@ -55,10 +57,20 @@
                 <div class="form-group">
                     <label>Amount:</label>
                     <div class="form-line">
-                        <input type="text" class="form-control" [(ngModel)]="expamt" tabindex="6">
+                        <input type="text" class="form-control" [(ngModel)]="expamt" OnlyNumber="true" min="0" tabindex="6">
                     </div>
                 </div>
-
+                <div class="form-group">
+                    <label>Amount Type:</label>
+                    <div class="form-line">
+                        <select [(ngModel)]="amttype" class="form-control amttype" tabindex="4">
+							<option [value]="''">Select Amount Type</option>
+							<option *ngFor="let row of amttypeDT" [value]="row.key">
+								{{row.val}}
+							</option>
+						</select>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
