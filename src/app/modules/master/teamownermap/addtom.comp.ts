@@ -8,11 +8,11 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 declare var google: any;
 
 @Component({
-    templateUrl: 'tmonrmap.comp.html',
+    templateUrl: 'addtom.comp.html',
     providers: [CommonService]
 })
 
-export class TeamOwnershipComponent implements OnInit {
+export class AddTeamOwnershipComponent implements OnInit {
     loginUser: LoginUserModel;
 
     tomid: number = 0;

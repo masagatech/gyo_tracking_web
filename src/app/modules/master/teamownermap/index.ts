@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthGuard } from '../../../_services/authguard-service';
 
-import { TeamOwnershipComponent } from './tmonrmap.comp';
+import { AddTeamOwnershipComponent } from './addtom.comp';
 import { TeamEmployeeMapService, TeamOwnershipMapService } from '@services/master';
 
 import { LazyLoadEvent, DataTableModule, AutoCompleteModule, FileUploadModule } from 'primeng/primeng';
@@ -13,7 +13,7 @@ export const routes = [
   {
     path: '', children: [
       {
-        path: '', component: TeamOwnershipComponent, canActivate: [AuthGuard],
+        path: '', component: AddTeamOwnershipComponent, canActivate: [AuthGuard],
         data: { "module": "pentt", "submodule": "ogm", "rights": "view", "urlname": "/teamownershipmap" }
       }
     ]
@@ -22,7 +22,7 @@ export const routes = [
 
 @NgModule({
   declarations: [
-    TeamOwnershipComponent
+    AddTeamOwnershipComponent
   ],
 
   imports: [

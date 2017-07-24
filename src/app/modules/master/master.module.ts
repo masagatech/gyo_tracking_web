@@ -24,14 +24,16 @@ export const routes = [
 
                     { path: 'tag', loadChildren: './tag#TagModule' },
                     { path: 'pushtag', loadChildren: './tagpush#TagPushModule' },
+
                     { path: 'team', loadChildren: './team#TeamModule' },
                     { path: 'employee', loadChildren: './employee#EmployeeModule' },
-                    { path: 'teamemployeemap', loadChildren: './teamemployeemap#TeamEmployeeMapModule' },
+                    { path: 'teamemployeemap', loadChildren: './teamempmap#TeamEmployeeMapModule' },
                     { path: 'teamownershipmap', loadChildren: './teamownermap#TeamOwnershipMapModule' },
+                    { path: 'expense', loadChildren: './expense#ExpenseModule' },
+                    { path: 'expenseemployeemap', loadChildren: './expempmap#ExpenseEmployeeMapModule' },
                     
                     { path: 'allocatetask', loadChildren: './allocatetask#AllocateTaskModule' },
                     { path: 'notification', loadChildren: './notification#NotificationModule' },
-                    { path: 'expense', loadChildren: './expense#ExpenseModule' },
                     
                 ]
             }

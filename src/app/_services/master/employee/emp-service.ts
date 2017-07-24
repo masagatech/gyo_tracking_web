@@ -13,4 +13,8 @@ export class EmployeeService {
     saveEmployeeInfo(req: any) {
         return this._dataserver.post("saveEmployeeInfo", req)
     }
+
+    updateEmployeeInfo(req: any) {
+        return this._dataserver.post("updateEmployeeInfo", req)
+    }
 }
