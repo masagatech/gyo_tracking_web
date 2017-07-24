@@ -15,6 +15,9 @@ declare var google: any;
 export class AddPushTagComponent implements OnInit {
     loginUser: LoginUserModel;
 
+    disableentt: boolean = false;
+    disabletag: boolean = false;
+
     ptid: number = 0;
 
     entityDT: any = [];
@@ -420,20 +423,26 @@ export class AddPushTagComponent implements OnInit {
 
         that.subscribeParameters = that._routeParams.params.subscribe(params => {
             if (params['id'] !== undefined) {
-                that.empid = params['id'];
+                that.tagid = params['id'];
+                that.disableentt = true;
+                that.disabletag = true;
 
                 that._ptservice.getPushTagDetails({
                     "flag": "edit",
-                    "ptid": that.ptid,
+                    "tagid": that.tagid,
                     "wsautoid": that._wsdetails.wsautoid
                 }).subscribe(data => {
                     try {
                         that.ptid = data.data[0].ptid;
+                        that.enttid = data.data[0].enttid;
+                        that.enttname = data.data[0].enttname;
+                        that.tagid = data.data[0].tagid;
+                        that.tagnm = data.data[0].tagnm;
+                        that.selectedPType = data.data[0].emptype;
                         that.tmid = data.data[0].tmid;
                         that.tmnm = data.data[0].tmnm;
-                        that.empid = data.data[0].empid;
-                        that.empname = data.data[0].empname;
                         that.remark = data.data[0].remark;
+                        that.employeeList = data.data[0].empdata;
                     }
                     catch (e) {
                         that._msg.Show(messageType.error, "Error", e);

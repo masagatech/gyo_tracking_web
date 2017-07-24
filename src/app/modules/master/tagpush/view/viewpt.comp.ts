@@ -12,34 +12,92 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 })
 
 export class ViewPushTagComponent implements OnInit {
-    notificationDT: any = [];
+    emptagDT: any = [];
+    pushtagDT: any = [];
     loginUser: LoginUserModel;
 
     _wsdetails: any = [];
 
     entityDT: any = [];
-    entityid: number = 0;
-    entityname: string = "";
+    enttid: number = 0;
+    enttname: string = "";
+
+    headertitle: string = "";
+
+    totCountTags: number = 0;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
         private _loginservice: LoginService, private _autoservice: CommonService, private _ptservice: PushTagService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
 
-        this.getPushTagDetails();
+        this.viewPushTagDataRights();
     }
 
     public ngOnInit() {
 
     }
 
-    getPushTagDetails() {
+    // Auto Completed Entity
+
+    getEntityData(event) {
+        let query = event.query;
+
+        this._autoservice.getAutoData({
+            "flag": "entity",
+            "uid": this.loginUser.uid,
+            "ucode": this.loginUser.ucode,
+            "utype": this.loginUser.utype,
+            "issysadmin": this.loginUser.issysadmin,
+            "wsautoid": this._wsdetails.wsautoid,
+            "search": query
+        }).subscribe((data) => {
+            this.entityDT = data.data;
+        }, err => {
+            this._msg.Show(messageType.error, "Error", err);
+        }, () => {
+
+        });
+    }
+
+    // Selected Entity
+
+    selectEntityData(event) {
+        this.enttid = event.value;
+        this.enttname = event.label;
+
+        Cookie.set("_enttid_", this.enttid.toString());
+        Cookie.set("_enttnm_", this.enttname);
+
+        this.getCountEmpTags();
+    }
+
+    // View Data Rights
+
+    public viewPushTagDataRights() {
+        var that = this;
+
+        if (Cookie.get('_enttnm_') != null) {
+            that.enttid = parseInt(Cookie.get('_enttid_'));
+            that.enttname = Cookie.get('_enttnm_');
+
+            that.getCountEmpTags();
+        }
+    }
+
+    getCountEmpTags() {
         var that = this;
         commonfun.loader();
 
-        that._ptservice.getPushTagDetails({ "flag": "all", "wsautoid": that._wsdetails.wsautoid }).subscribe(data => {
+        that._ptservice.getPushTagDetails({
+            "flag": "empwisetag", "enttid": that.enttid, "wsautoid": that._wsdetails.wsautoid
+        }).subscribe(data => {
             try {
-                that.notificationDT = data.data;
+                that.emptagDT = data.data;
+
+                let totCountTags = Object.keys(that.emptagDT).map(function (k) {
+                    that.totCountTags += parseInt(that.emptagDT[k].counttag);
+                })
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -55,11 +113,42 @@ export class ViewPushTagComponent implements OnInit {
         })
     }
 
+    getPushTagDetails(_empid) {
+        var that = this;
+        commonfun.loader("#msttag");
+
+        that._ptservice.getPushTagDetails({
+            "flag": "tagwiseemp", "enttid": that.enttid, "wsautoid": that._wsdetails.wsautoid, "empid": _empid
+        }).subscribe(data => {
+            try {
+                if (data.data.length > 0) {
+                    that.pushtagDT = data.data;
+                    that.headertitle = data.data[0].empname;
+                }
+                else{
+                    that.pushtagDT = [];
+                    that.headertitle = "";
+                }
+            }
+            catch (e) {
+                that._msg.Show(messageType.error, "Error", e);
+            }
+
+            commonfun.loaderhide("#msttag");
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+            commonfun.loaderhide("#msttag");
+        }, () => {
+
+        })
+    }
+
     public addPushTag() {
         this._router.navigate(['/master/pushtag/add']);
     }
 
     public editPushTag(row) {
-        this._router.navigate(['/master/pushtag/edit', row.ptid]);
+        this._router.navigate(['/master/pushtag/edit', row.tagid]);
     }
 }

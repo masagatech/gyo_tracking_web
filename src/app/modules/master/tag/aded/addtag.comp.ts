@@ -108,6 +108,7 @@ export class AddTagComponent implements OnInit {
             var saveTag = {
                 "tagid": that.tagid,
                 "tagnm": that.tagnm,
+                "tagtype": "p",
                 "enttid": that.enttid,
                 "remark1": that.remark1,
                 "remark2": that.remark2,

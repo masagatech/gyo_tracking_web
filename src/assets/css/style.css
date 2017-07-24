@@ -3292,6 +3292,11 @@ section.content {
 
 /* Infobox ===================================== */
 
+.demo {
+    display: inherit!important;
+    text-align: center;
+}
+
 .info-box {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     height: 80px;
