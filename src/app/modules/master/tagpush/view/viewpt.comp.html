@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="row clearfix">
-            <div class="col-md-4">
+            <div class="col-md-12" align="center">
                 <div id="msttag" class="info-box demo">
                     <a role="button" (click)="getPushTagDetails(0)">
                         <div class="content">
@@ -38,6 +38,8 @@
                     </a>
                 </div>
             </div>
+        </div>
+        <div class="row clearfix">
             <div class="col-md-2" *ngFor="let etrow of emptagDT">
                 <div id="etrow.msttag" class="info-box demo">
                     <a role="button" (click)="getPushTagDetails(etrow.empid)">
