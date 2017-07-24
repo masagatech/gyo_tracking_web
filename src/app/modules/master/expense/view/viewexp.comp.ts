@@ -12,7 +12,7 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 })
 
 export class ViewExpenseComponent implements OnInit {
-    tagDT: any = [];
+    expDT: any = [];
     loginUser: LoginUserModel;
 
     entityDT: any = [];
@@ -28,8 +28,6 @@ export class ViewExpenseComponent implements OnInit {
         private _expservice: ExpenseService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
-
-        this.getExpenseDetails();
     }
 
     public ngOnInit() {
@@ -81,7 +79,7 @@ export class ViewExpenseComponent implements OnInit {
 
         that._expservice.getExpenseDetails(params).subscribe(data => {
             try {
-                that.tagDT = data.data;
+                that.expDT = data.data;
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -102,6 +100,6 @@ export class ViewExpenseComponent implements OnInit {
     }
 
     public editExpenseForm(row) {
-        this._router.navigate(['/master/expense/edit', row.expcode]);
+        this._router.navigate(['/master/expense/edit', row.expid]);
     }
 }

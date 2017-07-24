@@ -18,12 +18,18 @@ export class AddExpenseComponent implements OnInit {
 
     _wsdetails: any = [];
 
-    expcode: number = 0;
-    expnm: string = "";
-    exptype: string = "";
-    dpt: string = "";
-    amt: number = 0;
+    entityDT: any = [];
+    enttid: number = 0;
+    enttname: string = "";
 
+    expid: number = 0;
+    expcd: string = "";
+    expnm: string = "";
+    expdesc: string = "";
+    exptype: string = "";
+    expamt: any = 0;
+
+    exptypeDT: any = [];
 
     private subscribeParameters: any;
 
@@ -31,6 +37,7 @@ export class AddExpenseComponent implements OnInit {
         private _expservice: ExpenseService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+        this.fillExpenseTypeDDL();
     }
 
     public ngOnInit() {
@@ -41,14 +48,66 @@ export class AddExpenseComponent implements OnInit {
         this.getExpenseDetails();
     }
 
+    // Auto Completed Entity
+
+    getEntityData(event) {
+        let query = event.query;
+
+        this._autoservice.getAutoData({
+            "flag": "entity",
+            "uid": this.loginUser.uid,
+            "ucode": this.loginUser.ucode,
+            "utype": this.loginUser.utype,
+            "issysadmin": this.loginUser.issysadmin,
+            "wsautoid": this._wsdetails.wsautoid,
+            "search": query
+        }).subscribe((data) => {
+            this.entityDT = data.data;
+        }, err => {
+            this._msg.Show(messageType.error, "Error", err);
+        }, () => {
+
+        });
+    }
+
+    // Selected Entity
+
+    selectEntityData(event) {
+        this.enttid = event.value;
+        this.enttname = event.label;
+    }
+
+    // Fill DropDown List
+
+    fillExpenseTypeDDL() {
+        var that = this;
+
+        that._expservice.getExpenseDetails({ "flag": "dropdown" }).subscribe(data => {
+            try {
+                that.exptypeDT = data.data;
+            }
+            catch (e) {
+                that._msg.Show(messageType.error, "Error", e);
+            }
+
+            commonfun.loaderhide();
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+            commonfun.loaderhide();
+        }, () => {
+
+        })
+    }
+
     // Clear Fields
 
     resetExpenseFields() {
-        this.expcode = 0;
+        this.expcd = "";
         this.expnm = "";
+        this.expdesc = "";
         this.exptype = "";
-        this.dpt = "";
-        this.amt = 0;
+        this.expamt = 0;
 
     }
 
@@ -57,23 +116,33 @@ export class AddExpenseComponent implements OnInit {
     saveExpenseInfo() {
         var that = this;
 
-        if (that.expnm == "") {
-            that._msg.Show(messageType.error, "Error", "Enter Expense");
+        if (that.enttid == 0) {
+            that._msg.Show(messageType.error, "Error", "Enter Entity Name");
+            $(".enttname input").focus();
+        }
+        else if (that.expcd == "") {
+            that._msg.Show(messageType.error, "Error", "Enter Expense Code");
+            $(".expcd").focus();
+        }
+        else if (that.expnm == "") {
+            that._msg.Show(messageType.error, "Error", "Enter Expense Name");
             $(".expnm").focus();
         }
         else if (that.exptype == "") {
-            that._msg.Show(messageType.error, "Error", "Enter ExpenseType");
+            that._msg.Show(messageType.error, "Error", "Select Expense Type");
             $(".exptype ").focus();
         }
         else {
             commonfun.loader();
 
             var saveExpense = {
-                "expcode": that.expcode,
+                "expid": that.expid,
+                "expcd": that.expcd,
                 "expnm": that.expnm,
+                "expdesc": that.expdesc,
                 "exptype": that.exptype,
-                "dpt": that.dpt,
-                "amt": that.amt,
+                "expamt": that.expamt,
+                "enttid": that.enttid,
                 "cuid": that.loginUser.ucode,
                 "wsautoid": that._wsdetails.wsautoid,
                 "mode": ""
@@ -81,7 +150,7 @@ export class AddExpenseComponent implements OnInit {
 
             that._expservice.saveExpenseInfo(saveExpense).subscribe(data => {
                 try {
-                    var dataResult = data.data[0].funsave_teaminfo;
+                    var dataResult = data.data[0].funsave_expenseinfo;
                     var msg = dataResult.msg;
                     var msgid = dataResult.msgid;
 
@@ -123,20 +192,25 @@ export class AddExpenseComponent implements OnInit {
         commonfun.loader();
 
         that.subscribeParameters = that._routeParams.params.subscribe(params => {
-            if (params['code'] !== undefined) {
-                that.expcode = params['code'];
+            if (params['id'] !== undefined) {
+                that.expid = params['id'];
 
                 params = {
                     "flag": "edit",
-                    "expcode": that.expcode,
+                    "expid": that.expid,
                     "wsautoid": that._wsdetails.wsautoid
                 }
 
                 that._expservice.getExpenseDetails(params).subscribe(data => {
                     try {
-                        that.expcode = data.data[0].expcode;
-                        that.expnm = data.data[0].tmnm;
+                        that.enttid = data.data[0].enttid;
+                        that.enttname = data.data[0].enttname;
+                        that.expid = data.data[0].expid;
+                        that.expcd = data.data[0].expcd;
+                        that.expnm = data.data[0].expnm;
+                        that.expdesc = data.data[0].expdesc;
                         that.exptype = data.data[0].exptype;
+                        that.expamt = data.data[0].expamt;
                     }
                     catch (e) {
                         that._msg.Show(messageType.error, "Error", e);

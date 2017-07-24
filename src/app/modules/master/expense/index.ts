@@ -14,10 +14,10 @@ import { LazyLoadEvent, DataTableModule, AutoCompleteModule, FileUploadModule } 
 export const routes = [
   {
     path: '', children: [
-      { path: '', component: ViewExpenseComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "expense", "rights": "view", "urlname": "/expense" } },
-      { path: 'add', component: AddExpenseComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "expense", "rights": "add", "urlname": "/add" } },
-      { path: 'details/:id', component: AddExpenseComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "expense", "rights": "edit", "urlname": "/edit" } },
-      { path: 'edit/:id', component: AddExpenseComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "expense", "rights": "edit", "urlname": "/edit" } }
+      { path: '', component: ViewExpenseComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "exp", "rights": "view", "urlname": "/expense" } },
+      { path: 'add', component: AddExpenseComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "exp", "rights": "add", "urlname": "/add" } },
+      { path: 'details/:id', component: AddExpenseComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "exp", "rights": "edit", "urlname": "/edit" } },
+      { path: 'edit/:id', component: AddExpenseComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "exp", "rights": "edit", "urlname": "/edit" } }
     ]
   },
 ];
