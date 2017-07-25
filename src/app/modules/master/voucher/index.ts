@@ -17,10 +17,10 @@ import { LazyLoadEvent, DataTableModule, AutoCompleteModule, FileUploadModule } 
 export const routes = [
   {
     path: '', children: [
-      { path: '', component: ViewVoucherComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "exp", "rights": "view", "urlname": "/voucher" } },
-      { path: 'add', component: AddVoucherComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "exp", "rights": "add", "urlname": "/add" } },
-      { path: 'details/:id', component: AddVoucherComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "exp", "rights": "edit", "urlname": "/edit" } },
-      { path: 'edit/:id', component: AddVoucherComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "exp", "rights": "edit", "urlname": "/edit" } }
+      { path: '', component: ViewVoucherComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "vcr", "rights": "view", "urlname": "/voucher" } },
+      { path: 'add', component: AddVoucherComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "vcr", "rights": "add", "urlname": "/add" } },
+      { path: 'details/:id', component: AddVoucherComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "vcr", "rights": "edit", "urlname": "/edit" } },
+      { path: 'edit/:id', component: AddVoucherComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "vcr", "rights": "edit", "urlname": "/edit" } }
     ]
   },
 ];

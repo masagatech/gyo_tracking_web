@@ -15,19 +15,25 @@ declare var commonfun: any;
 
 export class AddVoucherComponent implements OnInit {
     loginUser: LoginUserModel;
-
     _wsdetails: any = [];
 
     entityDT: any = [];
     enttid: number = 0;
     enttname: string = "";
 
+    employeeDT: any = [];
     empid: number = 0;
-    empae: string = "";
-    expae: any = 0;
-    amt:number = 0;
-    nodoc: string = "";
-    remark: string="";
+    empname: string = "";
+
+    expenseDT: any = [];
+    expid: number = 0;
+    expname: string = "";
+
+    amt: number = 0;
+    noofdoc: string = "";
+    remark: string = "";
+
+    voucherData: any = [];
 
     private subscribeParameters: any;
 
@@ -35,7 +41,7 @@ export class AddVoucherComponent implements OnInit {
         private _vchservice: VoucherService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
-      
+
     }
 
     public ngOnInit() {
@@ -75,58 +81,127 @@ export class AddVoucherComponent implements OnInit {
         this.enttname = event.label;
     }
 
+    // Auto Completed Employee
+
+    getEmployeeData(event) {
+        let query = event.query;
+
+        this._autoservice.getAutoData({
+            "flag": "employee",
+            "uid": this.loginUser.uid,
+            "ucode": this.loginUser.ucode,
+            "utype": this.loginUser.utype,
+            "enttid": this.enttid,
+            "issysadmin": this.loginUser.issysadmin,
+            "wsautoid": this._wsdetails.wsautoid,
+            "search": query
+        }).subscribe((data) => {
+            this.employeeDT = data.data;
+        }, err => {
+            this._msg.Show(messageType.error, "Error", err);
+        }, () => {
+
+        });
+    }
+
+    // Selected Employee
+
+    selectEmployeeData(event) {
+        this.empid = event.value;
+        this.empname = event.label;
+    }
+
+    // Auto Completed Expense
+
+    getExpenseData(event) {
+        let query = event.query;
+
+        this._autoservice.getAutoData({
+            "flag": "expense",
+            "enttid": this.enttid,
+            "wsautoid": this._wsdetails.wsautoid,
+            "search": query
+        }).subscribe((data) => {
+            this.expenseDT = data.data;
+        }, err => {
+            this._msg.Show(messageType.error, "Error", err);
+        }, () => {
+
+        });
+    }
+
+    // Selected Expense
+
+    selectExpenseData(event) {
+        this.expid = event.value;
+        this.expname = event.label;
+    }
+
+    // Add Multi Row
+
+    addVoucherRow() {
+        this.voucherData.push({
+            "enttid": this.enttid, "enttname": this.enttname,
+            "empid": this.empid, "empname": this.empname,
+            "expid": this.expid, "expname": this.expname,
+            "amt": this.amt, "noofdoc": this.noofdoc, "remark": this.remark
+        })
+
+        this.resetVoucherFields();
+    }
+
     // Clear Fields
 
     resetVoucherFields() {
         this.empid = 0;
-        this.empae = "";
-        this.expae = "";
+        this.empname = "";
+        this.expid = 0;
+        this.expname = "";
         this.amt = 0;
-        this.nodoc = "";
-        this.remark ="";
+        this.noofdoc = "";
+        this.remark = "";
     }
 
     // Save Data
 
-    saveVoucherInfo() {
+    isValidation() {
         var that = this;
 
         if (that.enttid == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Entity Name");
             $(".enttname input").focus();
         }
-        else if (that.expae == "") {
-            that._msg.Show(messageType.error, "Error", "Enter Expense Code");
-            $(".expcd").focus();
-        }
-        else if (that.expae == "") {
-            that._msg.Show(messageType.error, "Error", "Enter Expense Name");
+        else if (that.empid == 0) {
+            that._msg.Show(messageType.error, "Error", "Enter Employye Name");
             $(".expae").focus();
+        }
+        else if (that.expid == 0) {
+            that._msg.Show(messageType.error, "Error", "Enter Expense Name");
+            $(".expcd").focus();
         }
         else if (that.amt == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Amount");
-             $(".amt ").focus();
+            $(".amt ").focus();
         }
-        else if (that.nodoc == "") {
-            that._msg.Show(messageType.error, "Error", "Select Amount Type");
+        else if (that.noofdoc == "") {
+            that._msg.Show(messageType.error, "Error", "Select No Of Docs");
             $(".nodoc ").focus();
+        }
+        else {
+        }
+    }
+
+    saveVoucherInfo() {
+        var that = this;
+
+        if (that.voucherData.length == 0) {
+            that._msg.Show(messageType.error, "Error", "Fill all Voucher Fields");
+            $(".enttname input").focus();
         }
         else {
             commonfun.loader();
 
-            var saveVoucher = {
-                "empid": that.empid,
-                "empae": that.empae,
-                "expae": that.expae,
-                "amt": that.amt,
-                "nodoc": that.nodoc,
-                "enttid": that.enttid,
-                "cuid": that.loginUser.ucode,
-                "wsautoid": that._wsdetails.wsautoid,
-                "mode": ""
-            }
-
-            that._vchservice.saveVoucherInfo(saveVoucher).subscribe(data => {
+            that._vchservice.saveVoucherInfo({ "voucherdt": that.voucherData }).subscribe(data => {
                 try {
                     var dataResult = data.data[0].funsave_voucherinfo;
                     var msg = dataResult.msg;
@@ -184,10 +259,11 @@ export class AddVoucherComponent implements OnInit {
                         that.enttid = data.data[0].enttid;
                         that.enttname = data.data[0].enttname;
                         that.empid = data.data[0].empid;
-                        that.empae = data.data[0].empae;
-                        that.expae = data.data[0].expae;
+                        that.empname = data.data[0].empname;
+                        that.expid = data.data[0].expid;
+                        that.expname = data.data[0].expname;
                         that.amt = data.data[0].amt;
-                        that.nodoc = data.data[0].nodoc;
+                        that.noofdoc = data.data[0].noofdoc;
                     }
                     catch (e) {
                         that._msg.Show(messageType.error, "Error", e);
