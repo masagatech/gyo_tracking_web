@@ -85,6 +85,37 @@
                     </ul>
                 </div>
             </div>
+                <div class="col-md-4">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-theme btn-xs" (click)="addteamRow()">
+                                <i class="material-icons">add</i>
+                            </button>
+                        </div>
+                    </div>
+               </div>
         </div>
-    </div>
-</div>
+            <div class="body">
+                    <table class="table table-border">
+                        <tr>
+                            <th>Team Id</th>
+                            <th>Team Name</th>
+                            <th>Purpose</th>
+                            <th>Remark</th>
+                        </tr>
+                        <tr *ngFor="let row of teamrData">
+                            <td>
+                                {{row.tmid}}
+                            </td>
+                            <td>
+                                {{row.tmnm}}
+                            </td>
+                            <td>
+                                {{row.purpose}}
+                            </td>
+                            <td>
+                                {{row.remark}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+          </div>

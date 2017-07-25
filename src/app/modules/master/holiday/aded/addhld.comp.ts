@@ -31,6 +31,11 @@ export class AddHolidayComponent implements OnInit {
     enttid: number = 0;
     enttname: string = "";
 
+    tmid: number = 0;
+    tmnm: string = "";
+    purpose: string = "";
+    remark: string = "";
+
     mode: string = "";
     isactive: boolean = true;
 
