@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { HolidayService } from '@services/master';
+import { HolidayService, TeamEmployeeMapService } from '@services/master';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 declare var $: any;
@@ -31,8 +31,12 @@ export class AddHolidayComponent implements OnInit {
     enttid: number = 0;
     enttname: string = "";
 
+    teamDT: any = [];
     tmid: number = 0;
     tmnm: string = "";
+
+    employeeList: any = [];
+
     purpose: string = "";
     remark: string = "";
 
@@ -42,7 +46,7 @@ export class AddHolidayComponent implements OnInit {
     private subscribeParameters: any;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
-        private _hldservice: HolidayService, private _autoservice: CommonService) {
+        private _hldservice: HolidayService, private _temservice: TeamEmployeeMapService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
     }
@@ -83,8 +87,8 @@ export class AddHolidayComponent implements OnInit {
         this.enttid = event.value;
         this.enttname = event.label;
 
-        this.addEntityList();
-        $(".enttname input").focus();
+        // this.addEntityList();
+        // $(".enttname input").focus();
     }
 
     // Read Get Entity
@@ -102,6 +106,70 @@ export class AddHolidayComponent implements OnInit {
 
     deleteEntity(row) {
         this.entityList.splice(this.entityList.indexOf(row), 1);
+    }
+
+    // Auto Completed Team
+
+    getTeamData(event) {
+        let query = event.query;
+
+        this._autoservice.getAutoData({
+            "flag": "team",
+            "wsautoid": this._wsdetails.wsautoid,
+            "search": query
+        }).subscribe((data) => {
+            this.teamDT = data.data;
+        }, err => {
+            this._msg.Show(messageType.error, "Error", err);
+        }, () => {
+
+        });
+    }
+
+    // Selected Team
+
+    selectTeamData(event) {
+        this.tmid = event.value;
+        this.tmnm = event.label;
+        this.getTeamEmployeeMap();
+    }
+
+    // Get Team Employee Data
+
+    getTeamEmployeeMap() {
+        var that = this;
+        commonfun.loader("#divTeam");
+
+        that._temservice.getTeamEmployeeMap({
+            "flag": "edit",
+            "enttid": that.enttid,
+            "tmid": that.tmid,
+            "wsautoid": that._wsdetails.wsautoid
+        }).subscribe(data => {
+            try {
+                if (data.data.length > 0) {
+                    that.employeeList = data.data;
+                }
+                else {
+                    that._msg.Show(messageType.error, "Error", "There are no Employee");
+                    that.tmid = 0;
+                    that.tmnm = "";
+                    that.employeeList = [];
+                    $(".tmnm input").focus();
+                }
+            }
+            catch (e) {
+                that._msg.Show(messageType.error, "Error", e);
+            }
+
+            commonfun.loaderhide("#divTeam");
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+            commonfun.loaderhide("#divTeam");
+        }, () => {
+
+        })
     }
 
     // Active / Deactive Data
@@ -133,7 +201,7 @@ export class AddHolidayComponent implements OnInit {
         }, err => {
             console.log(err);
         }, () => {
-            
+
         });
     }
 
@@ -168,16 +236,18 @@ export class AddHolidayComponent implements OnInit {
             that._msg.Show(messageType.error, "Error", "Enter Holiday Title");
             $(".hldnm").focus();
         }
-        else if (that.entityList.length == 0) {
-            that._msg.Show(messageType.error, "Error", "Enter Atleast 1 Entity");
+        else if (that.enttid == 0) {
+            that._msg.Show(messageType.error, "Error", "Enter Entity");
             $(".enttname input").focus();
         }
         else {
             commonfun.loader();
 
             var _entitylist: string[] = [];
-
             _entitylist = Object.keys(that.entityList).map(function (k) { return that.entityList[k].schid });
+
+            var _employeelist: string[] = [];
+            _employeelist = Object.keys(that.employeeList).map(function (k) { return that.employeeList[k].empid });
 
             var saveholiday = {
                 "hldid": that.hldid,
@@ -185,6 +255,7 @@ export class AddHolidayComponent implements OnInit {
                 "hldnm": that.hldnm,
                 "hlddesc": that.hlddesc,
                 "school": _entitylist,
+                "empid": _employeelist,
                 "frmdt": that.frmdt,
                 "todt": that.todt,
                 "cuid": that.loginUser.ucode,

@@ -7,7 +7,7 @@ import { AuthGuard } from '../../../_services/authguard-service';
 import { AddHolidayComponent } from './aded/addhld.comp';
 import { ViewHolidayComponent } from './view/viewhld.comp';
 
-import { HolidayService } from '@services/master';
+import { HolidayService, TeamEmployeeMapService } from '@services/master';
 
 import { LazyLoadEvent, DataTableModule, CheckboxModule, AutoCompleteModule, ScheduleModule } from 'primeng/primeng';
 
@@ -33,7 +33,7 @@ export const routes = [
     AutoCompleteModule, ScheduleModule
   ],
 
-  providers: [AuthGuard, HolidayService]
+  providers: [AuthGuard, HolidayService, TeamEmployeeMapService]
 })
 
 export class HolidayModule {
