@@ -34,6 +34,8 @@ export const routes = [
                     { path: 'holiday', loadChildren: './holiday#HolidayReportsModule' },
                     
                     { path: 'allocatetask', loadChildren: './allocatetask#AllocateTaskReportsModule' },
+
+                    { path: 'loginlog', loadChildren: './loginlog#LoginLogReportsModule' },                  
                 ]
             }
         ]
