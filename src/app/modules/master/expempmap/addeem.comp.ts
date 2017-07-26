@@ -101,6 +101,8 @@ export class AddExpenseEmployeeMapComponent implements OnInit, OnDestroy {
     selectEmployeeData(event) {
         this.empid = event.value;
         this.empname = event.label;
+
+        this.getExpenseList();
     }
 
     // Auto Completed Expense
@@ -158,7 +160,7 @@ export class AddExpenseEmployeeMapComponent implements OnInit, OnDestroy {
 
         if (!duplicateExpense) {
             that.expenseList.push({
-                "expid": that.expid, "expname": that.expname
+                "expid": that.expid, "expnm": that.expname
             });
         }
 
@@ -181,6 +183,34 @@ export class AddExpenseEmployeeMapComponent implements OnInit, OnDestroy {
         this.expid = 0;
         this.expname = "";
         this.expenseList = [];
+    }
+
+    // Get Expense List
+
+    getExpenseList() {
+        var that = this;
+        commonfun.loader();
+
+        that._empservice.getEmployeeDetails({
+            "flag": "expense",
+            "id": that.empid,
+            "wsautoid": that._wsdetails.wsautoid
+        }).subscribe(data => {
+            try {
+                that.expenseList = data.data[0].expense !== null ? data.data[0].expense : [];
+            }
+            catch (e) {
+                that._msg.Show(messageType.error, "Error", e);
+            }
+
+            commonfun.loaderhide();
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+            commonfun.loaderhide();
+        }, () => {
+
+        })
     }
 
     saveExpenseEmployeeMap() {

@@ -37,7 +37,7 @@
                 <div *ngIf="expenseList.length">
                     <ul class="list-group">
                         <li class="list-group-item" *ngFor="let row of expenseList">
-                            {{row.expname}}
+                            {{row.expnm}}
                             <button type="button" class="btn btn-danger btn-xs pull-right" (click)="deleteExpense(row)">
                                 <i class="material-icons">delete</i></button>
                         </li>
