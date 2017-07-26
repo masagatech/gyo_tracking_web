@@ -32,10 +32,9 @@ export class AddHolidayComponent implements OnInit {
     enttname: string = "";
 
     teamDT: any = [];
+    teamList: any = [];
     tmid: number = 0;
     tmnm: string = "";
-
-    employeeList: any = [];
 
     purpose: string = "";
     remark: string = "";
@@ -87,8 +86,8 @@ export class AddHolidayComponent implements OnInit {
         this.enttid = event.value;
         this.enttname = event.label;
 
-        // this.addEntityList();
-        // $(".enttname input").focus();
+        this.addEntityList();
+        $(".enttname input").focus();
     }
 
     // Read Get Entity
@@ -131,45 +130,26 @@ export class AddHolidayComponent implements OnInit {
     selectTeamData(event) {
         this.tmid = event.value;
         this.tmnm = event.label;
-        this.getTeamEmployeeMap();
+
+        this.addTeamList();
+        $(".tmnm input").focus();
     }
 
-    // Get Team Employee Data
+    // Read Get Team
 
-    getTeamEmployeeMap() {
+    addTeamList() {
         var that = this;
-        commonfun.loader("#divTeam");
 
-        that._temservice.getTeamEmployeeMap({
-            "flag": "edit",
-            "enttid": that.enttid,
-            "tmid": that.tmid,
-            "wsautoid": that._wsdetails.wsautoid
-        }).subscribe(data => {
-            try {
-                if (data.data.length > 0) {
-                    that.employeeList = data.data;
-                }
-                else {
-                    that._msg.Show(messageType.error, "Error", "There are no Employee");
-                    that.tmid = 0;
-                    that.tmnm = "";
-                    that.employeeList = [];
-                    $(".tmnm input").focus();
-                }
-            }
-            catch (e) {
-                that._msg.Show(messageType.error, "Error", e);
-            }
+        that.teamList.push({
+            "tmid": that.tmid, "tmnm": that.tmnm
+        });
 
-            commonfun.loaderhide("#divTeam");
-        }, err => {
-            that._msg.Show(messageType.error, "Error", err);
-            console.log(err);
-            commonfun.loaderhide("#divTeam");
-        }, () => {
+        that.tmid = 0;
+        that.tmnm = "";
+    }
 
-        })
+    deleteTeam(row) {
+        this.teamList.splice(this.teamList.indexOf(row), 1);
     }
 
     // Active / Deactive Data
@@ -217,6 +197,7 @@ export class AddHolidayComponent implements OnInit {
         this.enttname = "";
 
         this.entityList = [];
+        this.teamList = [];
     }
 
     // Save Data
@@ -236,9 +217,13 @@ export class AddHolidayComponent implements OnInit {
             that._msg.Show(messageType.error, "Error", "Enter Holiday Title");
             $(".hldnm").focus();
         }
-        else if (that.enttid == 0) {
+        else if (that.entityList.length == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Entity");
             $(".enttname input").focus();
+        }
+        else if (that.teamList.length == 0) {
+            that._msg.Show(messageType.error, "Error", "Enter Team");
+            $(".tmnm input").focus();
         }
         else {
             commonfun.loader();
@@ -246,8 +231,8 @@ export class AddHolidayComponent implements OnInit {
             var _entitylist: string[] = [];
             _entitylist = Object.keys(that.entityList).map(function (k) { return that.entityList[k].schid });
 
-            var _employeelist: string[] = [];
-            _employeelist = Object.keys(that.employeeList).map(function (k) { return that.employeeList[k].empid });
+            var _teamlist: string[] = [];
+            _teamlist = Object.keys(that.teamList).map(function (k) { return that.teamList[k].tmid });
 
             var saveholiday = {
                 "hldid": that.hldid,
@@ -255,7 +240,7 @@ export class AddHolidayComponent implements OnInit {
                 "hldnm": that.hldnm,
                 "hlddesc": that.hlddesc,
                 "school": _entitylist,
-                "empid": _employeelist,
+                "tmid": _teamlist,
                 "frmdt": that.frmdt,
                 "todt": that.todt,
                 "cuid": that.loginUser.ucode,
@@ -324,6 +309,7 @@ export class AddHolidayComponent implements OnInit {
                         that.isactive = data.data[0].isactive;
                         that.mode = data.data[0].mode;
                         that.entityList = data.data[0].school !== null ? data.data[0].school : [];
+                        that.teamList = data.data[0].team !== null ? data.data[0].team : [];
                     }
                     catch (e) {
                         that._msg.Show(messageType.error, "Error", e);

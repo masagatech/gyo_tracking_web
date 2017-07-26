@@ -80,7 +80,7 @@
                     <ul class="list-group">
                         <li class="list-group-item" *ngFor="let row of entityList">
                             {{row.schnm}}
-                            <button type="button" class="btn btn-xs pull-right" (click)="deleteEntity(row)"><i class="material-icons">delete</i></button>
+                            <button type="button" class="btn btn-danger btn-xs pull-right" (click)="deleteEntity(row)"><i class="material-icons">delete</i></button>
                         </li>
                     </ul>
                 </div>
@@ -97,16 +97,13 @@
                     </div>
                 </div>
 
-                <div class="row clearfix">
-                    <div class="col-md-12">
-                        <div *ngIf="employeeList.length">
-                            <ul class="list-group">
-                                <li class="list-group-item allcheckboxes" *ngFor="let row of employeeList">
-                                    {{row.empname}}
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                <div *ngIf="teamList.length">
+                    <ul class="list-group">
+                        <li class="list-group-item" *ngFor="let row of teamList">
+                            {{row.tmnm}}
+                            <button type="button" class="btn btn-danger btn-xs pull-right" (click)="deleteTeam(row)"><i class="material-icons">delete</i></button>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
