@@ -22,6 +22,7 @@ export class AddAllocateTaskComponent implements OnInit {
     enttname: string = "";
 
     employeeDT: any = [];
+    employeeList: any = [];
     empid: number = 0;
     empname: string = "";
 
@@ -110,7 +111,54 @@ export class AddAllocateTaskComponent implements OnInit {
     selectEmployeeData(event) {
         this.empid = event.value;
         this.empname = event.label;
+    
+        this.addEmployeeList();
     }
+
+    // Check Duplicate Employee
+
+    isDuplicateEmployee() {
+        var that = this;
+
+        for (var i = 0; i < that.employeeList.length; i++) {
+            var field = that.employeeList[i];
+
+            if (field.empid == this.empid) {
+                this._msg.Show(messageType.error, "Error", "Duplicate Employee not Allowed");
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // Read Get Employee
+
+    addEmployeeList() {
+        var that = this;
+        commonfun.loader("#divEmployee");
+
+        var duplicateEmployee = that.isDuplicateEmployee();
+
+        if (!duplicateEmployee) {
+            that.employeeList.push({
+                "empid": that.empid, "empname": that.empname
+            });
+        }
+
+        that.empid = 0;
+        that.empname = "";
+        $(".empname input").focus();
+        commonfun.loaderhide("#divEmployee");
+    }
+
+    // Delete Employee
+
+    deleteEmployee(row) {
+        this.employeeList.splice(this.employeeList.indexOf(row), 1);
+        row.isactive = false;
+    }
+
 
     // Get Allocate Task
 
@@ -159,10 +207,6 @@ export class AddAllocateTaskComponent implements OnInit {
             that._msg.Show(messageType.error, "Error", "Select Entity");
             $(".enttname input").focus();
         }
-        else if (that.empid == 0) {
-            that._msg.Show(messageType.error, "Error", "Enter Employee");
-            $(".empname input").focus();
-        }
         else if (that.task == "") {
             that._msg.Show(messageType.error, "Error", "Enter Task");
             $(".task").focus();
@@ -182,10 +226,13 @@ export class AddAllocateTaskComponent implements OnInit {
         else {
             commonfun.loader();
 
+            var selectedEmployee: string[] = [];
+            selectedEmployee = Object.keys(that.employeeList).map(function (k) { return that.employeeList[k].empid });
+
             var saveemp = {
                 "tskid": that.tskid,
                 "enttid": that.enttid,
-                "empid": that.empid,
+                "empid": selectedEmployee,
                 "task": that.task,
                 "frmdt": that.frmdt,
                 "todt": that.todt,
@@ -238,19 +285,20 @@ export class AddAllocateTaskComponent implements OnInit {
 
         that.subscribeParameters = that._routeParams.params.subscribe(params => {
             if (params['id'] !== undefined) {
-                that.empid = params['id'];
+                that.tskid = params['id'];
 
                 that._tskservice.getAllocateTask({
                     "flag": "edit",
-                    "tskid": that.empid,
+                    "tskid": that.tskid,
                     "wsautoid": that._wsdetails.wsautoid
                 }).subscribe(data => {
                     try {
+                        console.log(data.data);
+
                         that.tskid = data.data[0].tskid;
                         that.enttid = data.data[0].enttid;
                         that.enttname = data.data[0].enttname;
-                        that.empid = data.data[0].empid;
-                        that.empname = data.data[0].empname;
+                        that.employeeList = data.data[0].empdata;
                         that.task = data.data[0].task;
                         that.frmdt = data.data[0].frmdt;
                         that.todt = data.data[0].todt;
