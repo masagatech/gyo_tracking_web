@@ -36,6 +36,9 @@ export const routes = [
                     { path: 'allocatetask', loadChildren: './allocatetask#AllocateTaskReportsModule' },
 
                     { path: 'loginlog', loadChildren: './loginlog#LoginLogReportsModule' },                  
+               
+                    { path: 'workspace', loadChildren: './workspace#WorkspaceReportsModule' },                  
+                   
                 ]
             }
         ]
