@@ -37,7 +37,10 @@ export const routes = [
                     { path: 'taskupdate', loadChildren: './taskupdate#TaskUpdateReportsModule' },
 
                     { path: 'loginlog', loadChildren: './loginlog#LoginLogReportsModule' },
-                    { path: 'workspace', loadChildren: './workspace#WorkspaceReportsModule' }
+                    { path: 'workspace', loadChildren: './workspace#WorkspaceReportsModule' },
+               
+                    { path: 'stops', loadChildren: './stops#StopsReportsModule' }
+                   
                 ]
             }
         ]
