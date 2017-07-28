@@ -14,18 +14,16 @@ import jsPDF from 'jspdf'
 })
 
 export class EmployeeReportsComponent implements OnInit, OnDestroy {
-    employeeDT: any = [];
     loginUser: LoginUserModel;
-
     _wsdetails: any = [];
 
-    entityDT: any = [];
-    entityid: number = 0;
-    entityname: string = "";
+    global = new Globals();
 
-    actaddrights: string = "";
-    acteditrights: string = "";
-    actviewrights: string = "";
+    entityDT: any = [];
+    enttid: number = 0;
+    enttname: string = "";
+
+    employeeDT: any = [];
 
     @ViewChild('Employee') Employee: ElementRef;
 
@@ -38,7 +36,7 @@ export class EmployeeReportsComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         setTimeout(function () {
-            $(".entityname input").focus();
+            $(".enttname input").focus();
             commonfun.navistyle();
 
             $.AdminBSB.islocked = true;
@@ -88,70 +86,49 @@ export class EmployeeReportsComponent implements OnInit, OnDestroy {
     // Selected Owners
 
     selectEntityData(event) {
-        this.entityid = event.value;
-        this.entityname = event.label;
+        this.enttid = event.value;
+        this.enttname = event.label;
 
-        Cookie.set("_enttid_", this.entityid.toString());
-        Cookie.set("_enttnm_", this.entityname);
+        Cookie.set("_enttid_", this.enttid.toString());
+        Cookie.set("_enttnm_", this.enttname);
 
         this.getEmployeeDetails();
     }
 
     public viewEmployeeDataRights() {
         var that = this;
-        var addRights = [];
-        var editRights = [];
-        var viewRights = [];
 
-        that._menuservice.getMenuDetails({
-            "flag": "actrights", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "mcode": "rptdrv", "utype": that.loginUser.utype
-        }).subscribe(data => {
-            addRights = data.data.filter(a => a.mrights === "add");
-            editRights = data.data.filter(a => a.mrights === "edit");
-            viewRights = data.data.filter(a => a.mrights === "view");
-
-            that.actaddrights = addRights.length !== 0 ? addRights[0].mrights : "";
-            that.acteditrights = editRights.length !== 0 ? editRights[0].mrights : "";
-            that.actviewrights = viewRights.length !== 0 ? viewRights[0].mrights : "";
-
-            if (Cookie.get('_enttnm_') != null) {
-                that.entityid = parseInt(Cookie.get('_enttid_'));
-                that.entityname = Cookie.get('_enttnm_');
-                that.getEmployeeDetails();
-            }
-        }, err => {
-            that._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        })
+        if (Cookie.get('_enttnm_') != null) {
+            that.enttid = parseInt(Cookie.get('_enttid_'));
+            that.enttname = Cookie.get('_enttnm_');
+            that.getEmployeeDetails();
+        }
     }
 
     getEmployeeDetails() {
         var that = this;
 
-        if (that.actviewrights === "view") {
-            commonfun.loader();
+        commonfun.loader();
 
-            that._Employeeservice.getEmployeeDetails({
-                "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
-                "enttid": that.entityid, "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid
-            }).subscribe(data => {
-                try {
-                    that.employeeDT = data.data;
-                }
-                catch (e) {
-                    that._msg.Show(messageType.error, "Error", e);
-                }
+        that._Employeeservice.getEmployeeDetails({
+            "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
+            "enttid": that.enttid, "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid
+        }).subscribe(data => {
+            try {
+                that.employeeDT = data.data;
+            }
+            catch (e) {
+                that._msg.Show(messageType.error, "Error", e);
+            }
 
-                commonfun.loaderhide();
-            }, err => {
-                that._msg.Show(messageType.error, "Error", err);
-                console.log(err);
-                commonfun.loaderhide();
-            }, () => {
+            commonfun.loaderhide();
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+            commonfun.loaderhide();
+        }, () => {
 
-            })
-        }
+        })
     }
 
     public ngOnDestroy() {

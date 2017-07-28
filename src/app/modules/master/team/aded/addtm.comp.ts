@@ -15,8 +15,11 @@ declare var commonfun: any;
 
 export class AddTeamComponent implements OnInit {
     loginUser: LoginUserModel;
-
     _wsdetails: any = [];
+
+    entityDT: any = [];
+    enttid: number = 0;
+    enttname: string = "";
 
     tmid: number = 0;
     tmnm: string = "";
@@ -29,11 +32,10 @@ export class AddTeamComponent implements OnInit {
     private subscribeParameters: any;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
-        private _tmservice: TeamService, private _autoservice: CommonService) 
-        {
+        private _tmservice: TeamService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
-        }
+    }
 
     public ngOnInit() {
         setTimeout(function () {
@@ -41,6 +43,35 @@ export class AddTeamComponent implements OnInit {
         }, 100);
 
         this.getTeamDetails();
+    }
+
+    // Auto Completed Entity
+
+    getEntityData(event) {
+        let query = event.query;
+
+        this._autoservice.getAutoData({
+            "flag": "entity",
+            "uid": this.loginUser.uid,
+            "ucode": this.loginUser.ucode,
+            "utype": this.loginUser.utype,
+            "issysadmin": this.loginUser.issysadmin,
+            "wsautoid": this._wsdetails.wsautoid,
+            "search": query
+        }).subscribe((data) => {
+            this.entityDT = data.data;
+        }, err => {
+            this._msg.Show(messageType.error, "Error", err);
+        }, () => {
+
+        });
+    }
+
+    // Selected Entity
+
+    selectEntityData(event) {
+        this.enttid = event.value;
+        this.enttname = event.label;
     }
 
     // Clear Fields
@@ -73,6 +104,7 @@ export class AddTeamComponent implements OnInit {
                 "tmnm": that.tmnm,
                 "purpose": that.purpose,
                 "cuid": that.loginUser.ucode,
+                "enttid": that.enttid,
                 "wsautoid": that._wsdetails.wsautoid,
                 "isactive": that.isactive,
                 "mode": ""
@@ -133,6 +165,8 @@ export class AddTeamComponent implements OnInit {
 
                 that._tmservice.getTeamDetails(params).subscribe(data => {
                     try {
+                        that.enttid = data.data[0].enttid;
+                        that.enttname = data.data[0].enttname;
                         that.tmid = data.data[0].tmid;
                         that.tmnm = data.data[0].tmnm;
                         that.purpose = data.data[0].purpose;

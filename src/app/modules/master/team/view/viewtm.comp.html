@@ -1,10 +1,19 @@
 <div class="card">
     <div class="header">
         <div class="row clearfix">
-            <div class="col-md-2">
+            <div class="col-md-2 col-xs-2">
                 <h4>Team</h4>
             </div>
-            <div class="col-md-10" align="right">
+            <div class="col-md-9 col-xs-9">
+                <div class="form-group">
+                    <div class="form-line">
+                        <label class="control-label">Entity Name <strong>*</strong></label>
+                        <p-autoComplete id="enttname" name="enttname" [(ngModel)]="enttname" [tabindex]="9" (onSelect)="selectEntityData($event)" [suggestions]="entityDT" (completeMethod)="getEntityData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete enttname"></p-autoComplete>
+                        <span class="material-icons inputserachico">search</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1 col-xs-1" align="right">
                 <button type="button" class="btn btn-theme btn-xs" (click)="addTeamForm()">
 					<span class="material-icons">add</span>
 				</button>

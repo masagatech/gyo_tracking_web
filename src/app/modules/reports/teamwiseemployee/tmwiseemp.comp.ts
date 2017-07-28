@@ -101,7 +101,7 @@ export class TeamWiseEmployeeComponent implements OnInit, OnDestroy {
         commonfun.loader();
 
         that._rptservice.getTeamWiseEmployeeReports({
-            "flag": "group", "enttid": that.enttid, "wsautoid": that._wsdetails.wsautoid
+            "flag": "team", "enttid": that.enttid, "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {
             try {
                 that.teamDT = data.data;
@@ -122,7 +122,7 @@ export class TeamWiseEmployeeComponent implements OnInit, OnDestroy {
 
     // View Employee List
 
-    getTeamWiseEmployeeReports(row) {
+    getTeamWiseEmployee(row) {
         var that = this;
 
         commonfun.loader("#ddlemp");

@@ -32,7 +32,7 @@ export const routes = [
                     { path: 'expense', loadChildren: './expense#ExpenseModule' },
                     { path: 'expenseemployeemap', loadChildren: './expempmap#ExpenseEmployeeMapModule' },
                     
-                    { path: 'allocatetask', loadChildren: './allocatetask#AllocateTaskModule' },
+                    { path: 'taskallocate', loadChildren: './taskallocate#TaskAllocateModule' },
                     { path: 'notification', loadChildren: './notification#NotificationModule' },
                     { path: 'expense', loadChildren: './expense#ExpenseModule' },
                     { path: 'voucher', loadChildren: './voucher#VoucherModule' },

@@ -3,14 +3,14 @@ import { DataService } from '../../dataconnect';
 import { Router } from '@angular/router';
 
 @Injectable()
-export class AllocateTaskService {
+export class TaskAllocateService {
     constructor(private _dataserver: DataService, private _router: Router) { }
 
-    getAllocateTask(req: any) {
-        return this._dataserver.post("getAllocateTask", req)
+    getTaskAllocate(req: any) {
+        return this._dataserver.post("getTaskAllocate", req)
     }
 
-    saveAllocateTask(req: any) {
-        return this._dataserver.post("saveAllocateTask", req)
+    saveTaskAllocate(req: any) {
+        return this._dataserver.post("saveTaskAllocate", req)
     }
 }

@@ -18,6 +18,9 @@ export const routes = [
                 children: [
                     { path: '', loadChildren: './dashboard#DashboardModule' },
 
+                    // Trip Tracking
+                    { path: 'triptracking', loadChildren: './triptracking#TripTrackingModule' },
+
                     // Masters
                     { path: 'master', loadChildren: './master#MasterModule' },
 

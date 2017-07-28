@@ -5,6 +5,8 @@ export class Globals {
     uploadurl: string = "http://localhost:8092/images/";
     filepath: string = "www\\uploads\\";
 
+    static socketurl: string = "http://localhost:8082/";
+
     // serviceurl: string = "http://traveltrack.goyo.in:8080/goyoapi/";
     // uploadurl: string = "http://traveltrack.goyo.in:8080/images/";
     // filepath: string = "www/uploads/";

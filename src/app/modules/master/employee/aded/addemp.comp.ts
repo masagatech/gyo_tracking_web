@@ -14,6 +14,7 @@ declare var google: any;
 
 export class AddEmployeeComponent implements OnInit {
     loginUser: LoginUserModel;
+    _wsdetails: any = [];
 
     entityDT: any = [];
     enttid: number = 0;
@@ -51,7 +52,6 @@ export class AddEmployeeComponent implements OnInit {
     global = new Globals();
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
 
-    _wsdetails: any = [];
     private subscribeParameters: any;
 
     constructor(private _empservice: EmployeeService, private _routeParams: ActivatedRoute, private _router: Router,

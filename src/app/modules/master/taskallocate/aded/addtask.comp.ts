@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { AllocateTaskService } from '@services/master';
+import { TaskAllocateService } from '@services/master';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 declare var google: any;
@@ -12,7 +12,7 @@ declare var google: any;
     providers: [CommonService]
 })
 
-export class AddAllocateTaskComponent implements OnInit {
+export class AddTaskAllocateComponent implements OnInit {
     loginUser: LoginUserModel;
 
     tskid: number = 0;
@@ -26,7 +26,8 @@ export class AddAllocateTaskComponent implements OnInit {
     empid: number = 0;
     empname: string = "";
 
-    task: string = "";
+    tsktitle: string = "";
+    tskdesc: string = "";
     frmdt: any = "";
     todt: any = "";
 
@@ -38,7 +39,7 @@ export class AddAllocateTaskComponent implements OnInit {
     _wsdetails: any = [];
     private subscribeParameters: any;
 
-    constructor(private _tskservice: AllocateTaskService, private _routeParams: ActivatedRoute, private _router: Router,
+    constructor(private _atservice: TaskAllocateService, private _routeParams: ActivatedRoute, private _router: Router,
         private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
@@ -51,7 +52,7 @@ export class AddAllocateTaskComponent implements OnInit {
             $(".enttname input").focus();
         }, 100);
 
-        this.getAllocateTask();
+        this.getTaskAllocate();
     }
 
     // Auto Completed Entity
@@ -166,7 +167,7 @@ export class AddAllocateTaskComponent implements OnInit {
         var that = this;
         commonfun.loader();
 
-        that._tskservice.getAllocateTask({ "flag": "dropdown" }).subscribe(data => {
+        that._atservice.getTaskAllocate({ "flag": "dropdown" }).subscribe(data => {
             try {
                 that.ntrgrpDT = data.data;
             }
@@ -186,29 +187,35 @@ export class AddAllocateTaskComponent implements OnInit {
 
     // Clear Fields
 
-    resetEmployeeFields() {
+    resetTaskFields() {
         var that = this;
 
-        that.empid = 0;
-        that.empname = "";
-        that.task = "";
+        that.tsktitle = "";
+        that.tskdesc = "";
         that.frmdt = "";
         that.todt = "";
         that.ntrgrp = "";
         that.remark = "";
+        that.empid = 0;
+        that.empname = "";
+        that.employeeList = [];
     }
 
     // Save Data
 
-    saveAllocateTask() {
+    saveTaskAllocate() {
         var that = this;
 
         if (that.enttid == 0) {
             that._msg.Show(messageType.error, "Error", "Select Entity");
             $(".enttname input").focus();
         }
-        else if (that.task == "") {
-            that._msg.Show(messageType.error, "Error", "Enter Task");
+        else if (that.tsktitle == "") {
+            that._msg.Show(messageType.error, "Error", "Enter Task Title");
+            $(".task").focus();
+        }
+        else if (that.tskdesc == "") {
+            that._msg.Show(messageType.error, "Error", "Enter Task Description");
             $(".task").focus();
         }
         else if (that.frmdt == "") {
@@ -233,7 +240,8 @@ export class AddAllocateTaskComponent implements OnInit {
                 "tskid": that.tskid,
                 "enttid": that.enttid,
                 "empid": selectedEmployee,
-                "task": that.task,
+                "tsktitle": that.tsktitle,
+                "tskdesc": that.tskdesc,
                 "frmdt": that.frmdt,
                 "todt": that.todt,
                 "ntrgrp": that.ntrgrp,
@@ -242,7 +250,7 @@ export class AddAllocateTaskComponent implements OnInit {
                 "wsautoid": that._wsdetails.wsautoid
             }
 
-            this._tskservice.saveAllocateTask(saveemp).subscribe(data => {
+            this._atservice.saveTaskAllocate(saveemp).subscribe(data => {
                 try {
                     var dataResult = data.data[0].funsave_allocatetask;
                     var msg = dataResult.msg;
@@ -252,7 +260,7 @@ export class AddAllocateTaskComponent implements OnInit {
                         that._msg.Show(messageType.success, "Success", msg);
 
                         if (msgid === "1") {
-                            that.resetEmployeeFields();
+                            that.resetTaskFields();
                         }
                         else {
                             that.backViewData();
@@ -279,7 +287,7 @@ export class AddAllocateTaskComponent implements OnInit {
 
     // Get Allocate Task
 
-    getAllocateTask() {
+    getTaskAllocate() {
         var that = this;
         commonfun.loader();
 
@@ -287,7 +295,7 @@ export class AddAllocateTaskComponent implements OnInit {
             if (params['id'] !== undefined) {
                 that.tskid = params['id'];
 
-                that._tskservice.getAllocateTask({
+                that._atservice.getTaskAllocate({
                     "flag": "edit",
                     "tskid": that.tskid,
                     "wsautoid": that._wsdetails.wsautoid
@@ -299,7 +307,8 @@ export class AddAllocateTaskComponent implements OnInit {
                         that.enttid = data.data[0].enttid;
                         that.enttname = data.data[0].enttname;
                         that.employeeList = data.data[0].empdata;
-                        that.task = data.data[0].task;
+                        that.tsktitle = data.data[0].tsktitle;
+                        that.tskdesc = data.data[0].tskdesc;
                         that.frmdt = data.data[0].frmdt;
                         that.todt = data.data[0].todt;
                         that.ntrgrp = data.data[0].ntrgrp;
@@ -324,7 +333,7 @@ export class AddAllocateTaskComponent implements OnInit {
                     that.enttname = Cookie.get('_enttnm_');
                 }
 
-                that.resetEmployeeFields();
+                that.resetTaskFields();
                 commonfun.loaderhide();
             }
         });
@@ -333,6 +342,6 @@ export class AddAllocateTaskComponent implements OnInit {
     // Back For View Data
 
     backViewData() {
-        this._router.navigate(['/master/allocatetask']);
+        this._router.navigate(['/master/taskallocate']);
     }
 }

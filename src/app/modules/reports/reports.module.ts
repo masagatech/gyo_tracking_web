@@ -33,12 +33,12 @@ export const routes = [
                     { path: 'vehicle', loadChildren: './vehicle#VehicleReportsModule' },
                     { path: 'holiday', loadChildren: './holiday#HolidayReportsModule' },
                     
-                    { path: 'allocatetask', loadChildren: './allocatetask#AllocateTaskReportsModule' },
+                    { path: 'taskallocate', loadChildren: './taskallocate#TaskAllocateReportsModule' },
+                    { path: 'taskupdate', loadChildren: './taskupdate#TaskUpdateReportsModule' },
 
-                    { path: 'loginlog', loadChildren: './loginlog#LoginLogReportsModule' },                  
+                    { path: 'loginlog', loadChildren: './loginlog#LoginLogReportsModule' },
                
-                    { path: 'workspace', loadChildren: './workspace#WorkspaceReportsModule' },                  
-                   
+                    { path: 'workspace', loadChildren: './workspace#WorkspaceReportsModule' }
                 ]
             }
         ]
