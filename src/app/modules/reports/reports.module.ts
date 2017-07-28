@@ -39,7 +39,10 @@ export const routes = [
                
                     { path: 'workspace', loadChildren: './workspace#WorkspaceReportsModule' },                  
                    
+                    { path: 'stops', loadChildren: './stops#StopsReportsModule' },                  
+                   
                 ]
+
             }
         ]
     },
