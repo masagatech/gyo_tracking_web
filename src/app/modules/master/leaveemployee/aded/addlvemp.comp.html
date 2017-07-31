@@ -1,0 +1,67 @@
+<div class="card">
+    <div class="header">
+        <h4>Leave Employee</h4>
+        <ul class="header-dropdown m-r--5">
+            <li>
+                <a role="button" class="btn btn-theme btn-xs" (click)="saveLeaveEmployee()">
+                    <i class="material-icons">save</i></a>
+            </li>
+            <li>
+                <a role="button" class="btn btn-theme btn-xs" (click)="backViewData()">
+                    <i class="material-icons">arrow_back</i></a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="form-line">
+                        <label class="control-label">Entity Name <strong>*</strong></label>
+                        <p-autoComplete id="enttname" name="enttname" [(ngModel)]="enttname" [tabindex]="1" (onSelect)="selectEntityData($event)" [suggestions]="entityDT" (completeMethod)="getEntityData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete enttname"></p-autoComplete>
+                        <span class="material-icons inputserachico">search</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-line">
+                        <label class="control-label">Employee Name <strong>*</strong></label>
+                        <p-autoComplete id="empnm" name="empnm" [(ngModel)]="empnm" [tabindex]="1" (onSelect)="selectEmployeeData($event)" [suggestions]="empDT" (completeMethod)="getEmployeeData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete empnm"></p-autoComplete>
+                        <span class="material-icons inputserachico">search</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>From Date</label>
+                    <div class="form-line">
+                        <input type="date" class="form-control" [(ngModel)]="frmdt">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>To Date</label>
+                    <div class="form-line">
+                        <input type="date" class="form-control" [(ngModel)]="todt">
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label>Leave Type:</label>
+                    <div class="form-line">
+                        <select [(ngModel)]="restype" class="form-control restype" tabindex="4">
+							<option [value]="''">Select Leave Type</option>
+                            <option [value]="'Medical'">Medical</option>
+							<!--<option *ngFor="let row of lvtypeDT" [value]="row.key">
+								{{row.val}}
+							</option>-->
+						</select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Reason</label>
+                    <div class="form-line">
+                        <textarea class="form-control" rows="5" [(ngModel)]="reason"></textarea>
+                    </div>
+                </div>
+          </div>
+      </div>
+    </div>
+ </div>
