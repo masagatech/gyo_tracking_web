@@ -14,7 +14,7 @@ export class ReportsService {
         return this._dataserver.post("getTeamWiseEmployeeReports", req)
     }
 
-    getSpeedVialationReports(req: any) {
-        return this._dataserver.post("getSpeedVialationReports", req)
+    getTripReports(req: any) {
+        return this._dataserver.post("getTripReports", req)
     }
 }

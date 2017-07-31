@@ -2,10 +2,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { SharedComponentModule } from '../../../_shared/sharedcomp.module';
 import { AuthGuard } from '../../../_services/authguard-service';
 
-import { SpeedReportsComponent } from './rptspeed.comp';
+import { EmployeeAttendanceReportsComponent } from './rptempatt.comp';
 import { ReportsService } from '@services/master';
 
 import { LazyLoadEvent, DataTableModule, AutoCompleteModule } from 'primeng/primeng';
@@ -14,8 +13,8 @@ export const routes = [
   {
     path: '', children: [
       {
-        path: '', component: SpeedReportsComponent, canActivate: [AuthGuard],
-        data: { "module": "rpt", "submodule": "rptspd", "rights": "view", "urlname": "/speed" }
+        path: '', component: EmployeeAttendanceReportsComponent, canActivate: [AuthGuard],
+        data: { "module": "rpt", "submodule": "empatt", "rights": "view", "urlname": "/employeeattendance" }
       }
     ]
   },
@@ -23,16 +22,16 @@ export const routes = [
 
 @NgModule({
   declarations: [
-    SpeedReportsComponent
+    EmployeeAttendanceReportsComponent
   ],
 
   imports: [
-    CommonModule, FormsModule, SharedComponentModule, RouterModule.forChild(routes), DataTableModule, AutoCompleteModule
+    CommonModule, FormsModule, RouterModule.forChild(routes), DataTableModule, AutoCompleteModule
   ],
 
   providers: [AuthGuard, ReportsService]
 })
 
-export class SpeedReportsModule {
+export class PassengerAttendanceReportsModule {
   public static routes = routes;
 }

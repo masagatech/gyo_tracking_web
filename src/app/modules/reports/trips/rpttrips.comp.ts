@@ -8,46 +8,49 @@ import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import jsPDF from 'jspdf'
 
 @Component({
-    templateUrl: 'unschdpsngr.comp.html',
-    providers: [MenuService, CommonService]
+    templateUrl: 'rpttrips.comp.html',
+    providers: [CommonService, MenuService, ReportsService]
 })
 
-export class UnschedulePassengerComponent implements OnInit, OnDestroy {
+export class TripReportsComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
     _wsdetails: any = [];
+
+    monthDT: any = [];
 
     entityDT: any = [];
     enttid: number = 0;
     enttname: string = "";
+    monthname: string = "";
 
-    passengerDT: any = [];
-    actviewrights: string = "";
+    tripData: any = [];
 
-    @ViewChild('unschdpsngr') unschdpsngr: ElementRef;
+    @ViewChild('attnatt') attnatt: ElementRef;
 
-    constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, public _menuservice: MenuService,
-        private _loginservice: LoginService, private _rptservice: ReportsService, private _autoservice: CommonService) {
+    constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
+        public _menuservice: MenuService, private _loginservice: LoginService, private _rptservice: ReportsService,
+        private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
 
-        this.viewUnscheduleReportsRights();
+        this.viewTripReportsRights();
     }
 
     public ngOnInit() {
         setTimeout(function () {
-            commonfun.navistyle();
             $(".enttname input").focus();
+            commonfun.navistyle();
 
             $.AdminBSB.islocked = true;
             $.AdminBSB.leftSideBar.Close();
             $.AdminBSB.rightSideBar.activate();
-        }, 0);
+        }, 100);
     }
 
     // Export
 
     public exportToCSV() {
-        new Angular2Csv(this.passengerDT, 'UnscheduledPassenger', { "showLabels": true });
+        new Angular2Csv(this.tripData, 'Trip Reports', { "showLabels": true });
     }
 
     public exportToPDF() {
@@ -55,34 +58,9 @@ export class UnschedulePassengerComponent implements OnInit, OnDestroy {
         let options = {
             pagesplit: true
         };
-        pdf.addHTML(this.unschdpsngr.nativeElement, 0, 0, options, () => {
-            pdf.save("UnscheduledPassenger.pdf");
+        pdf.addHTML(this.attnatt.nativeElement, 0, 0, options, () => {
+            pdf.save("AttendentAttendance.pdf");
         });
-    }
-
-    public viewUnscheduleReportsRights() {
-        var that = this;
-        var addRights = [];
-        var editRights = [];
-        var viewRights = [];
-
-        that._menuservice.getMenuDetails({
-            "flag": "actrights", "uid": that.loginUser.uid, "mcode": "unschdpsngr", "utype": that.loginUser.utype
-        }).subscribe(data => {
-            viewRights = data.data.filter(a => a.mrights === "view");
-            that.actviewrights = viewRights.length !== 0 ? viewRights[0].mrights : "";
-
-            if (Cookie.get('_enttnm_') != null) {
-                that.enttid = parseInt(Cookie.get('_enttid_'));
-                that.enttname = Cookie.get('_enttnm_');
-
-                that.getUnschedulePassenger();
-            }
-        }, err => {
-            that._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        })
     }
 
     // Auto Completed Entity
@@ -116,26 +94,57 @@ export class UnschedulePassengerComponent implements OnInit, OnDestroy {
         Cookie.set("_enttid_", this.enttid.toString());
         Cookie.set("_enttnm_", this.enttname);
 
-        this.getUnschedulePassenger();
+        this.getTripReports();
     }
 
-    // View Passenger List
+    // Get Trip Data
 
-    getUnschedulePassenger() {
+    public viewTripReportsRights() {
         var that = this;
 
-        if (that.actviewrights === "view") {
-            commonfun.loader();
+        if (Cookie.get('_enttnm_') != null) {
+            that.enttid = parseInt(Cookie.get('_enttid_'));
+            that.enttname = Cookie.get('_enttnm_');
 
-            that._rptservice.getTeamWiseEmployeeReports({
-                "flag": "unschedule", "enttid": that.enttid, "wsautoid": that._wsdetails.wsautoid
+            that.getTripReports();
+        }
+    }
+
+    deg2rad(deg) {
+        return deg * (Math.PI / 180)
+    }
+
+    getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+        var R = 6371; // Radius of the earth in km
+        var dLat = this.deg2rad(lat2 - lat1); // deg2rad below
+        var dLon = this.deg2rad(lon2 - lon1);
+        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        var d = R * c; // Distance in km
+        return d;
+    }
+
+    getTripReports() {
+        var that = this;
+
+        if (that.enttname === "") {
+            that._msg.Show(messageType.warn, "Warning", "Search Entity");
+        }
+        else {
+            that._rptservice.getTripReports({
+                "enttid": that.enttid, "uid": that.loginUser.uid
             }).subscribe(data => {
                 try {
-                    if (data.data.length > 0) {
-                        that.passengerDT = data.data;
+                    if (data.data.length !== 0) {
+                        for (var i = 0; i < data.data.length; i++) {
+                            var trprow = data.data[i];
+                            trprow.km = that.getDistanceFromLatLonInKm(trprow.strlat, trprow.strlng, trprow.endlat, trprow.endlng);
+                        }
+
+                        that.tripData = data.data;
                     }
                     else {
-                        that.passengerDT = [];
+                        that.tripData = [];
                     }
                 }
                 catch (e) {

@@ -8,15 +8,16 @@ import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import jsPDF from 'jspdf'
 
 @Component({
-    templateUrl: 'rptdrvatt.comp.html',
+    templateUrl: 'rptempatt.comp.html',
     providers: [CommonService, MenuService, ReportsService]
 })
 
-export class DriverAttendanceReportsComponent implements OnInit, OnDestroy {
+export class EmployeeAttendanceReportsComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
     _wsdetails: any = [];
 
     monthDT: any = [];
+    standardDT: any = [];
 
     attColumn: any = [];
     attData: any = [];
@@ -24,12 +25,13 @@ export class DriverAttendanceReportsComponent implements OnInit, OnDestroy {
     enttid: number = 0;
     enttname: string = "";
     monthname: string = "";
+    standard: string = "";
 
     actaddrights: string = "";
     acteditrights: string = "";
     actviewrights: string = "";
 
-    @ViewChild('drvatt') drvatt: ElementRef;
+    @ViewChild('psngrattnd') psngrattnd: ElementRef;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
         public _menuservice: MenuService, private _loginservice: LoginService, private _rptservice: ReportsService,
@@ -38,11 +40,13 @@ export class DriverAttendanceReportsComponent implements OnInit, OnDestroy {
         this._wsdetails = Globals.getWSDetails();
 
         this.fillDropDownList();
-        this.getDefaultMonth();
         this.viewAttendanceReportsRights();
+        this.getDefaultMonth();
     }
 
     public ngOnInit() {
+        var that = this;
+
         setTimeout(function () {
             $(".enttname input").focus();
             commonfun.navistyle();
@@ -64,16 +68,18 @@ export class DriverAttendanceReportsComponent implements OnInit, OnDestroy {
     // Export
 
     public exportToCSV() {
-        new Angular2Csv(this.attData, 'DriverAttendance', { "showLabels": true });
+        new Angular2Csv(this.attData, 'User Details', { "showLabels": true });
     }
 
     public exportToPDF() {
-        let pdf = new jsPDF('l', 'pt', 'a4');
+        let pdf = new jsPDF();
+
         let options = {
             pagesplit: true
         };
-        pdf.addHTML(this.drvatt.nativeElement, 0, 0, options, () => {
-            pdf.save("DriverAttendance.pdf");
+
+        pdf.addHTML(this.psngrattnd.nativeElement, 0, 0, options, () => {
+            pdf.save("PassengerAttendance.pdf");
         });
     }
 
@@ -111,15 +117,16 @@ export class DriverAttendanceReportsComponent implements OnInit, OnDestroy {
         this.getAttendanceColumn();
     }
 
-    // Fill Entity, Division, Gender DropDown
+    // Fill Entity, Standard, Month DropDown
 
     fillDropDownList() {
         var that = this;
         commonfun.loader();
 
-        that._rptservice.getAttendanceReports({ "flag": "dropdown" }).subscribe(data => {
+        that._rptservice.getAttendanceReports({ "flag": "filterddl" }).subscribe(data => {
             try {
-                that.monthDT = data.data;
+                that.monthDT = data.data.filter(a => a.group === "month");
+                that.standardDT = data.data.filter(a => a.group === "standard");
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -146,7 +153,7 @@ export class DriverAttendanceReportsComponent implements OnInit, OnDestroy {
         var viewRights = [];
 
         that._menuservice.getMenuDetails({
-            "flag": "actrights", "uid": that.loginUser.uid, "mcode": "rptdrvatt", "utype": that.loginUser.utype
+            "flag": "actrights", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "mcode": "rptpsngrsatt", "utype": that.loginUser.utype
         }).subscribe(data => {
             addRights = data.data.filter(a => a.mrights === "add");
             editRights = data.data.filter(a => a.mrights === "edit");
@@ -196,10 +203,10 @@ export class DriverAttendanceReportsComponent implements OnInit, OnDestroy {
         }
         else {
             if (that.actviewrights === "view") {
-                commonfun.loader();
+                commonfun.loader("#fltrpsngr");
 
                 that._rptservice.getAttendanceReports({
-                    "flag": "driver", "monthname": that.monthname, "schoolid": that.enttid
+                    "flag": "student", "monthname": that.monthname, "standard": that.standard, "schoolid": that.enttid
                 }).subscribe(data => {
                     try {
                         if (data.data.length !== 0) {
@@ -212,11 +219,12 @@ export class DriverAttendanceReportsComponent implements OnInit, OnDestroy {
                     catch (e) {
                         that._msg.Show(messageType.error, "Error", e);
                     }
-                    commonfun.loaderhide();
+
+                    commonfun.loaderhide("#fltrpsngr");
                 }, err => {
                     that._msg.Show(messageType.error, "Error", err);
                     console.log(err);
-                    commonfun.loaderhide();
+                    commonfun.loaderhide("#fltrpsngr");
                 }, () => {
 
                 })
