@@ -225,7 +225,7 @@ export class AddTeamOwnershipComponent implements OnInit {
     // Delete Ownership
 
     deleteOwnership(row) {
-        this.employeeList.splice(this.employeeList.indexOf(row), 1);
+        this.ownershipList.splice(this.ownershipList.indexOf(row), 1);
         row.isactive = false;
     }
 

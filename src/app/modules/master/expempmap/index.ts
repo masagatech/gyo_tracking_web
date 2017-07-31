@@ -16,7 +16,7 @@ export const routes = [
     path: '', children: [
       {
         path: '', component: AddExpenseEmployeeMapComponent, canActivate: [AuthGuard],
-        data: { "module": "set", "submodule": "umm", "rights": "view", "urlname": "/expenseemployeemap" }
+        data: { "module": "set", "submodule": "eem", "rights": "view", "urlname": "/expenseemployeemap" }
       },
     ]
   },

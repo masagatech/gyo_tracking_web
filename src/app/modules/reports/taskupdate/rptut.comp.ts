@@ -43,6 +43,10 @@ export class TaskUpdateComponent implements OnInit {
         setTimeout(function () {
             commonfun.navistyle();
             $(".enttname input").focus();
+
+            $.AdminBSB.islocked = true;
+            $.AdminBSB.leftSideBar.Close();
+            $.AdminBSB.rightSideBar.activate();
         }, 100);
     }
 
@@ -170,11 +174,29 @@ export class TaskUpdateComponent implements OnInit {
         })
     }
 
+    TotalAmount() {
+        let that = this;
+        var totval = 0;
+        let items = null;
+
+        for (let i = 0; i < this.updateTaskDT.length; i++) {
+            items = this.updateTaskDT[i];
+            totval += parseInt(items.value);
+        }
+
+        return totval;
+    }
+
     public addAllocateTask() {
         this._router.navigate(['/master/allocatetask/add']);
     }
 
     public editAllocateTask(row) {
         this._router.navigate(['/master/allocatetask/edit', row.tskid]);
+    }
+
+    public ngOnDestroy() {
+        $.AdminBSB.islocked = false;
+        $.AdminBSB.leftSideBar.Open();
     }
 }

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { SharedComponentModule } from '../../../_shared/sharedcomp.module';
 import { AuthGuard } from '../../../_services/authguard-service';
 
 import { TaskUpdateComponent } from './rptut.comp';
@@ -14,7 +15,7 @@ export const routes = [
     path: '', children: [
       {
         path: '', component: TaskUpdateComponent, canActivate: [AuthGuard],
-        data: { "module": "rpt", "submodule": "at", "rights": "view", "urlname": "/allocatetask" }
+        data: { "module": "rpt", "submodule": "rptut", "rights": "view", "urlname": "/taskupdate" }
       },
     ]
   },
@@ -26,7 +27,8 @@ export const routes = [
   ],
 
   imports: [
-    CommonModule, FormsModule, RouterModule.forChild(routes), DataTableModule, AutoCompleteModule, FileUploadModule
+    CommonModule, FormsModule, RouterModule.forChild(routes), DataTableModule, AutoCompleteModule,
+    FileUploadModule, SharedComponentModule
   ],
 
   providers: [AuthGuard, TaskNatureService]

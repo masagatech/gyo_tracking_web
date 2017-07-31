@@ -15,7 +15,7 @@ export const routes = [
     path: '', children: [
       {
         path: '', component: VehicleReportsComponent, canActivate: [AuthGuard],
-        data: { "module": "rpt", "submodule": "rptpsngr", "rights": "view", "urlname": "/vehicle" }
+        data: { "module": "rpt", "submodule": "rptveh", "rights": "view", "urlname": "/vehicle" }
       }
     ]
   },

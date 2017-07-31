@@ -40,7 +40,7 @@
                 </div>
             </div>
             <div class="col-md-2" style="padding-top: 12px;">
-                <button type="button" class="btn btn-theme btn-xs" (click)="getNatureTask()">
+                <button type="button" class="btn btn-theme btn-xs" (click)="getTaskNature()">
                     <span class="material-icons">restore</span>
                 </button>
             </div>
@@ -54,9 +54,27 @@
                     <p-column field="tadate" header="Allocation Date" [style]="{'width':'125px','text-align':'left'}"></p-column>
                     <p-column field="tsktitle" header="Task Title" [style]="{'width':'200px','text-align':'left'}"></p-column>
                     <p-column field="empname" header="Employee Name" [style]="{'width':'200px', 'text-align':'left'}"></p-column>
+                    <p-column field="value" header="Value" [style]="{'width':'70px', 'text-align':'right'}"></p-column>
                     <p-column field="remark1" header="Remark" [style]="{'text-align':'left'}"></p-column>
                     <p-column field="tstype" header="Status" [style]="{'width':'125px', 'text-align':'left'}"></p-column>
                     <p-column field="tndate" header="Update Date" [style]="{'width':'110px', 'text-align':'left'}"></p-column>
+                    <p-column field="tntime" header="Update Time" [style]="{'width':'110px', 'text-align':'left'}"></p-column>
+                    <footer *ngIf="updateTaskDT.length">
+                        <table class="tableNoborder">
+                            <tbody>
+                                <tr>
+                                    <td align="left" colspan="3">
+                                        <b>Total Amount</b>
+                                    </td>
+                                    <td width="150px" align="right" width="70px">
+                                        {{TotalAmount() | _currency:loginUser._globsettings[0]}}
+                                    </td>
+                                    <td colspan="4">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </footer>
                 </p-dataTable>
             </div>
         </div>
