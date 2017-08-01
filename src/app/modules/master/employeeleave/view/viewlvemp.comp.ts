@@ -12,7 +12,6 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 })
 
 export class ViewLeaveEmploypeeComponent implements OnInit {
-    lvDT: any = [];
     loginUser: LoginUserModel;
 
     _wsdetails: any = [];
@@ -20,6 +19,8 @@ export class ViewLeaveEmploypeeComponent implements OnInit {
     entityDT: any = [];
     enttid: number = 0;
     enttname: string = "";
+
+    leaveEmployeeDT: any = [];
 
     global = new Globals();
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
@@ -29,7 +30,7 @@ export class ViewLeaveEmploypeeComponent implements OnInit {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
 
-        this.getLeaveEmployee();
+        this.viewEmployeeLeaveDataRights();
     }
 
     public ngOnInit() {
@@ -64,7 +65,20 @@ export class ViewLeaveEmploypeeComponent implements OnInit {
         this.enttid = event.value;
         this.enttname = event.label;
 
+        Cookie.set("_enttid_", this.enttid.toString());
+        Cookie.set("_enttnm_", this.enttname);
+
         this.getLeaveEmployee();
+    }
+
+    public viewEmployeeLeaveDataRights() {
+        var that = this;
+
+        if (Cookie.get('_enttnm_') != null) {
+            that.enttid = parseInt(Cookie.get('_enttid_'));
+            that.enttname = Cookie.get('_enttnm_');
+            that.getLeaveEmployee();
+        }
     }
 
     getLeaveEmployee() {
@@ -74,14 +88,13 @@ export class ViewLeaveEmploypeeComponent implements OnInit {
         commonfun.loader();
 
         params = {
-            "flag": "all",
-            "enttid": that.enttid,
-            "wsautoid": that._wsdetails.wsautoid
+            "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
+            "issysadmin": that.loginUser.issysadmin, "schid": that.enttid, "wsautoid": that._wsdetails.wsautoid
         }
 
         that._lvservice.getLeaveEmployee(params).subscribe(data => {
             try {
-                that.lvDT = data.data;
+                that.leaveEmployeeDT = data.data;
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -102,6 +115,6 @@ export class ViewLeaveEmploypeeComponent implements OnInit {
     }
 
     public editLeaveEmployeeForm(row) {
-        this._router.navigate(['/master/leaveemployee/edit', row.empid]);
+        this._router.navigate(['/master/leaveemployee/edit', row.elid]);
     }
 }

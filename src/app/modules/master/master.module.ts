@@ -27,6 +27,7 @@ export const routes = [
 
                     { path: 'team', loadChildren: './team#TeamModule' },
                     { path: 'employee', loadChildren: './employee#EmployeeModule' },
+                    { path: 'leaveemployee', loadChildren: './employeeleave#LeaveEmployeeModule' },
                     { path: 'teamemployeemap', loadChildren: './teamempmap#TeamEmployeeMapModule' },
                     { path: 'teamownershipmap', loadChildren: './teamownermap#TeamOwnershipMapModule' },
                     { path: 'expense', loadChildren: './expense#ExpenseModule' },
@@ -36,8 +37,6 @@ export const routes = [
                     { path: 'notification', loadChildren: './notification#NotificationModule' },
                     { path: 'expense', loadChildren: './expense#ExpenseModule' },
                     { path: 'voucher', loadChildren: './voucher#VoucherModule' },
-                    { path: 'leaveemployee', loadChildren: './leaveemployee#LeaveEmployeeModule' },
-                    
                 ]
             }
         ]
