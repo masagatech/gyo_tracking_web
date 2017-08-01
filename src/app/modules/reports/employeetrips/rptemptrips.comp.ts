@@ -114,14 +114,30 @@ export class TripReportsComponent implements OnInit, OnDestroy {
         return deg * (Math.PI / 180)
     }
 
-    getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    getDistanceFromLatLonInKm(strlat, strlng, endlat, endlng) {
         var R = 6371; // Radius of the earth in km
-        var dLat = this.deg2rad(lat2 - lat1); // deg2rad below
-        var dLon = this.deg2rad(lon2 - lon1);
-        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        var dLat = this.deg2rad(endlat - strlat); // deg2rad below
+        var dLon = this.deg2rad(endlng - strlng);
+        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+            + Math.cos(this.deg2rad(strlat)) * Math.cos(this.deg2rad(endlat)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
         var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         var d = R * c; // Distance in km
-        return d;
+        return Math.round(d * 100) / 100;
+    }
+
+    round2Fixed(value) {
+        value = +value;
+
+        if (isNaN(value))
+            return NaN;
+
+        // Shift
+        value = value.toString().split('e');
+        value = Math.round(+(value[0] + 'e' + (value[1] ? (+value[1] + 2) : 2)));
+
+        // Shift back
+        value = value.toString().split('e');
+        return (+(value[0] + 'e' + (value[1] ? (+value[1] - 2) : -2))).toFixed(2);
     }
 
     getTripReports() {

@@ -39,12 +39,16 @@
         <div #attnatt class="row clearfix">
             <div class="col-md-12">
                 <p-dataTable [value]="tripData">
-                    <p-column field="chkdate" header="Trip Date" [style]="{'width': '50px', 'text-align': 'left'}"></p-column>
-                    <p-column field="chkin" header="Check In" [style]="{'width': '30px', 'text-align': 'left'}"></p-column>
-                    <p-column field="chkout" header="Check Out" [style]="{'width': '30px', 'text-align': 'left'}"></p-column>
-                    <p-column field="stops" header="Stops" [style]="{'width': '30px', 'text-align': 'right'}"></p-column>
-                    <p-column field="task" header="Task" [style]="{'width': '30px', 'text-align': 'right'}"></p-column>
-                    <p-column field="kilometer" header="Kilometer" [style]="{'width': '30px', 'text-align': 'right'}"></p-column>
+                    <p-column field="chkdate" header="Trip Date" [style]="{'text-align': 'left'}"></p-column>
+                    <p-column field="strlat" header="Start Latitude" [style]="{'width': '130px', 'text-align': 'right'}"></p-column>
+                    <p-column field="endlat" header="End Latitude" [style]="{'width': '130px', 'text-align': 'right'}"></p-column>
+                    <p-column field="strlng" header="Start Longitude" [style]="{'width': '130px', 'text-align': 'right'}"></p-column>
+                    <p-column field="endlng" header="End Longitude" [style]="{'width': '130px', 'text-align': 'right'}"></p-column>
+                    <p-column field="chkin" header="Check In" [style]="{'width': '100px', 'text-align': 'left'}"></p-column>
+                    <p-column field="chkout" header="Check Out" [style]="{'width': '100px', 'text-align': 'left'}"></p-column>
+                    <p-column field="stops" header="Stops" [style]="{'width': '60px', 'text-align': 'right'}"></p-column>
+                    <p-column field="task" header="Task" [style]="{'width': '60px', 'text-align': 'right'}"></p-column>
+                    <p-column field="kilometer" header="Kilometer" [style]="{'width': '130px', 'text-align': 'right'}"></p-column>
                 </p-dataTable>
             </div>
         </div>
