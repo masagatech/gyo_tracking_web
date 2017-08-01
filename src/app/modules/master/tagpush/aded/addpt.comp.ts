@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { TeamEmployeeMapService, PushTagService } from '@services/master';
+import { TeamEmployeeMapService, TagService } from '@services/master';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 declare var google: any;
@@ -47,7 +47,7 @@ export class AddPushTagComponent implements OnInit {
     _wsdetails: any = [];
     private subscribeParameters: any;
 
-    constructor(private _temservice: TeamEmployeeMapService, private _ptservice: PushTagService, private _routeParams: ActivatedRoute,
+    constructor(private _temservice: TeamEmployeeMapService, private _ptservice: TagService, private _routeParams: ActivatedRoute,
         private _router: Router, private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();

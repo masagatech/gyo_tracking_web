@@ -3,13 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { PushTagService } from '@services/master';
+import { TagService } from '@services/master';
 import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import jsPDF from 'jspdf'
 
 @Component({
     templateUrl: 'rptemptag.comp.html',
-    providers: [MenuService]
+    providers: [MenuService, CommonService]
 })
 
 export class EmployeeTagReportsComponent implements OnInit, OnDestroy {
@@ -29,7 +29,7 @@ export class EmployeeTagReportsComponent implements OnInit, OnDestroy {
     @ViewChild('employeetag') employeetag: ElementRef;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, public _menuservice: MenuService,
-        private _loginservice: LoginService, private _ptservice: PushTagService, private _autoservice: CommonService) {
+        private _loginservice: LoginService, private _ptservice: TagService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
         this.viewEmployeeTagDataRights();
@@ -70,10 +70,11 @@ export class EmployeeTagReportsComponent implements OnInit, OnDestroy {
         let query = event.query;
 
         this._autoservice.getAutoData({
-            "flag": "byemp",
+            "flag": "entity",
             "uid": this.loginUser.uid,
-            "empid": this.loginUser.ucode,
-            "enttid": this.loginUser.issysadmin,
+            "ucode": this.loginUser.ucode,
+            "utype": this.loginUser.utype,
+            "issysadmin": this.loginUser.issysadmin,
             "wsautoid": this._wsdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
@@ -85,7 +86,7 @@ export class EmployeeTagReportsComponent implements OnInit, OnDestroy {
         });
     }
 
-    // Selected Owners
+    // Selected Entity
 
     selectEntityData(event) {
         this.enttid = event.value;
@@ -93,8 +94,34 @@ export class EmployeeTagReportsComponent implements OnInit, OnDestroy {
 
         Cookie.set("_enttid_", this.enttid.toString());
         Cookie.set("_enttnm_", this.enttname);
+    }
 
-        this.getPushTagDetails();
+    getEmployeeData(event) {
+        let query = event.query;
+
+        this._autoservice.getAutoData({
+            "flag": "employee",
+            "uid": this.loginUser.uid,
+            "ucode": this.loginUser.ucode,
+            "utype": this.loginUser.utype,
+            "enttid": this.enttid,
+            "issysadmin": this.loginUser.issysadmin,
+            "wsautoid": this._wsdetails.wsautoid,
+            "search": query
+        }).subscribe((data) => {
+            this.employeeDT = data.data;
+        }, err => {
+            this._msg.Show(messageType.error, "Error", err);
+        }, () => {
+
+        });
+    }
+
+    // Selected Employee
+
+    selectEmployeeData(event) {
+        this.empid = event.value;
+        this.empname = event.label;
     }
 
     public viewEmployeeTagDataRights() {
@@ -113,8 +140,7 @@ export class EmployeeTagReportsComponent implements OnInit, OnDestroy {
         commonfun.loader();
 
         that._ptservice.getPushTagDetails({
-            "flag": "byemp", "uid": that.loginUser.uid, "empid": that.loginUser.ucode,
-            "enttid": that.enttid, "wsautoid": that._wsdetails.wsautoid
+            "flag": "byemp", "empid": that.empid, "enttid": that.enttid, "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {
             try {
                 that.emptagDT = data.data;

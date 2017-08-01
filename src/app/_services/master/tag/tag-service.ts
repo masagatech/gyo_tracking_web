@@ -13,4 +13,12 @@ export class TagService {
     saveTagInfo(req: any) {
         return this._dataserver.post("saveTagInfo", req)
     }
+
+    getPushTagDetails(req: any) {
+        return this._dataserver.post("getPushTagDetails", req)
+    }
+
+    savePushTagInfo(req: any) {
+        return this._dataserver.post("savePushTagInfo", req)
+    }
 }

@@ -7,7 +7,7 @@ import { AuthGuard } from '../../../_services/authguard-service';
 import { AddPushTagComponent } from './aded/addpt.comp';
 import { ViewPushTagComponent } from './view/viewpt.comp';
 
-import { TeamEmployeeMapService, PushTagService } from '@services/master';
+import { TeamEmployeeMapService, TagService } from '@services/master';
 
 import { LazyLoadEvent, DataTableModule, AutoCompleteModule, FileUploadModule, RadioButtonModule } from 'primeng/primeng';
 
@@ -32,7 +32,7 @@ export const routes = [
     CommonModule, FormsModule, RouterModule.forChild(routes), DataTableModule, AutoCompleteModule, FileUploadModule, RadioButtonModule
   ],
 
-  providers: [AuthGuard, TeamEmployeeMapService, PushTagService]
+  providers: [AuthGuard, TeamEmployeeMapService, TagService]
 })
 
 export class TagPushModule {
