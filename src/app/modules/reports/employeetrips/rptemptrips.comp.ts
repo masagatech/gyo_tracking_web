@@ -8,7 +8,7 @@ import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import jsPDF from 'jspdf'
 
 @Component({
-    templateUrl: 'rpttrips.comp.html',
+    templateUrl: 'rptemptrips.comp.html',
     providers: [CommonService, MenuService, ReportsService]
 })
 
@@ -138,7 +138,7 @@ export class TripReportsComponent implements OnInit, OnDestroy {
                     if (data.data.length !== 0) {
                         for (var i = 0; i < data.data.length; i++) {
                             var trprow = data.data[i];
-                            trprow.km = that.getDistanceFromLatLonInKm(trprow.strlat, trprow.strlng, trprow.endlat, trprow.endlng);
+                            trprow.kilometer = that.getDistanceFromLatLonInKm(trprow.strlat, trprow.strlng, trprow.endlat, trprow.endlng);
                         }
 
                         that.tripData = data.data;
