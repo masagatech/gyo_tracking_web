@@ -34,7 +34,9 @@ export const routes = [
                     { path: 'loginlog', loadChildren: './loginlog#LoginLogReportsModule' },
                     { path: 'workspace', loadChildren: './workspace#WorkspaceReportsModule' },
                
-                    { path: 'stops', loadChildren: './stops#StopsReportsModule' }
+                    { path: 'stops', loadChildren: './stops#StopsReportsModule' },
+                    { path: 'menulog', loadChildren: './menulog#MenuLogReportsModule' }
+                    
                    
                 ]
             }
