@@ -44,7 +44,7 @@ export class MenuLogReportsComponent implements OnInit, OnDestroy {
     // Export
 
     public exportToCSV() {
-        new Angular2Csv(this.menulogDT, 'Menu Details', { "showLabels": true });
+        new Angular2Csv(this.menulogDT, 'MenuLogDetails', { "showLabels": true });
     }
 
     public exportToPDF() {
@@ -53,7 +53,7 @@ export class MenuLogReportsComponent implements OnInit, OnDestroy {
             pagesplit: true
         };
         pdf.addHTML(this.menulog.nativeElement, 0, 0, options, () => {
-            pdf.save("Menulog.pdf");
+            pdf.save("MenuLogDetail.pdf");
         });
     }
 
