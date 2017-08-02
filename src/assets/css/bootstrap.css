@@ -1471,19 +1471,14 @@ hr {
     border-top: 1px solid #eee;
 }
 
-.bar {
-    border: 0;
-    margin: 5px 0;
-    -moz-box-sizing: content-box;
-    box-sizing: content-box;
+.hr {
+    margin: 10px!important;
+    border-top: 0!important;
 }
 
-.line-bar {
+br {
+    margin: 5px;
     border: 0;
-    border-top: 1px solid #eee;
-    margin: 5px 0;
-    -moz-box-sizing: content-box;
-    box-sizing: content-box;
 }
 
 .sr-only {
@@ -2021,8 +2016,10 @@ pre code {
 }
 
 .container-fluid {
-    padding-right: 15px;
-    padding-left: 15px;
+    /* padding-right: 15px;
+    padding-left: 15px; */
+    padding-right: 5px;
+    padding-left: 5px;
     margin-right: auto;
     margin-left: auto;
 }
@@ -4191,6 +4188,14 @@ fieldset[disabled] .btn-link:focus {
     margin-top: 5px;
 }
 
+.reject {
+    padding: 0;
+    /* margin: -180px -120px;
+    font-size: 25em!important; */
+    color: #fb483a;
+    position: absolute;
+}
+
 input[type="submit"].btn-block,
 input[type="reset"].btn-block,
 input[type="button"].btn-block {
@@ -5175,6 +5180,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
 
 .navbar-brand>span.title {
     padding-left: 10px;
+    font-size: 16px;
 }
 
 @media (min-width: 768px) {
@@ -6308,7 +6314,7 @@ a.thumbnail.active {
 .list-group-item {
     position: relative;
     display: block;
-    padding: 10px 15px;
+    padding: 10px 15px!important;
     margin-bottom: -1px;
     background-color: #fff;
     border: 1px solid #ddd;
@@ -7783,6 +7789,12 @@ button.close {
 
 .pull-left {
     float: left !important;
+}
+
+.img-left {
+    float: left !important;
+    width: 60px;
+    padding: 0 5px;
 }
 
 .hide {

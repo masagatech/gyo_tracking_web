@@ -26,12 +26,17 @@ export class ExpenseReportsComponent implements OnInit, OnDestroy {
     empid: number = 0;
     empname: string = "";
 
+    frmdt: any = "";
+    todt: any = "";
+
     @ViewChild('expense') expense: ElementRef;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, public _menuservice: MenuService,
         private _loginservice: LoginService, private _expservice: ExpenseService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+
+        this.setFromDateAndToDate();
         this.viewExpenseDataRights();
     }
 
@@ -46,6 +51,30 @@ export class ExpenseReportsComponent implements OnInit, OnDestroy {
             $.AdminBSB.leftSideBar.Close();
             $.AdminBSB.rightSideBar.activate();
         }, 100);
+    }
+
+    // Selected Calendar Date
+
+    formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
+
+    // Format Date
+
+    setFromDateAndToDate() {
+        var date = new Date();
+        var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+        this.frmdt = this.formatDate(today);
+        this.todt = this.formatDate(today);
     }
 
     // Export
@@ -140,8 +169,8 @@ export class ExpenseReportsComponent implements OnInit, OnDestroy {
         commonfun.loader();
 
         that._expservice.getExpenseDetails({
-            "flag": "reports", "empid": that.empid, "enttid": that.enttid, "wsautoid": that._wsdetails.wsautoid,
-    
+            "flag": "reports", "enttid": that.enttid, "empid": that.empid, "frmdt": that.frmdt, "todt": that.todt,
+            "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {
             try {
                 that.expDT = data.data;

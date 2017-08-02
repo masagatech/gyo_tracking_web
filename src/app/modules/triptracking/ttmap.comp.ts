@@ -1,20 +1,34 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import {
+    Component, OnInit, OnDestroy, ViewChild, ViewEncapsulation,
+    AfterViewInit, ComponentFactoryResolver, forwardRef
+} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MessageService, messageType, LoginService, CommonService, SocketService } from '@services';
+import { MessageService, messageType, LoginService, CommonService, SocketService, TrackDashbord } from '@services';
 import { LoginUserModel, Globals } from '@models';
 import { TTMapService } from '@services/master';
 import { LazyLoadEvent, DataTable } from 'primeng/primeng';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 import { SelectItem, GMap } from 'primeng/primeng';
+import { ADHOST } from '@directives';
+import { HOSTComponent } from '@interface';
+
+import { PSGComponent } from './passengers/psg.comp'
+import { INFOComponent } from './info/info.comp'
+import { HISTORYComponent } from './history/history.comp'
 
 declare var google: any;
 
 @Component({
     templateUrl: 'ttmap.comp.html',
-    providers: [CommonService, SocketService]
+    providers: [CommonService, SocketService, TrackDashbord]
 })
 
-export class TripTrackingComponent implements OnInit, OnDestroy {
+
+export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
+    //chid component
+    @ViewChild(ADHOST)
+    private _Host: ADHOST;
+
     loginUser: LoginUserModel;
     _wsdetails: any = [];
 
@@ -33,7 +47,10 @@ export class TripTrackingComponent implements OnInit, OnDestroy {
     enttname: string = "";
 
     vehtypeDT: any = [];
+    vehtypeIds: any = [];
     vehtypeid: number = 0;
+    selectedVeh: any = [];
+    selectedSVh: any = {};
 
     tripDT: any = [];
     messageDT: any = [];
@@ -50,72 +67,64 @@ export class TripTrackingComponent implements OnInit, OnDestroy {
     lastlat: string = "";
     lastlon: string = "";
 
-    constructor(public _ttmapservice: TTMapService, private _msg: MessageService, private _autoservice: CommonService,
-        private _loginservice: LoginService, private _socketservice: SocketService) {
+    vhmarkers: any = [];
+
+    dbcaller: any = [];
+
+    //side bar
+    sidebarTitle = "Title";
+
+    markerOptions = {
+        showinfo: false,
+        hidelive: false
+    }
+
+    constructor(private _ttmapservice: TTMapService, private _msg: MessageService, private _autoservice: CommonService,
+        private _loginservice: LoginService, private _socketservice: SocketService,
+        private _trackDashbord: TrackDashbord,
+        private componentFactoryResolver: ComponentFactoryResolver) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
 
         this.getMessage();
-        this.getTripType();
+
+        //this.getTripType();
+    }
+
+    private loadComponent(component, data) {
+        let componentFactory = this.componentFactoryResolver.resolveComponentFactory(component);
+        let viewContainerRef = this._Host.viewContainerRef;
+        viewContainerRef.clear();
+        let componentRef = viewContainerRef.createComponent(componentFactory);
+        (<HOSTComponent>componentRef.instance).data = data;
+
     }
 
     ngOnInit() {
         this._socketservice.close();
-
-        let imagePath = 'assets/img/bus1.png#markerOne';
-
-        let image = {
-            url: imagePath,
-            origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(0, 0),
-        };
-
-        this.marker = new google.maps.Marker({
-            position: {
-                lat: 19.2500675
-                , lng: 73.1426076
-            }, title: "",
-            strokeColor: 'red',
-            strokeWeight: 3,
-            scale: 6,
-            icon: image,
-            rotation: -20.21
-        }
-        );
-
-        this.overlays = [this.marker];
-        this.map = this._gmap.getMap();
         this.getDefaultMap();
 
         setTimeout(function () {
             $.AdminBSB.islocked = true;
             $.AdminBSB.leftSideBar.Close();
+            $.AdminBSB.rightSideBar.closeonwindow = false;//do not close right bar on window click
             $(".enttname input").focus();
+            $('.container-fluid').css('padding-left', '0px').css('padding-right', '0px');
         }, 100);
+
+
+        this.fillVehicleDropDown();
     }
 
+    public ngAfterViewInit() {
+        //this.loadComponent(PSGComponent, { "a": "asdsadsadasa" });
+        this.map = this._gmap.getMap();
+        SlidingMarker.initializeGlobally();
+    }
     getDefaultMap() {
-        var tripdata = {
-            "status": 200,
-            "data": [{
-                "_id": "59077358b9d3a72be4594dfd",
-
-                "bearing": -1.302723,
-                "loctm": "2017-05-01T17:41:25.498Z",
-                "loc": [
-                    19.2500675,
-                    73.1426076
-                ],
-                "sertm": "2017-05-01T17:41:44.738Z",
-                "__v": 0
-            }]
-        }
-
-        var geoloc = tripdata.data[0].loc;
-
         this.options = {
-            center: { lat: geoloc[0], lng: geoloc[1] },
-            zoom: 17
+            center: { lat: 22.861639, lng: 78.257621 },
+            zoom: 5
         };
     }
 
@@ -149,34 +158,37 @@ export class TripTrackingComponent implements OnInit, OnDestroy {
     }
 
     // Selected Entity
-
-    selectEntityData(event) {
+    
+    private selectEntityData(event) {
         this.enttid = event.value;
         this.enttname = event.label;
 
-        Cookie.set("_enttid_", this.enttid.toString());
-        Cookie.set("_enttnm_", this.enttname);
-
-        if (Cookie.get('_enttnm_') != null) {
-            this.enttid = parseInt(Cookie.get('_enttid_'));
-            this.enttname = Cookie.get('_enttnm_');
-
-            this.fillVehicleDropDown();
-        }
+        this.fillVehicleDropDown();
     }
 
     // Vehicle DropDown
-
-    fillVehicleDropDown() {
+    private fillVehicleDropDown() {
         var that = this;
         commonfun.loader();
-
-        that._autoservice.getDropDownData({
-            "flag": "vehicle", "enttid": that.enttid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
-            "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid
+        this.vehtypeDT = [];
+        this.vehtypeIds = [];
+        that._trackDashbord.gettrackboard({
+            "flag": "vehicle",
+            "enttid": that.enttid,
+            "uid": that.loginUser.uid,
+            "utype": that.loginUser.utype,
+            "issysadmin": that.loginUser.issysadmin,
+            "wsautoid": that._wsdetails.wsautoid
         }).subscribe((data) => {
             try {
                 that.vehtypeDT = data.data;
+                for (var k = 0; k < that.vehtypeDT.length; k++) {
+                    var el = that.vehtypeDT[k];
+                    that.vehtypeIds.push(el.vhid);
+                    //    that.carmarkers.push(new google.);
+                }
+                that.getLastUpdateAndSubscribe(null);
+                that.setLiveBeatsOn();
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -189,40 +201,6 @@ export class TripTrackingComponent implements OnInit, OnDestroy {
 
         })
     }
-
-    // Show Passenger Data By vehicle, Trip
-
-    showPassengerList() {
-        var that = this;
-        commonfun.loader();
-
-        this._ttmapservice.showPassengerList({ "vehtypeid": that.vehtypeid, "tripid": that.sel_tripid, "msttripid": that.sel_msttripid }).subscribe(data => {
-            that.psngrDT = data.data;
-            commonfun.loaderhide();
-        }, err => {
-            that._msg.Show(messageType.error, "Error", err);
-            commonfun.loaderhide();
-        }, () => {
-        });
-    }
-
-    // Get Today's Trip
-
-    getTripData() {
-        var that = this;
-        commonfun.loader();
-
-        this._ttmapservice.getTripData({ "flag": "vh", "vehid": that.vehtypeid }).subscribe(data => {
-            that.sel_tripid = 0;
-            that.tripDT = data.data;
-            commonfun.loaderhide();
-        }, err => {
-            that._msg.Show(messageType.error, "Error", err);
-            commonfun.loaderhide();
-        }, () => {
-        });
-    }
-
     // Get Selected Trip ID for get Map Data
 
     getTTMap(row) {
@@ -237,14 +215,12 @@ export class TripTrackingComponent implements OnInit, OnDestroy {
     getMessage() {
         var that = this;
         commonfun.loader();
-
+        that.connectmsg = "Registering...";
         this._socketservice.getMessage().subscribe(data => {
             var _d = data;
-
             if (_d["evt"] == "regreq") {
-                if (that.sel_tripid !== 0) {
-                    that.connectmsg = "Registering...";
-                    that._socketservice.sendMessage("register", that.sel_tripid.toString());
+                if (that.vehtypeIds.length > 0) {
+                    that._socketservice.sendMessage("reg_v", that.vehtypeIds.join(','));
                 }
             }
             else if (_d["evt"] == "registered") {
@@ -252,18 +228,25 @@ export class TripTrackingComponent implements OnInit, OnDestroy {
                 setTimeout(function () {
                     that.connectmsg = "Waiting for data..";
                 }, 1000);
+
             }
             else if (_d["evt"] == "data") {
                 try {
                     var geoloc = _d["data"];
-
-                    if (that.sel_tripid == geoloc.tripid) {
-                        that.lastlat = geoloc.lat;
-                        that.lastlon = geoloc.lon;
-
-                        that.connectmsg = "Lat : " + that.lastlat + ", Lon : " + that.lastlon;
-                        that.mapMove(geoloc.lat, geoloc.lon, geoloc.bearng);
+                    let el = that.vehtypeDT.find(a => a.vhid === parseInt(geoloc.vhid));
+                    //console.log(el)
+                    if (el !== undefined) {
+                        el.tripid = geoloc.tripid;
+                        el.speed = geoloc.speed;
+                        el.bearing = geoloc.bearing;
+                        el.btr = geoloc.btr;
+                        el.loc = [geoloc.lon, geoloc.lat];
+                        el.sertm = geoloc.sertm;
+                        el.isshow = true;
+                        el.min = 0;
+                        el.ju = true;
                     }
+                    this.moveMarker([geoloc.lat, geoloc.lon], geoloc.vhid, geoloc.bearing);
                 } catch (error) {
 
                 }
@@ -276,69 +259,280 @@ export class TripTrackingComponent implements OnInit, OnDestroy {
         });
     }
 
-    togglePlayPause() {
-        this.isPlay = !this.isPlay;
+    // private get timeinterval
+    private setLiveBeatsOn() {
+        if (this.dbcaller !== undefined) {
+            clearInterval(this.dbcaller);
+        }
+        if (this.vehtypeIds.length > 0) {
+            let that = this;
+            this.dbcaller = setInterval(
+                function () {
+                    that.logicLiveBeat();
+                }, 30000);
+            that._socketservice.close();
+            //setTimeout(function () {
+            that._socketservice.connect();
+            //that._socketservice.sendMessage("reg_v", that.vehtypeIds.join(','));
+            //}, 1000);
 
-        if (this.isPlay) {
-            this.mapMove(this.lastlat, this.lastlon, 0);
         }
     }
 
-    mapMove(lat: any, lon: any, bearng: any) {
-        if (this.isPlay) {
-            var latlng = new google.maps.LatLng(lat, lon);
-            this.marker.setPosition(latlng);
-            this._gmap.map.setCenter(latlng);
-        }
-        else {
+    private logicLiveBeat() {
+        let _data = [];
+        // console.log(this.vehtypeDT);
+        for (var i = 0; i < this.vehtypeDT.length; i++) {
+            var _el = this.vehtypeDT[i];
+            //console.log(_el);
+            if (_el.isshow == true) {
 
-        }
-    }
-
-    sendMessage() {
-        this._socketservice.close();
-        this.getLastLocation();
-        this.connectmsg = "Connecting...";
-        this._socketservice.connect();
-    }
-
-    getLastLocation() {
-        var that = this;
-        commonfun.loader();
-
-        that._ttmapservice.getLastLocation({ "tripid": that.sel_tripid }).subscribe(data => {
-            if (that.overlays.length == 0) {
-                this.overlays.push(this.marker);
+                //console.log(minutes);
+                _el.min = this.getTimeDiff(_el.sertm);
+                if (_el.min > 3 || _el.ju == false) {
+                    _el.ju = false;
+                    _data.push(_el.vhid);
+                }
+            } else {
+                _data.push(_el.vhid);
             }
+        }
+        this.getLastUpdateAndSubscribe(_data);
+    }
 
-            var geoloc = data.data[0].loc;
-            var bearng = data.data[0].bearng;
+    private getTimeDiff(sertm): any {
+        let now = new Date();
+        let seconds = Math.round(Math.abs((now.getTime() - new Date(sertm).getTime()) / 1000));
+        let minutes = Math.round(Math.abs(seconds / 60))
+        return minutes;
+    }
 
-            that.mapMove(geoloc[0], geoloc[1], bearng);
-            commonfun.loaderhide();
+    // get vehicle last data and subscribe for socket{}
+    private getLastUpdateAndSubscribe(data) {
+
+        if (data !== null && data.length === 0) return;
+        this._trackDashbord.getvahicleupdates({
+            "vhids": data == null ? this.vehtypeIds : data
+        }).subscribe(_d => {
+
+            this.refreshdata(_d.data);
         }, err => {
-            that._msg.Show(messageType.error, "Error", err);
+            this._msg.Show(messageType.error, "Error", err);
             commonfun.loaderhide();
         }, () => {
+        })
+
+    }
+
+    private refreshdata(data) {
+        for (let i = 0; i < this.vehtypeDT.length; i++) {
+            let el = this.vehtypeDT[i];
+            let d = data.find(f => f.vhid === el.vhid);
+            if (d !== undefined) {
+                el.tripid = d.tripid;
+                el.speed = d.speed;
+                el.bearing = d.bearing;
+                el.btr = d.btr;
+                el.loc = d.loc;
+                el.sertm = d.sertm;
+                el.min = this.getTimeDiff(d.sertm);
+                el.isshow = true;
+                el.ju = false;
+                //console.log(el.loc);
+                this.moveMarker([el.loc[1], el.loc[0]], el.vhid, el.bearing);
+            } else if (el.ju) {
+                // just updated from socket
+            } else {
+                el.isshow = false;
+            }
+        }
+    }
+
+    //move marker
+    private moveMarker(loc, vhid, bearing) {
+        let mrk = this.vhmarkers[vhid];
+
+        if (mrk !== undefined) {
+            let bear = 0;// commonfun.getbearing(bearing);
+            // console.log(loc);
+            let _ico = mrk.getIcon().ico;
+            mrk.setIcon({ url: 'assets/img/map/' + _ico + '_' + bear + '.png?v=1', ico: _ico })
+            mrk.setPosition(new google.maps.LatLng(loc[0], loc[1]));
+        }
+    }
+
+    //select for map show
+    private onchange(e, vh) {
+
+        if (vh.isshow === undefined || vh.isshow === false)
+        { this._msg.Show(messageType.warn, "Hey", "No Updates found"); e.target.checked = false; return } else {
+            if (e.target.checked) {
+
+                this.selectedVeh.push(vh.vhid);
+                this.addmarker(vh);
+                this.map.setCenter(new google.maps.LatLng(vh.loc[1], vh.loc[0]))
+                //console.log(vh);
+            } else {
+                let i = this.selectedVeh.indexOf(vh.vhid);
+                if (i > -1)
+                    this.selectedVeh.splice(i, 1);
+                this.removemarker(vh.vhid);
+            }
+        }
+        // this.selectedVeh.push(vh);
+        e.preventDefault();
+    }
+
+    private showinfowindow() {
+        for (let i = 0; i < this.selectedVeh.length; i++) {
+            let el = this.selectedVeh[i];
+            let mr = this.vhmarkers[el];
+            if (this.markerOptions.showinfo) {
+                mr.info.open(this.map, mr);
+            } else {
+                mr.info.close();
+            }
+        }
+
+    }
+
+    private hidelives() {
+        for (let i = 0; i < this.selectedVeh.length; i++) {
+            let el = this.selectedVeh[i];
+            let mr = this.vhmarkers[el];
+            if (this.markerOptions.hidelive) {
+                mr.setMap(null);
+            } else {
+                mr.setMap(this.map);
+            }
+
+        }
+    }
+
+    private clickVehicle(vh) {
+        if (vh.isshow === undefined || vh.isshow === false) { return; }
+        this.map.setCenter(new google.maps.LatLng(vh.loc[1], vh.loc[0]));
+    }
+
+    private addmarker(vh) {
+        let bearing = 0;//commonfun.getbearing((vh.bearing || 0));
+        let imagePath = 'assets/img/map/' + vh.ico + '_' + bearing + '.png?v=1';
+        let image = {
+            url: imagePath,
+            ico: vh.ico
+        };
+
+        let vhmarker = new google.maps.Marker({
+            position: {
+                lat: vh.loc[1]
+                , lng: vh.loc[0]
+            },
+            strokeColor: 'red',
+            strokeWeight: 3,
+            scale: 6,
+            icon: image,
+            animation: google.maps.Animation.BOUNCE,
+            title: vh.vno + ' (' + vh.vrg + ')',
+        }
+        );
+        vhmarker.info = new google.maps.InfoWindow({
+            content: vhmarker.title
         });
+
+        if (this.markerOptions.showinfo) {
+            vhmarker.info.open(this.map, vhmarker);
+        }
+
+        vhmarker.setMap(this.map);
+        this.vhmarkers[vh.vhid] = vhmarker;
+        //console.log(vhmarker);
     }
 
-    // Zoon In, Out, Clear and Reset
-
-    zoomIn(map) {
-        map.setZoom(map.getZoom() + 1);
+    private removemarker(vhid) {
+        let mrkr = this.vhmarkers[vhid];
+        //console.log(mrkr);
+        if (mrkr != null) {
+            mrkr.setMap(null);
+            delete this.vhmarkers[vhid];
+        }
     }
 
-    zoomOut(map) {
-        map.setZoom(map.getZoom() - 1);
+
+    private info_click(vh, event) {
+        if (vh.isshow === undefined || vh.isshow === false)
+        { this._msg.Show(messageType.warn, "Hey", "No Updates found"); return; }
+        this.sidebarTitle = "Info";
+        this.selectedSVh = vh;
+        this.loadComponent(INFOComponent, { "vhid": vh.vhid, loginUser: this.loginUser, _wsdetails: this._wsdetails });
+        commonfun.loader("#loaderbody", "pulse", 'Loading Vehicle Info...')
+        $.AdminBSB.rightSideBar.Open();
+        event.stopPropagation();
+    }
+
+    private passenger_click(vh, event) {
+        if (vh.isshow === undefined || vh.isshow === false)
+        { this._msg.Show(messageType.warn, "Hey", "No Updates found"); return; }
+        this.sidebarTitle = "Passengers";
+        this.selectedSVh = vh;
+        this.loadComponent(PSGComponent, { "tripid": vh.tripid, loginUser: this.loginUser, _wsdetails: this._wsdetails });
+        commonfun.loader("#loaderbody", "pulse", 'Loading Passengers...')
+        $.AdminBSB.rightSideBar.Open();
+
+        event.stopPropagation();
+    }
+
+    private history_click(vh, event) {
+        if (vh.isshow === undefined || vh.isshow === false)
+        { this._msg.Show(messageType.warn, "Hey", "No Updates found"); return; }
+        //else
+        this.loadComponent(HISTORYComponent, {
+            "vhid": vh.vhid,
+            loginUser: this.loginUser, _wsdetails: this._wsdetails, map: this.map
+        });
+        this.sidebarTitle = "History";
+        this.selectedSVh = vh;
+        commonfun.loader("#loaderbody", "timer", 'Loading History...')
+        $.AdminBSB.rightSideBar.Open();
+        event.stopPropagation();
+    }
+
+    private close_sidebar() {
+        commonfun.loaderhide("#loaderbody")
+        $.AdminBSB.rightSideBar.Close();
     }
 
     clear() {
         // this.overlays = [];
     }
 
-    public ngOnDestroy() {
-        $.AdminBSB.islocked = false;
-        $.AdminBSB.leftSideBar.Open();
+    //ui changer
+    private closesidepanel() {
+        if ($("#sidepanel").hasClass('col-md-3')) {
+            $("#sidepanel").removeClass('col-md-3').addClass('hide');
+            $("#map").removeClass('col-md-9').addClass('col-md-12');
+            $("#closeicon").text('keyboard_arrow_right');
+        } else {
+            $("#sidepanel").addClass('col-md-3').removeClass('hide');
+            $("#map").removeClass('col-md-12').addClass('col-md-9');
+            $("#closeicon").text('keyboard_arrow_left');
+        }
+        if (this.map !== undefined) {
+            google.maps.event.trigger(this.map, 'resize');
+        }
     }
+
+
+    public ngOnDestroy() {
+        if (this.dbcaller !== undefined) {
+            clearInterval(this.dbcaller);
+        }
+        $.AdminBSB.islocked = false;
+        $.AdminBSB.rightSideBar.closeonwindow = true;//do not close right bar on window click
+        $.AdminBSB.leftSideBar.Open();
+        $('.container-fluid').css('padding-left', '5px').css('padding-right', '5px');
+        this._socketservice.close();
+    }
+
+
+
 }
