@@ -44,7 +44,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
 
     entityDT: any = [];
     enttid: number = 0;
-    enttname: string = "";
+    enttname: any = [];
 
     vehtypeDT: any = [];
     vehtypeIds: any = [];
@@ -161,7 +161,9 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
     
     private selectEntityData(event) {
         this.enttid = event.value;
-        this.enttname = event.label;
+        
+        Cookie.set("_enttid_", event.value);
+        Cookie.set("_enttnm_", event.label);
 
         this.fillVehicleDropDown();
     }

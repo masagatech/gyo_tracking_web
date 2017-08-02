@@ -18,8 +18,8 @@ export class ViewEmployeeComponent implements OnInit {
     _wsdetails: any = [];
 
     entityDT: any = [];
-    entityid: number = 0;
-    entityname: string = "";
+    enttid: number = 0;
+    enttname: any = [];
 
     global = new Globals();
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
@@ -64,11 +64,10 @@ export class ViewEmployeeComponent implements OnInit {
     // Selected Owners
 
     selectEntityData(event) {
-        this.entityid = event.value;
-        this.entityname = event.label;
+        this.enttid = event.value;
 
-        Cookie.set("_enttid_", this.entityid.toString());
-        Cookie.set("_enttnm_", this.entityname);
+        Cookie.set("_enttid_", event.value);
+        Cookie.set("_enttnm_", event.label);
 
         this.getEmployeeDetails();
     }
@@ -77,8 +76,10 @@ export class ViewEmployeeComponent implements OnInit {
         var that = this;
 
         if (Cookie.get('_enttnm_') != null) {
-            that.entityid = parseInt(Cookie.get('_enttid_'));
-            that.entityname = Cookie.get('_enttnm_');
+            that.enttid = parseInt(Cookie.get('_enttid_'));
+            that.enttname.value = parseInt(Cookie.get('_enttid_'));
+            that.enttname.label = Cookie.get('_enttnm_');
+
             that.getEmployeeDetails();
         }
     }
@@ -91,7 +92,7 @@ export class ViewEmployeeComponent implements OnInit {
 
         params = {
             "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
-            "enttid": that.entityid, "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid
+            "enttid": that.enttid, "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid
         }
 
         console.log(JSON.stringify(params));

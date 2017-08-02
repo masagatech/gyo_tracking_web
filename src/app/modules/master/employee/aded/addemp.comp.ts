@@ -18,7 +18,7 @@ export class AddEmployeeComponent implements OnInit {
 
     entityDT: any = [];
     enttid: number = 0;
-    enttname: string = "";
+    enttname: any = [];
 
     stateDT: any = [];
     cityDT: any = [];
@@ -100,7 +100,9 @@ export class AddEmployeeComponent implements OnInit {
 
     selectEntityData(event) {
         this.enttid = event.value;
-        this.enttname = event.label;
+
+        Cookie.set("_enttid_", event.value);
+        Cookie.set("_enttnm_", event.label);
     }
 
     // Get State DropDown
@@ -418,6 +420,9 @@ export class AddEmployeeComponent implements OnInit {
                     try {
                         var _empdata = data.data;
 
+                        that.enttid = data.data[0].enttid;
+                        that.enttname.value = _empdata[0].enttid;
+                        that.enttname.label = _empdata[0].enttname;
                         that.empid = _empdata[0].empid;
                         that.loginid = _empdata[0].loginid;
                         that.empcode = _empdata[0].empcode;
@@ -442,8 +447,6 @@ export class AddEmployeeComponent implements OnInit {
                         that.fillAreaDropDown();
                         that.area = _empdata[0].area;
                         that.pincode = _empdata[0].pincode;
-                        that.enttid = _empdata[0].enttid;
-                        that.enttname = _empdata[0].enttname;
                         that.remark1 = _empdata[0].remark1;
                         that.isactive = _empdata[0].isactive;
                         that.mode = _empdata[0].mode;;
@@ -464,7 +467,8 @@ export class AddEmployeeComponent implements OnInit {
             else {
                 if (Cookie.get('_enttnm_') != null) {
                     that.enttid = parseInt(Cookie.get('_enttid_'));
-                    that.enttname = Cookie.get('_enttnm_');
+                    that.enttname.value = parseInt(Cookie.get('_enttid_'));
+                    that.enttname.label = Cookie.get('_enttnm_');
                 }
 
                 that.resetEmployeeFields();

@@ -15,7 +15,7 @@ export class AddVehicleComponent implements OnInit {
 
     entityDT: any = [];
     enttid: number = 0;
-    enttname: string = "";
+    enttname: any = [];
 
     vehtypeDT: any = [];
 
@@ -76,7 +76,9 @@ export class AddVehicleComponent implements OnInit {
 
     selectEntityData(event) {
         this.enttid = event.value;
-        this.enttname = event.label;
+
+        Cookie.set("_enttid_", event.value);
+        Cookie.set("_enttnm_", event.label);
     }
 
     // Fill Vehicle Type Drop Down
@@ -277,6 +279,7 @@ export class AddVehicleComponent implements OnInit {
             else {
                 if (Cookie.get('_enttnm_') != null) {
                     that.enttid = parseInt(Cookie.get('_enttid_'));
+                    that.enttname.value = parseInt(Cookie.get('_enttid_'));
                     that.enttname = Cookie.get('_enttnm_');
                 }
 

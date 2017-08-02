@@ -22,11 +22,11 @@ export class AddPushTagComponent implements OnInit {
 
     entityDT: any = [];
     enttid: number = 0;
-    enttname: string = "";
+    enttname: any = [];
 
     tagDT: any = [];
     tagid: number = 0;
-    tagnm: string = "";
+    tagnm: any = [];
 
     selectedPType: string = 'team';
     isteam: boolean = false;
@@ -34,11 +34,11 @@ export class AddPushTagComponent implements OnInit {
 
     teamDT: any = [];
     tmid: number = 0;
-    tmnm: string = "";
+    tmnm: any = [];
 
     employeeDT: any = [];
     empid: number = 0;
-    empname: string = "";
+    empname: any = [];
 
     employeeList: any = [];
 
@@ -90,7 +90,10 @@ export class AddPushTagComponent implements OnInit {
 
     selectEntityData(event) {
         this.enttid = event.value;
-        this.enttname = event.label;
+
+        Cookie.set("_enttid_", event.value);
+        Cookie.set("_enttnm_", event.label);
+
         this.getTagData(event);
     }
 
@@ -117,7 +120,6 @@ export class AddPushTagComponent implements OnInit {
 
     selectTagData(event) {
         this.tagid = event.value;
-        this.tagnm = event.label;
     }
 
     // Hide When Team / Employee
@@ -157,7 +159,6 @@ export class AddPushTagComponent implements OnInit {
 
     selectTeamData(event) {
         this.tmid = event.value;
-        this.tmnm = event.label;
         this.getTeamEmployeeMap();
     }
 
@@ -180,7 +181,7 @@ export class AddPushTagComponent implements OnInit {
                 else {
                     that._msg.Show(messageType.error, "Error", "There are no Employee");
                     that.tmid = 0;
-                    that.tmnm = "";
+                    that.tmnm = [];
                     that.employeeList = [];
                     $(".tmnm input").focus();
                 }
@@ -226,8 +227,6 @@ export class AddPushTagComponent implements OnInit {
 
     selectEmployeeData(event) {
         this.empid = event.value;
-        this.empname = event.label;
-
         this.addEmployeeList();
 
         $(".selectall").is(':checked');
@@ -271,11 +270,11 @@ export class AddPushTagComponent implements OnInit {
         var duplicateEmployee = that.isDuplicateEmployee();
 
         if (!duplicateEmployee) {
-            that.employeeList.push({ "empid": that.empid, "empname": that.empname });
+            that.employeeList.push({ "empid": that.empname.value, "empname": that.empname.label });
         }
 
         that.empid = 0;
-        that.empname = "";
+        that.empname = [];
         $(".empname input").focus();
         commonfun.loaderhide("#divEmployee");
     }
@@ -286,9 +285,9 @@ export class AddPushTagComponent implements OnInit {
         var that = this;
 
         that.tmid = 0;
-        that.tmnm = "";
+        that.tmnm = [];
         that.empid = 0;
-        that.empname = "";
+        that.empname = [];
         that.remark = "";
         that.employeeList = [];
     }
@@ -435,12 +434,14 @@ export class AddPushTagComponent implements OnInit {
                     try {
                         that.ptid = data.data[0].ptid;
                         that.enttid = data.data[0].enttid;
-                        that.enttname = data.data[0].enttname;
+                        that.enttname.value = data.data[0].enttid;
+                        that.enttname.label = data.data[0].enttname;
                         that.tagid = data.data[0].tagid;
-                        that.tagnm = data.data[0].tagnm;
+                        that.tagnm.value = data.data[0].tagid;
+                        that.tagnm.label = data.data[0].tagnm;
                         that.selectedPType = data.data[0].emptype;
-                        that.tmid = data.data[0].tmid;
-                        that.tmnm = data.data[0].tmnm;
+                        that.tmnm.value = data.data[0].tmid;
+                        that.tmnm.label = data.data[0].tmnm;
                         that.remark = data.data[0].remark;
                         that.employeeList = data.data[0].empdata;
                     }
@@ -460,6 +461,7 @@ export class AddPushTagComponent implements OnInit {
             else {
                 if (Cookie.get('_enttnm_') != null) {
                     that.enttid = parseInt(Cookie.get('_enttid_'));
+                    that.enttname.value = parseInt(Cookie.get('_enttid_'));
                     that.enttname = Cookie.get('_enttnm_');
                 }
 

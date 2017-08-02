@@ -19,12 +19,12 @@ export class AddTaskAllocateComponent implements OnInit {
 
     entityDT: any = [];
     enttid: number = 0;
-    enttname: string = "";
+    enttname: any = [];
 
     employeeDT: any = [];
     employeeList: any = [];
     empid: number = 0;
-    empname: string = "";
+    empname: any = [];
 
     tsktitle: string = "";
     tskdesc: string = "";
@@ -81,7 +81,9 @@ export class AddTaskAllocateComponent implements OnInit {
 
     selectEntityData(event) {
         this.enttid = event.value;
-        this.enttname = event.label;
+
+        Cookie.set("_enttid_", event.value);
+        Cookie.set("_enttnm_", event.label);
     }
 
     // Auto Completed Employee
@@ -111,8 +113,6 @@ export class AddTaskAllocateComponent implements OnInit {
 
     selectEmployeeData(event) {
         this.empid = event.value;
-        this.empname = event.label;
-    
         this.addEmployeeList();
     }
 
@@ -143,12 +143,12 @@ export class AddTaskAllocateComponent implements OnInit {
 
         if (!duplicateEmployee) {
             that.employeeList.push({
-                "empid": that.empid, "empname": that.empname
+                "empid": that.empname.value, "empname": that.empname.label
             });
         }
 
         that.empid = 0;
-        that.empname = "";
+        that.empname = [];
         $(".empname input").focus();
         commonfun.loaderhide("#divEmployee");
     }
@@ -198,7 +198,7 @@ export class AddTaskAllocateComponent implements OnInit {
         that.ntrgrp = "";
         that.remark = "";
         that.empid = 0;
-        that.empname = "";
+        that.empname = [];
         that.employeeList = [];
     }
 
@@ -306,7 +306,8 @@ export class AddTaskAllocateComponent implements OnInit {
 
                         that.tskid = data.data[0].tskid;
                         that.enttid = data.data[0].enttid;
-                        that.enttname = data.data[0].enttname;
+                        that.enttname.value = data.data[0].enttid;
+                        that.enttname.label = data.data[0].enttname;
                         that.employeeList = data.data[0].empdata;
                         that.tsktitle = data.data[0].tsktitle;
                         that.tskdesc = data.data[0].tskdesc;
@@ -331,6 +332,7 @@ export class AddTaskAllocateComponent implements OnInit {
             else {
                 if (Cookie.get('_enttnm_') != null) {
                     that.enttid = parseInt(Cookie.get('_enttid_'));
+                    that.enttname.value = parseInt(Cookie.get('_enttid_'));
                     that.enttname = Cookie.get('_enttnm_');
                 }
 

@@ -20,11 +20,11 @@ export class AddLeaveEmployeeComponent implements OnInit {
     elid: number = 0;
     entityDT: any = [];
     enttid: number = 0;
-    enttname: string = "";
+    enttname: any = [];
 
     employeeDT: any = [];
     empid: number = 0;
-    empname: string = "";
+    empname: any = [];
 
     frmdt: number = 0;
     todt: number = 0;
@@ -79,7 +79,9 @@ export class AddLeaveEmployeeComponent implements OnInit {
 
     selectEntityData(event) {
         this.enttid = event.value;
-        this.enttname = event.label;
+        
+        Cookie.set("_enttid_", event.value);
+        Cookie.set("_enttnm_", event.label);
     }
 
     getEmployeeData(event) {
@@ -107,7 +109,6 @@ export class AddLeaveEmployeeComponent implements OnInit {
 
     selectEmployeeData(event) {
         this.empid = event.value;
-        this.empname = event.label;
     }
 
     // Leave Type
@@ -132,7 +133,7 @@ export class AddLeaveEmployeeComponent implements OnInit {
 
     resetLeaveEmployeeFields() {
         this.elid = 0;
-        this.empname = "";
+        this.empname = [];
         this.restype = "";
         this.frmdt = 0;
         this.todt = 0;
@@ -150,11 +151,11 @@ export class AddLeaveEmployeeComponent implements OnInit {
         }
         else if (that.empid == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Employee Name");
-            $(".empname").focus();
+            $(".empname input").focus();
         }
         else if (that.restype == "") {
             that._msg.Show(messageType.error, "Error", "Enter Leave Type");
-            $(".restype input").focus();
+            $(".restype").focus();
         }
         else if (that.reason == "") {
             that._msg.Show(messageType.error, "Error", "Enter Reason");
@@ -233,10 +234,12 @@ export class AddLeaveEmployeeComponent implements OnInit {
                 that._lvservice.getLeaveEmployee(params).subscribe(data => {
                     try {
                         that.elid = data.data[0].elid;
-                        that.empid = data.data[0].empid;
-                        that.empname = data.data[0].empname;
                         that.enttid = data.data[0].enttid;
-                        that.enttname = data.data[0].enttname;
+                        that.enttname.value = data.data[0].enttid;
+                        that.enttname.label = data.data[0].enttname;
+                        that.empid = data.data[0].empid;
+                        that.empname.value = data.data[0].empid;
+                        that.empname.label = data.data[0].empname;
                         that.frmdt = data.data[0].frmdt;
                         that.todt = data.data[0].todt;
                         that.restype = data.data[0].restype;

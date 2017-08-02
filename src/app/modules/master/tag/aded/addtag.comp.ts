@@ -19,7 +19,7 @@ export class AddTagComponent implements OnInit {
 
     entityDT: any = [];
     enttid: number = 0;
-    enttname: string = "";
+    enttname: any = [];
 
     tagid: number = 0;
     tagnm: string = "";
@@ -72,7 +72,9 @@ export class AddTagComponent implements OnInit {
 
     selectEntityData(event) {
         this.enttid = event.value;
-        this.enttname = event.label;
+        
+        Cookie.set("_enttid_", event.value);
+        Cookie.set("_enttnm_", event.label);
     }
 
     // Clear Fields
@@ -177,7 +179,8 @@ export class AddTagComponent implements OnInit {
                         that.tagid = data.data[0].tagid;
                         that.tagnm = data.data[0].tagnm;
                         that.enttid = data.data[0].enttid;
-                        that.enttname = data.data[0].enttname;
+                        that.enttname.value = data.data[0].enttid;
+                        that.enttname.label = data.data[0].enttname;
                         that.remark1 = data.data[0].remark1;
                         that.remark2 = data.data[0].remark2;
                         that.remark3 = data.data[0].remark3;

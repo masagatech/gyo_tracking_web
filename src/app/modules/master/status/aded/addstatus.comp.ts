@@ -17,7 +17,7 @@ export class AddStatusComponent implements OnInit {
 
     entityDT: any = [];
     enttid: number = 0;
-    enttname: string = "";
+    enttname: any = [];
 
     _wsdetails: any = [];
 
@@ -80,7 +80,9 @@ export class AddStatusComponent implements OnInit {
 
     selectEntityData(event) {
         this.enttid = event.value;
-        this.enttname = event.label;
+        
+        Cookie.set("_enttid_", event.value);
+        Cookie.set("_enttnm_", event.label);
     }
 
     // Save Data
@@ -169,11 +171,11 @@ export class AddStatusComponent implements OnInit {
                 that._autoservice.getMOM(params).subscribe(data => {
                     try {
                         that.enttid = data.data[0].enttid;
-                        that.enttname = data.data[0].enttname;
+                        that.enttname.value = data.data[0].enttid;
+                        that.enttname.label = data.data[0].enttname;
                         that.statusid = data.data[0].autoid;
                         that.statusnm = data.data[0].val;
                         that.ordno = data.data[0].ordno;
-                        that.enttid = data.data[0].enttid;
                     }
                     catch (e) {
                         that._msg.Show(messageType.error, "Error", e);

@@ -19,15 +19,15 @@ export class AddVoucherComponent implements OnInit {
 
     entityDT: any = [];
     enttid: number = 0;
-    enttname: string = "";
+    enttname: any = [];
 
     employeeDT: any = [];
     empid: number = 0;
-    empname: string = "";
+    empname: any = [];
 
     expenseDT: any = [];
     expid: number = 0;
-    expname: string = "";
+    expname: any = [];
 
     amt: number = 0;
     noofdoc: string = "";
@@ -78,7 +78,9 @@ export class AddVoucherComponent implements OnInit {
 
     selectEntityData(event) {
         this.enttid = event.value;
-        this.enttname = event.label;
+        
+        Cookie.set("_enttid_", event.value);
+        Cookie.set("_enttnm_", event.label);
     }
 
     // Auto Completed Employee
@@ -108,7 +110,6 @@ export class AddVoucherComponent implements OnInit {
 
     selectEmployeeData(event) {
         this.empid = event.value;
-        this.empname = event.label;
     }
 
     // Auto Completed Expense
@@ -142,8 +143,8 @@ export class AddVoucherComponent implements OnInit {
     addVoucherRow() {
         this.voucherData.push({
             "enttid": this.enttid, "enttname": this.enttname,
-            "empid": this.empid, "empname": this.empname,
-            "expid": this.expid, "expname": this.expname,
+            "empid": this.empname.value, "empname": this.empname.label,
+            "expid": this.expname.value, "expname": this.expname.label,
             "amt": this.amt, "noofdoc": this.noofdoc, "remark": this.remark
         })
 
@@ -154,9 +155,9 @@ export class AddVoucherComponent implements OnInit {
 
     resetVoucherFields() {
         this.empid = 0;
-        this.empname = "";
+        this.empname = [];
         this.expid = 0;
-        this.expname = "";
+        this.expname = [];
         this.amt = 0;
         this.noofdoc = "";
         this.remark = "";
@@ -257,11 +258,13 @@ export class AddVoucherComponent implements OnInit {
                 that._vchservice.getVoucherDetails(params).subscribe(data => {
                     try {
                         that.enttid = data.data[0].enttid;
-                        that.enttname = data.data[0].enttname;
-                        that.empid = data.data[0].empid;
-                        that.empname = data.data[0].empname;
+                        that.enttname.value = data.data[0].enttid;
+                        that.enttname.label = data.data[0].enttname;
+                        that.empname.value = data.data[0].empid;
+                        that.empname.label = data.data[0].empname;
                         that.expid = data.data[0].expid;
-                        that.expname = data.data[0].expname;
+                        that.expname.value = data.data[0].expid;
+                        that.expname.label = data.data[0].expname;
                         that.amt = data.data[0].amt;
                         that.noofdoc = data.data[0].noofdoc;
                     }

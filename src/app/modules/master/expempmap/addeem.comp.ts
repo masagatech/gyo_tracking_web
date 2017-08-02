@@ -15,15 +15,15 @@ export class AddExpenseEmployeeMapComponent implements OnInit, OnDestroy {
 
     entityDT: any = [];
     enttid: number = 0;
-    enttname: string = "";
+    enttname: any = [];
 
     employeeDT: any = [];
     empid: number = 0;
-    empname: string = "";
+    empname: any = [];
 
     expenseDT: any = [];
     expid: number = 0;
-    expname: string = "";
+    expname: any = [];
     expenseList: any = [];
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _autoservice: CommonService,
@@ -41,7 +41,7 @@ export class AddExpenseEmployeeMapComponent implements OnInit, OnDestroy {
     resetUserRights() {
         $(".enttname input").focus();
         this.expid = 0;
-        this.expname = "";
+        this.expname = [];
     }
 
     // Auto Completed Entity
@@ -70,7 +70,6 @@ export class AddExpenseEmployeeMapComponent implements OnInit, OnDestroy {
 
     selectEntityData(event) {
         this.enttid = event.value;
-        this.enttname = event.label;
     }
 
     // Auto Completed Employee
@@ -100,8 +99,6 @@ export class AddExpenseEmployeeMapComponent implements OnInit, OnDestroy {
 
     selectEmployeeData(event) {
         this.empid = event.value;
-        this.empname = event.label;
-
         this.getExpenseList();
     }
 
@@ -128,7 +125,6 @@ export class AddExpenseEmployeeMapComponent implements OnInit, OnDestroy {
 
     selectExpenseData(event) {
         this.expid = event.value;
-        this.expname = event.label;
 
         this.addExpenseList();
     }
@@ -160,12 +156,12 @@ export class AddExpenseEmployeeMapComponent implements OnInit, OnDestroy {
 
         if (!duplicateExpense) {
             that.expenseList.push({
-                "expid": that.expid, "expnm": that.expname
+                "expid": that.expname.value, "expnm": that.expname.label
             });
         }
 
         that.expid = 0;
-        that.expname = "";
+        that.expname = [];
         $(".expname input").focus();
         //commonfun.loaderhide("#divExpense");
     }
@@ -179,9 +175,9 @@ export class AddExpenseEmployeeMapComponent implements OnInit, OnDestroy {
 
     resetExpenseFields() {
         this.empid = 0;
-        this.empname = "";
+        this.empname = [];
         this.expid = 0;
-        this.expname = "";
+        this.expname = [];
         this.expenseList = [];
     }
 

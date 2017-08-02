@@ -19,7 +19,7 @@ export class AddTeamComponent implements OnInit {
 
     entityDT: any = [];
     enttid: number = 0;
-    enttname: string = "";
+    enttname: any = [];
 
     tmid: number = 0;
     tmnm: string = "";
@@ -71,7 +71,9 @@ export class AddTeamComponent implements OnInit {
 
     selectEntityData(event) {
         this.enttid = event.value;
-        this.enttname = event.label;
+        
+        Cookie.set("_enttid_", event.value);
+        Cookie.set("_enttnm_", event.label);
     }
 
     // Clear Fields
@@ -165,9 +167,10 @@ export class AddTeamComponent implements OnInit {
 
                 that._tmservice.getTeamDetails(params).subscribe(data => {
                     try {
-                        that.enttid = data.data[0].enttid;
-                        that.enttname = data.data[0].enttname;
                         that.tmid = data.data[0].tmid;
+                        that.enttid = data.data[0].enttid;
+                        that.enttname.value = data.data[0].enttid;
+                        that.enttname.label = data.data[0].enttname;
                         that.tmnm = data.data[0].tmnm;
                         that.purpose = data.data[0].purpose;
                     }

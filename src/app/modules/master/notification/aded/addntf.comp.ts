@@ -19,7 +19,7 @@ export class AddNotificationComponent implements OnInit {
 
     entityDT: any = [];
     enttid: number = 0;
-    enttname: string = "";
+    enttname: any = [];
 
     teamDT: any = [];
     tmid: number = 0;
@@ -27,7 +27,7 @@ export class AddNotificationComponent implements OnInit {
 
     employeeDT: any = [];
     empid: number = 0;
-    empname: string = "";
+    empname: any = [];
 
     employeeList: any = [];
 
@@ -77,7 +77,9 @@ export class AddNotificationComponent implements OnInit {
 
     selectEntityData(event) {
         this.enttid = event.value;
-        this.enttname = event.label;
+
+        Cookie.set("_enttid_", event.value);
+        Cookie.set("_enttnm_", event.label);
     }
 
     // Auto Completed Team
@@ -291,7 +293,8 @@ export class AddNotificationComponent implements OnInit {
                     try {
                         that.ntfid = data.data[0].ntfid;
                         that.enttid = data.data[0].enttid;
-                        that.enttname = data.data[0].enttname;
+                        that.enttname.value = data.data[0].enttid;
+                        that.enttname.label = data.data[0].enttname;
                         that.tmid = data.data[0].tmid;
                         that.tmnm = data.data[0].tmnm;
                         // that.employeeList = data.data[0].empdata;
@@ -316,7 +319,8 @@ export class AddNotificationComponent implements OnInit {
             else {
                 if (Cookie.get('_enttnm_') != null) {
                     that.enttid = parseInt(Cookie.get('_enttid_'));
-                    that.enttname = Cookie.get('_enttnm_');
+                    that.enttname.value = parseInt(Cookie.get('_enttid_'));
+                    that.enttname.label = Cookie.get('_enttnm_');
                 }
 
                 that.resetNotificationFields();

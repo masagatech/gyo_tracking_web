@@ -18,7 +18,7 @@ export class ViewLeaveEmploypeeComponent implements OnInit {
 
     entityDT: any = [];
     enttid: number = 0;
-    enttname: string = "";
+    enttname: any = [];
 
     leaveEmployeeDT: any = [];
 
@@ -63,10 +63,9 @@ export class ViewLeaveEmploypeeComponent implements OnInit {
 
     selectEntityData(event) {
         this.enttid = event.value;
-        this.enttname = event.label;
 
-        Cookie.set("_enttid_", this.enttid.toString());
-        Cookie.set("_enttnm_", this.enttname);
+        Cookie.set("_enttid_", event.value);
+        Cookie.set("_enttnm_", event.label);
 
         this.getLeaveEmployee();
     }
@@ -76,7 +75,9 @@ export class ViewLeaveEmploypeeComponent implements OnInit {
 
         if (Cookie.get('_enttnm_') != null) {
             that.enttid = parseInt(Cookie.get('_enttid_'));
-            that.enttname = Cookie.get('_enttnm_');
+            that.enttname.value = parseInt(Cookie.get('_enttid_'));
+            that.enttname.label = Cookie.get('_enttnm_');
+            
             that.getLeaveEmployee();
         }
     }

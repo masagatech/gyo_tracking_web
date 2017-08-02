@@ -19,16 +19,16 @@ export class AddTeamEmployeeMapComponent implements OnInit {
 
     entityDT: any = [];
     enttid: number = 0;
-    enttname: string = "";
+    enttname: any = [];
 
     employeeDT: any = [];
     employeeList: any = [];
     empid: number = 0;
-    empname: string = "";
+    empname: any = [];
 
     teamDT: any = [];
     tmid: number = 0;
-    tmnm: string = "";
+    tmnm: any = [];
 
     _wsdetails: any = [];
     private subscribeParameters: any;
@@ -73,7 +73,9 @@ export class AddTeamEmployeeMapComponent implements OnInit {
 
     selectEntityData(event) {
         this.enttid = event.value;
-        this.enttname = event.label;
+        
+        Cookie.set("_enttid_", event.value);
+        Cookie.set("_enttnm_", event.label);
     }
 
     // Auto Completed Team
@@ -103,8 +105,6 @@ export class AddTeamEmployeeMapComponent implements OnInit {
 
     selectTeamData(event) {
         this.tmid = event.value;
-        this.tmnm = event.label;
-
         this.getTeamEmployeeMap();
     }
 
@@ -169,14 +169,14 @@ export class AddTeamEmployeeMapComponent implements OnInit {
             that.employeeList.push({
                 "temid": that.temid,
                 "enttid": that.enttid, "enttname": that.enttname,
-                "tmid": that.tmid, "tmnm": that.tmnm,
-                "empid": that.empid, "empname": that.empname,
+                "tmid": that.tmnm.value, "tmnm": that.tmnm.label,
+                "empid": that.empname.value, "empname": that.empname.label,
                 "wsautoid": that._wsdetails.wsautoid, "isactive": true
             });
         }
 
         that.empid = 0;
-        that.empname = "";
+        that.empname = [];
         $(".empname input").focus();
         commonfun.loaderhide("#divEmployee");
     }
@@ -194,9 +194,9 @@ export class AddTeamEmployeeMapComponent implements OnInit {
         var that = this;
 
         that.tmid = 0;
-        that.tmnm = "";
+        that.tmnm = [];
         that.empid = 0;
-        that.empname = "";
+        that.empname = [];
         that.employeeList = [];
     }
 

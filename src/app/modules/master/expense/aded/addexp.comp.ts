@@ -20,7 +20,7 @@ export class AddExpenseComponent implements OnInit {
 
     entityDT: any = [];
     enttid: number = 0;
-    enttname: string = "";
+    enttname: any = [];
 
     expid: number = 0;
     expcd: string = "";
@@ -76,7 +76,9 @@ export class AddExpenseComponent implements OnInit {
 
     selectEntityData(event) {
         this.enttid = event.value;
-        this.enttname = event.label;
+
+        Cookie.set("_enttid_", event.value);
+        Cookie.set("_enttnm_", event.label);
     }
 
     // Fill DropDown List
@@ -88,7 +90,7 @@ export class AddExpenseComponent implements OnInit {
             try {
                 that.exptypeDT = data.data.filter(a => a.group === "exptype");
                 setTimeout(function () { $.AdminBSB.select.refresh('exptype'); }, 100);
-                
+
                 that.amttypeDT = data.data.filter(a => a.group === "amttype");
                 setTimeout(function () { $.AdminBSB.select.refresh('amttype'); }, 100);
             }
@@ -215,7 +217,8 @@ export class AddExpenseComponent implements OnInit {
                 that._expservice.getExpenseDetails(params).subscribe(data => {
                     try {
                         that.enttid = data.data[0].enttid;
-                        that.enttname = data.data[0].enttname;
+                        that.enttname.value = data.data[0].enttid;
+                        that.enttname.label = data.data[0].enttname;
                         that.expid = data.data[0].expid;
                         that.expcd = data.data[0].expcd;
                         that.expnm = data.data[0].expnm;

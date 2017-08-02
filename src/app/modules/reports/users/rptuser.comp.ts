@@ -19,7 +19,7 @@ export class UserReportsComponent implements OnInit, OnDestroy {
     autoUserDT: any = [];
 
     autouid: number = 0;
-    autouname: string = "";
+    autouname: any = [];
 
     utypeDT: any = [];
     srcutype: string = "";
@@ -118,12 +118,8 @@ export class UserReportsComponent implements OnInit, OnDestroy {
     // Selected User
 
     selectAutoUsers(event, arg) {
-        var that = this;
-
-        that.autouid = event.uid;
-        that.autouname = event.uname;
-
-        that.getUserDetails();
+        this.autouid = event.uid;
+        this.getUserDetails();
     }
 
     public viewUserDataRights() {
@@ -193,7 +189,7 @@ export class UserReportsComponent implements OnInit, OnDestroy {
         Cookie.delete('_srcutype_');
         this.srcutype = "";
         this.autouid = 0;
-        this.autouname = "";
+        this.autouname = [];
         this.getUserDetails();
     }
 

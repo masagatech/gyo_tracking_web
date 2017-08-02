@@ -16,12 +16,12 @@ export class AddUserMenuMapComponent implements OnInit, OnDestroy {
     menuname: string = "";
 
     uid: number = 0;
-    uname: string = "";
+    uname: any = [];
     utype: string = "";
     ufullname: string = "";
 
     refuid: number = 0;
-    refuname: string = "";
+    refuname: any = [];
     refutype: string = "";
 
     menudetails: any = [];
@@ -44,11 +44,11 @@ export class AddUserMenuMapComponent implements OnInit, OnDestroy {
     }
 
     resetUserRights() {
-        $("#uname").focus();
+        $("#uname input").focus();
         this.uid = 0;
-        this.uname = "";
+        this.uname = [];
         this.refuid = 0;
-        this.refuname = "";
+        this.refuname = [];
     }
 
     // Auto Completed User
@@ -80,11 +80,9 @@ export class AddUserMenuMapComponent implements OnInit, OnDestroy {
         var that = this;
 
         that.uid = event.uid;
-        that.uname = event.uname;
         that.utype = event.utype;
 
         that.refuid = event.uid;
-        that.refuname = event.uname;
         that.refutype = event.utype;
 
         that.getUserRightsById(that.refuid, that.refutype);
@@ -96,7 +94,6 @@ export class AddUserMenuMapComponent implements OnInit, OnDestroy {
         var that = this;
 
         that.refuid = event.uid;
-        that.refuname = event.uname;
         that.refutype = event.utype;
     }
 

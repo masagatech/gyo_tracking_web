@@ -18,13 +18,9 @@ export class HolidayReportsComponent implements OnInit, OnDestroy {
 
     entityDT: any = [];
     enttid: number = 0;
-    enttname: string = "";
+    enttname: any = [];
 
     holidayDT: any = [];
-
-    actaddrights: string = "";
-    acteditrights: string = "";
-    actviewrights: string = "";
 
     @ViewChild('holiday') holiday: ElementRef;
 
@@ -47,7 +43,7 @@ export class HolidayReportsComponent implements OnInit, OnDestroy {
             $.AdminBSB.rightSideBar.activate();
         }, 100);
     }
-    
+
     // Export
 
     public exportToCSV() {
@@ -90,69 +86,48 @@ export class HolidayReportsComponent implements OnInit, OnDestroy {
 
     selectEntityData(event) {
         this.enttid = event.value;
-        this.enttname = event.label;
 
-        Cookie.set("_enttid_", this.enttid.toString());
-        Cookie.set("_enttnm_", this.enttname);
+        Cookie.set("_enttid_", event.value);
+        Cookie.set("_enttnm_", event.label);
 
         this.getHolidayGrid();
     }
 
     public viewHolidayDataRights() {
         var that = this;
-        var addRights = [];
-        var editRights = [];
-        var viewRights = [];
 
-        that._menuservice.getMenuDetails({
-            "flag": "actrights", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "mcode": "hld", "utype": that.loginUser.utype
-        }).subscribe(data => {
-            addRights = data.data.filter(a => a.mrights === "add");
-            editRights = data.data.filter(a => a.mrights === "edit");
-            viewRights = data.data.filter(a => a.mrights === "view");
-
-            that.actaddrights = addRights.length !== 0 ? addRights[0].mrights : "";
-            that.acteditrights = editRights.length !== 0 ? editRights[0].mrights : "";
-            that.actviewrights = viewRights.length !== 0 ? viewRights[0].mrights : "";
-
-            if (Cookie.get('_enttnm_') != null) {
-                that.enttid = parseInt(Cookie.get('_enttid_'));
-                that.enttname = Cookie.get('_enttnm_');
-                that.getHolidayGrid();
-            }
-        }, err => {
-            that._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        })
+        if (Cookie.get('_enttnm_') != null) {
+            that.enttid = parseInt(Cookie.get('_enttid_'));
+            that.enttname.value = parseInt(Cookie.get('_enttid_'));
+            that.enttname.label = Cookie.get('_enttnm_');
+            that.getHolidayGrid();
+        }
     }
 
     getHolidayGrid() {
         var that = this;
 
-        if (that.actviewrights === "view") {
-            commonfun.loader();
+        commonfun.loader();
 
-            that._holidayervice.getHoliday({
-                "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
-                "issysadmin": that.loginUser.issysadmin, "schid": that.enttid, "wsautoid": that._wsdetails.wsautoid
-            }).subscribe(data => {
-                try {
-                    that.holidayDT = data.data;
-                }
-                catch (e) {
-                    that._msg.Show(messageType.error, "Error", e);
-                }
+        that._holidayervice.getHoliday({
+            "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
+            "issysadmin": that.loginUser.issysadmin, "schid": that.enttid, "wsautoid": that._wsdetails.wsautoid
+        }).subscribe(data => {
+            try {
+                that.holidayDT = data.data;
+            }
+            catch (e) {
+                that._msg.Show(messageType.error, "Error", e);
+            }
 
-                commonfun.loaderhide();
-            }, err => {
-                that._msg.Show(messageType.error, "Error", err);
-                console.log(err);
-                commonfun.loaderhide();
-            }, () => {
+            commonfun.loaderhide();
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+            commonfun.loaderhide();
+        }, () => {
 
-            })
-        }
+        })
     }
 
     public ngOnDestroy() {

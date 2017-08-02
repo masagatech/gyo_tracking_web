@@ -20,7 +20,7 @@ export class ViewWorkspaceComponent implements OnInit {
 
     autoWorkspaceDT: any = [];
     autowsid: number = 0;
-    autowsname: string = "";
+    autowsname: any = [];
 
     wsautoid: number = 0;
     wscode: string = "";
@@ -84,10 +84,9 @@ export class ViewWorkspaceComponent implements OnInit {
 
     selectAutoWorkspaceData(event) {
         this.autowsid = event.value;
-        this.autowsname = event.label;
 
-        Cookie.set("_autowsid_", this.autowsid.toString());
-        Cookie.set("_autowsnm_", this.autowsname);
+        Cookie.set("_autowsid_", event.value);
+        Cookie.set("_autowsnm_", event.label);
 
         this.getWorkspaceDetails();
     }

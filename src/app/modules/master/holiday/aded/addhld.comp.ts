@@ -29,12 +29,12 @@ export class AddHolidayComponent implements OnInit {
     entityDT: any = [];
     entityList: any = [];
     enttid: number = 0;
-    enttname: string = "";
+    enttname: any = [];
 
     teamDT: any = [];
     teamList: any = [];
     tmid: number = 0;
-    tmnm: string = "";
+    tmnm: any = [];
 
     purpose: string = "";
     remark: string = "";
@@ -84,7 +84,9 @@ export class AddHolidayComponent implements OnInit {
 
     selectEntityData(event) {
         this.enttid = event.value;
-        this.enttname = event.label;
+        
+        Cookie.set("_enttid_", event.value);
+        Cookie.set("_enttnm_", event.label);
 
         this.addEntityList();
         $(".enttname input").focus();
@@ -129,7 +131,6 @@ export class AddHolidayComponent implements OnInit {
 
     selectTeamData(event) {
         this.tmid = event.value;
-        this.tmnm = event.label;
 
         this.addTeamList();
         $(".tmnm input").focus();
@@ -141,11 +142,11 @@ export class AddHolidayComponent implements OnInit {
         var that = this;
 
         that.teamList.push({
-            "tmid": that.tmid, "tmnm": that.tmnm
+            "tmid": that.tmnm.value, "tmnm": that.tmnm.label
         });
 
         that.tmid = 0;
-        that.tmnm = "";
+        that.tmnm = [];
     }
 
     deleteTeam(row) {

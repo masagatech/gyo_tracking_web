@@ -19,18 +19,18 @@ export class AddTeamOwnershipComponent implements OnInit {
 
     entityDT: any = [];
     enttid: number = 0;
-    enttname: string = "";
+    enttname: any = [];
 
     employeeList: any = [];
 
     ownershipDT: any = [];
     ownershipList: any = [];
     onrid: number = 0;
-    onrname: string = "";
+    onrname: any = [];
 
     teamDT: any = [];
     tmid: number = 0;
-    tmnm: string = "";
+    tmnm: any = [];
 
     _wsdetails: any = [];
     private subscribeParameters: any;
@@ -75,7 +75,9 @@ export class AddTeamOwnershipComponent implements OnInit {
 
     selectEntityData(event) {
         this.enttid = event.value;
-        this.enttname = event.label;
+        
+        Cookie.set("_enttid_", event.value);
+        Cookie.set("_enttnm_", event.label);
     }
 
     // Auto Completed Team
@@ -105,7 +107,6 @@ export class AddTeamOwnershipComponent implements OnInit {
 
     selectTeamData(event) {
         this.tmid = event.value;
-        this.tmnm = event.label;
 
         this.getTeamEmployeeMap();
         this.getTeamOwnershipMap();
@@ -130,7 +131,7 @@ export class AddTeamOwnershipComponent implements OnInit {
                 else {
                     that._msg.Show(messageType.error, "Error", "There are no Employee");
                     that.tmid = 0;
-                    that.tmnm = "";
+                    that.tmnm = [];
                     that.employeeList = [];
                     $(".tmnm input").focus();
                 }
@@ -176,8 +177,6 @@ export class AddTeamOwnershipComponent implements OnInit {
 
     selectOwnershipData(event) {
         this.onrid = event.value;
-        this.onrname = event.label;
-
         this.addOwnershipList();
     }
 
@@ -210,14 +209,14 @@ export class AddTeamOwnershipComponent implements OnInit {
             that.ownershipList.push({
                 "tomid": that.tomid,
                 "enttid": that.enttid, "enttname": that.enttname,
-                "tmid": that.tmid, "tmnm": that.tmnm,
-                "onrid": that.onrid, "onrname": that.onrname,
+                "tmid": that.tmnm.value, "tmnm": that.tmnm.label,
+                "onrid": that.onrname.value, "onrname": that.onrname.label,
                 "wsautoid": that._wsdetails.wsautoid, "isactive": true
             });
         }
 
         that.onrid = 0;
-        that.onrname = "";
+        that.onrname = [];
         $(".onrname input").focus();
         commonfun.loaderhide("#divOwnership");
     }
@@ -235,9 +234,9 @@ export class AddTeamOwnershipComponent implements OnInit {
         var that = this;
 
         that.tmid = 0;
-        that.tmnm = "";
+        that.tmnm = [];
         that.onrid = 0;
-        that.onrname = "";
+        that.onrname = [];
         that.employeeList = [];
         that.ownershipList = [];
     }
@@ -249,11 +248,11 @@ export class AddTeamOwnershipComponent implements OnInit {
 
         if (that.enttid == 0) {
             that._msg.Show(messageType.error, "Error", "Select Entity");
-            $(".enttid").focus();
+            $(".enttname input").focus();
         }
         else if (that.tmid == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Team Name");
-            $(".tmnm").focus();
+            $(".tmnm input").focus();
         }
         else if (that.employeeList.length == 0) {
             that._msg.Show(messageType.error, "Error", "Enter atleast 1 Ownership");
