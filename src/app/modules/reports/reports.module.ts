@@ -36,8 +36,9 @@ export const routes = [
                
                     { path: 'stops', loadChildren: './stops#StopsReportsModule' },
                     { path: 'menulog', loadChildren: './menulog#MenuLogReportsModule' },
-                    { path: 'employeetag', loadChildren: './employeetag#EmployeeTagReportsModule' }
+                    { path: 'employeetag', loadChildren: './employeetag#EmployeeTagReportsModule' },
                     
+                    { path: 'expense', loadChildren: './expense#ExpenseReportsModule' }
                    
                 ]
             }
