@@ -17,7 +17,7 @@ export class AddMOMComponent implements OnInit, OnDestroy {
     validSuccess: Boolean = true;
 
     momid: number = 0;
-    teamDT: any = [];
+    groupDT: any = [];
     group: string = "";
     key: string = "";
     val: string = "";
@@ -56,7 +56,8 @@ export class AddMOMComponent implements OnInit, OnDestroy {
         var that = this;
 
         that._commonservice.getMOM({ "flag": "group" }).subscribe(data => {
-            that.teamDT = data.data;
+            that.groupDT = data.data;
+            setTimeout(function () { $.AdminBSB.select.refresh('group'); }, 100);
         }, err => {
             that._message.Show(messageType.error, 'Error', err);
         }, () => {

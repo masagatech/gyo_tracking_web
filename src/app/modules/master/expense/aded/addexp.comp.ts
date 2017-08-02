@@ -87,7 +87,10 @@ export class AddExpenseComponent implements OnInit {
         that._expservice.getExpenseDetails({ "flag": "dropdown" }).subscribe(data => {
             try {
                 that.exptypeDT = data.data.filter(a => a.group === "exptype");
+                setTimeout(function () { $.AdminBSB.select.refresh('exptype'); }, 100);
+                
                 that.amttypeDT = data.data.filter(a => a.group === "amttype");
+                setTimeout(function () { $.AdminBSB.select.refresh('amttype'); }, 100);
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);

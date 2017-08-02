@@ -5,7 +5,7 @@
                 <label class="control-label">Group</label>
                 <select id="group" name="group" [(ngModel)]="group" class="form-control">
                     <option value="">-- Select Group --</option>
-                    <option *ngFor="let grow of teamDT" [value]="grow.key">
+                    <option *ngFor="let grow of groupDT" [value]="grow.key">
                         {{grow.val}}
                     </option>
                 </select>

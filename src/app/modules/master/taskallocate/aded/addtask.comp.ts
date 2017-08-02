@@ -170,6 +170,7 @@ export class AddTaskAllocateComponent implements OnInit {
         that._atservice.getTaskAllocate({ "flag": "dropdown" }).subscribe(data => {
             try {
                 that.ntrgrpDT = data.data;
+                setTimeout(function () { $.AdminBSB.select.refresh('ntrgrp'); }, 100);
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);

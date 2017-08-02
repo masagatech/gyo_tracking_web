@@ -126,7 +126,9 @@ export class EmployeeAttendanceReportsComponent implements OnInit, OnDestroy {
         that._rptservice.getAttendanceReports({ "flag": "filterddl" }).subscribe(data => {
             try {
                 that.monthDT = data.data.filter(a => a.group === "month");
+                setTimeout(function () { $.AdminBSB.select.refresh('monthname'); }, 100);
                 that.standardDT = data.data.filter(a => a.group === "standard");
+                setTimeout(function () { $.AdminBSB.select.refresh('standard'); }, 100);
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);

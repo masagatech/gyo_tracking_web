@@ -38,7 +38,7 @@
                 <div class="form-group">
                     <label>Expense Type:</label>
                     <div class="form-line">
-                        <select [(ngModel)]="exptype" class="form-control exptype" tabindex="4">
+                        <select id="exptype" [(ngModel)]="exptype" class="form-control exptype" tabindex="4">
 							<option [value]="''">Select Expense Type</option>
 							<option *ngFor="let row of exptypeDT" [value]="row.key">
 								{{row.val}}
@@ -63,7 +63,7 @@
                 <div class="form-group">
                     <label>Amount Type:</label>
                     <div class="form-line">
-                        <select [(ngModel)]="amttype" class="form-control amttype" tabindex="4">
+                        <select id="amttype" [(ngModel)]="amttype" class="form-control amttype" tabindex="4">
 							<option [value]="''">Select Amount Type</option>
 							<option *ngFor="let row of amttypeDT" [value]="row.key">
 								{{row.val}}
