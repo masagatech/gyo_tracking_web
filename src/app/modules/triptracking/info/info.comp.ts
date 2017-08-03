@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { TTMapService } from '@services/master';
 import { MessageService, messageType, TrackDashbord } from '@services';
+import { LoginUserModel, Globals } from '@models';
 
 @Component({
     templateUrl: './info.comp.html'
@@ -8,7 +9,9 @@ import { MessageService, messageType, TrackDashbord } from '@services';
 export class INFOComponent implements OnInit {
     @Input() data: any;
     tripDT: any = [];
-    vhinfo: any = {};
+    empinfo: any = {};
+    global = new Globals();
+    
     constructor(private _msg: MessageService, private _ttmapservice: TTMapService, private _trackDashbord: TrackDashbord) { }
 
     ngOnInit() {
@@ -36,20 +39,18 @@ export class INFOComponent implements OnInit {
         });
     }
 
-    private getVHInfo() {
-        if (this.vhinfo.vhid !== undefined) { return; }
+    private getEmployeeinfo() {
+        if (this.empinfo.vhid !== undefined) { return; }
         var that = this;
         commonfun.loader("#loaderbody");
+
         this._trackDashbord.gettrackboard({
-            "flag": "vehicleid",
-            "vehid": this.data.vhid,
-            "uid": this.data.loginUser.uid,
-            "utype": this.data.loginUser.utype,
-            "issysadmin": this.data.loginUser.issysadmin,
+            "flag": "empid",
+            "empid": this.data.empid,
             "wsautoid": this.data._wsdetails.wsautoid
         }).subscribe((data) => {
             try {
-                that.vhinfo = data.data[0];
+                that.empinfo = data.data[0];
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
