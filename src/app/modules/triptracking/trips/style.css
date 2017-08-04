@@ -1,8 +1,8 @@
-.def-box{
+.def-box {
     position: relative;
 }
 
-.imgProf{
+.imgProf {
     height: 30px;
     width: 30px;
     border-radius: 50%;
@@ -15,13 +15,15 @@
     border-radius: 50%;
     overflow: hidden;
 }
-.imgProf img{
+
+.imgProf img {
     height: 30px;
 }
 
-.detailBlock{
+.detailBlock {
     margin-left: 35px;
 }
+
 span.material-icons.ico-specify {
     font-size: 14px;
     color: #329e05;
@@ -30,11 +32,13 @@ span.material-icons.ico-specify {
     left: -11px;
     top: -3px;
 }
-.statusicon{
+
+.statusicon {
     position: absolute;
     right: 5px;
-    top:5px;
+    top: 5px;
 }
-.leftmar{
+
+.leftmar {
     margin-left: 10px;
 }

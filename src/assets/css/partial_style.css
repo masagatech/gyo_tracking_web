@@ -2169,14 +2169,14 @@ li.vehicle {
 }
 
 .vhtitle {
+    margin: 0 35px 0;
     display: block;
     font-size: 12px;
     font-weight: bold;
-    margin-left: 29px;
 }
 
 .vhsubtitle {
-    margin-left: 29px;
+    margin: 10px 35px 0;
     display: block;
     font-size: 11px;
     color: #8c8c8c;

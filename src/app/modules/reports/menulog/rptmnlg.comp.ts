@@ -12,22 +12,22 @@ import jsPDF from 'jspdf'
 })
 
 export class MenuLogReportsComponent implements OnInit, OnDestroy {
-    menulogDT: any = [];
     loginUser: LoginUserModel;
-
     _wsdetails: any = [];
 
-    actaddrights: string = "";
-    acteditrights: string = "";
-    actviewrights: string = "";
+    frmdt: any = "";
+    todt: any = "";
+
+    menulogDT: any = [];
 
     @ViewChild('menulog') menulog: ElementRef;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
         public _menuservice: MenuService, private _loginservice: LoginService, private _menulogservice: MenuLogReportsService) {
         this.loginUser = this._loginservice.getUser();
-        this.viewMenulogDataRights();
+        this.getMenuLog();
 
+        this.setFromDateAndToDate();
         this._wsdetails = Globals.getWSDetails();
     }
 
@@ -41,52 +41,35 @@ export class MenuLogReportsComponent implements OnInit, OnDestroy {
         }, 0);
     }
 
-    // Export
+    // Selected Calendar Date
 
-    public exportToCSV() {
-        new Angular2Csv(this.menulogDT, 'MenuLogDetails', { "showLabels": true });
+    formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
     }
 
-    public exportToPDF() {
-        let pdf = new jsPDF('l', 'pt', 'a4');
-        let options = {
-            pagesplit: true
-        };
-        pdf.addHTML(this.menulog.nativeElement, 0, 0, options, () => {
-            pdf.save("MenuLogDetail.pdf");
-        });
+    // Format Date
+
+    setFromDateAndToDate() {
+        var date = new Date();
+        var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+        this.frmdt = this.formatDate(today);
+        this.todt = this.formatDate(today);
     }
 
-    public viewMenulogDataRights() {
-        var that = this;
-        var addRights = [];
-        var editRights = [];
-        var viewRights = [];
-
-        that._menuservice.getMenuDetails({
-         "flag": "actrights", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "mcode": "rptmnlg", "utype": that.loginUser.utype
-
-        }).subscribe(data => {
-            addRights = data.data.filter(a => a.mrights === "add");
-            editRights = data.data.filter(a => a.mrights === "edit");
-            viewRights = data.data.filter(a => a.mrights === "view");
-
-            that.actaddrights = addRights.length !== 0 ? addRights[0].mrights : "";
-            that.acteditrights = editRights.length !== 0 ? editRights[0].mrights : "";
-            that.actviewrights = viewRights.length !== 0 ? viewRights[0].mrights : "";
-
-            that.getMenuLog();
-        }, err => {
-            that._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        })
-    }
+    // Get Menu Log
 
     getMenuLog() {
         var that = this;
 
-        if (that.actviewrights === "view") {
             commonfun.loader();
 
             that._menulogservice.getMenuLog({
@@ -108,7 +91,22 @@ export class MenuLogReportsComponent implements OnInit, OnDestroy {
             }, () => {
 
             })
-        }
+    }
+
+    // Export
+
+    public exportToCSV() {
+        new Angular2Csv(this.menulogDT, 'MenuLogDetails', { "showLabels": true });
+    }
+
+    public exportToPDF() {
+        let pdf = new jsPDF('l', 'pt', 'a4');
+        let options = {
+            pagesplit: true
+        };
+        pdf.addHTML(this.menulog.nativeElement, 0, 0, options, () => {
+            pdf.save("MenuLogDetail.pdf");
+        });
     }
 
     public ngOnDestroy() {

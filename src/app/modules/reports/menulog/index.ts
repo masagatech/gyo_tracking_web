@@ -15,7 +15,7 @@ export const routes = [
     path: '', children: [
       {
         path: '', component: MenuLogReportsComponent, canActivate: [AuthGuard],
-        data: { "module": "rpt", "submodule": "rptmnlg", "rights": "view", "urlname": "/menulog" }
+        data: { "module": "rpt", "submodule": "rptml", "rights": "view", "urlname": "/menulog" }
       }
     ]
   },

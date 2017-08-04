@@ -9,14 +9,13 @@ import { AuthGuard } from '../../_services/authguard-service';
 import { TripTrackingComponent } from './ttmap.comp';
 import { TTMapService } from '@services/master';
 import { Globals } from '@models';
-import { TimeAgoPipe } from '@pipe/timeago'
-import { format } from '@pipe/format'
-//child components
+import { TimeAgoPipe } from '@pipe/timeago';
+import { format } from '@pipe/format';
 import { ADHOST } from '@directives';
 
-import { PSGComponent } from './passengers/psg.comp'
-import { INFOComponent } from './info/info.comp'
-import { HISTORYComponent } from './history/history.comp'
+import { InfoComponent } from './info/info.comp';
+import { TripsComponent } from './trips/trips.comp';
+import { HistoryComponent } from './history/history.comp';
 
 import { LazyLoadEvent, DataTableModule, AutoCompleteModule, GMapModule, SelectButtonModule, CalendarModule, SliderModule } from 'primeng/primeng';
 
@@ -39,13 +38,15 @@ export const routes = [
   declarations: [
     TripTrackingComponent,
     TimeAgoPipe,
-    PSGComponent,
-    INFOComponent,
+    InfoComponent,
+    TripsComponent,
+    HistoryComponent,
     ADHOST,
-    HISTORYComponent,
     format
   ],
-  entryComponents: [PSGComponent, INFOComponent, HISTORYComponent],
+
+  entryComponents: [InfoComponent, TripsComponent, HistoryComponent],
+  
   imports: [
     CommonModule, FormsModule, SharedComponentModule, SocketIoModule.forRoot(config),
     RouterModule.forChild(routes), DataTableModule, AutoCompleteModule, GMapModule, SelectButtonModule,

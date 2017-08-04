@@ -7,8 +7,8 @@
     text-transform: capitalize;
 }
 
-
-.trptype{    height: 30px;
+.trptype {
+    height: 30px;
     width: 30px;
     border-radius: 50%;
     background-color: #ff9900;
@@ -22,46 +22,53 @@
     text-align: center;
 }
 
-
-.detailBlock{
+.detailBlock {
     margin-left: 35px;
 }
+
 span.material-icons.ico-specify {
-   font-size: 14px;
+    font-size: 14px;
     color: #329e05;
     margin-top: 1px;
     position: absolute;
     left: -9px;
     top: -3px;
 }
-.statusicon{
+
+.statusicon {
     position: absolute;
     left: -2px;
     top: 5px;
 }
-.statusicon .material-icons{
+
+.statusicon .material-icons {
     font-size: 15px;
     font-weight: bold;
     color: teal;
 }
-.leftmar{
+
+.leftmar {
     margin-left: 3px;
 }
-.slideright{
+
+.slideright {
     position: absolute;
     right: 0px;
     z-index: 111;
 }
+
 .backholder {
     background-color: #fff;
     margin-top: -4px;
 }
-.backarrow{
-        position: relative;
+
+.backarrow {
+    position: relative;
     display: block;
     background-color: #607d8b;
     color: #fff;
 }
+
 .backarrow span {
     font-size: 14px;
     top: 8px;

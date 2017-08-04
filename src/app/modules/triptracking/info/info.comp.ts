@@ -6,16 +6,19 @@ import { LoginUserModel, Globals } from '@models';
 @Component({
     templateUrl: './info.comp.html'
 })
-export class INFOComponent implements OnInit {
+
+export class InfoComponent implements OnInit {
     @Input() data: any;
     tripDT: any = [];
     empinfo: any = {};
     global = new Globals();
-    
-    constructor(private _msg: MessageService, private _ttmapservice: TTMapService, private _trackDashbord: TrackDashbord) { }
+
+    constructor(private _msg: MessageService, private _ttmapservice: TTMapService, private _trackDashbord: TrackDashbord) {
+    }
 
     ngOnInit() {
         this.getTripData();
+        this.getEmployeeInfo();
     }
 
     // Get Today's Trip
@@ -39,7 +42,7 @@ export class INFOComponent implements OnInit {
         });
     }
 
-    private getEmployeeinfo() {
+    private getEmployeeInfo() {
         if (this.empinfo.vhid !== undefined) { return; }
         var that = this;
         commonfun.loader("#loaderbody");
@@ -63,5 +66,4 @@ export class INFOComponent implements OnInit {
 
         })
     }
-
 }

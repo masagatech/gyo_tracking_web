@@ -18,17 +18,20 @@ export class AddTeamEmployeeMapComponent implements OnInit {
     temid: number = 0;
 
     entityDT: any = [];
+    enttdata: any = [];
     enttid: number = 0;
-    enttname: any = [];
+    enttname: string = "";
 
     employeeDT: any = [];
-    employeeList: any = [];
+    empdata: any = [];
     empid: number = 0;
-    empname: any = [];
+    empname: string = "";
+    employeeList: any = [];
 
     teamDT: any = [];
+    tmdata: any = [];
     tmid: number = 0;
-    tmnm: any = [];
+    tmnm: string = "";
 
     _wsdetails: any = [];
     private subscribeParameters: any;
@@ -169,14 +172,15 @@ export class AddTeamEmployeeMapComponent implements OnInit {
             that.employeeList.push({
                 "temid": that.temid,
                 "enttid": that.enttid, "enttname": that.enttname,
-                "tmid": that.tmnm.value, "tmnm": that.tmnm.label,
-                "empid": that.empname.value, "empname": that.empname.label,
+                "tmid": that.tmid, "tmnm": that.tmnm,
+                "empid": that.empid, "empname": that.empname,
                 "wsautoid": that._wsdetails.wsautoid, "isactive": true
             });
         }
 
         that.empid = 0;
-        that.empname = [];
+        that.empname = "";
+        that.empdata = [];
         $(".empname input").focus();
         commonfun.loaderhide("#divEmployee");
     }
@@ -194,9 +198,11 @@ export class AddTeamEmployeeMapComponent implements OnInit {
         var that = this;
 
         that.tmid = 0;
-        that.tmnm = [];
+        that.tmnm = "";
+        that.tmdata = [];
         that.empid = 0;
-        that.empname = [];
+        that.empname = "";
+        that.empdata = [];
         that.employeeList = [];
     }
 

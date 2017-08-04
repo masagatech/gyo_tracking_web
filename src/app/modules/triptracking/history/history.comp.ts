@@ -11,9 +11,9 @@ declare var google: any;
     templateUrl: './history.comp.html',
     providers: [TrackDashbord],
     styleUrls: ['./style.css']
-
 })
-export class HISTORYComponent implements OnInit, OnDestroy {
+
+export class HistoryComponent implements OnInit, OnDestroy {
     @ViewChild(ADHOST)
     private _Host: ADHOST;
 

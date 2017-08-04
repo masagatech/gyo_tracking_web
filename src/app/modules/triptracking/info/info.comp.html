@@ -1,71 +1,37 @@
-<ul class="nav nav-tabs tab-nav-right" role="tablist">
-    <li role="presentation"><a href="#empinfo" data-toggle="tab" (click)="getEmployeeinfo()">Info</a></li>
-    <li role="presentation" class="active"><a href="#todaytrp" data-toggle="tab">Today's Trips</a></li>
-</ul>
-<div class="tab-content">
-    <div role="tabpanel" class="tab-pane" id="empinfo">
-        <div class="font-bold m-b--35">
-            <img src="{{global.uploadurl + empinfo.empph}}" onerror="this.src='assets/img/default.gif';" height="48px" />
-        </div>
-        <ul class="dashboard-stat-list">
-            <li *ngIf="empinfo.empcode != ''">
-                <b>Employee Code</b>
-                <span class="pull-right">{{empinfo.empcode}}</span>
-            </li>
-            <li *ngIf="empinfo.empname != ''">
-                <b>Employee Name</b>
-                <span class="pull-right">{{empinfo.empname}}</span>
-            </li>
-            <li *ngIf="empinfo.mobileno1 != ''">
-                <b>Mobile No.</b>
-                <span class="pull-right">{{empinfo.mobileno1}}</span>
-            </li>
-            <li *ngIf="empinfo.email1 != ''">
-                <b>Email</b>
-                <span class="pull-right">{{empinfo.email1}}</span>
-            </li>
-            <li *ngIf="empinfo.address != ''">
-                <b>Address</b>
-                <span class="pull-right">{{empinfo.address}}</span>
-            </li>
-            <li *ngIf="empinfo.country != ''">
-                <b>Country</b>
-                <span class="pull-right">{{empinfo.country}}</span>
-            </li>
-            <li *ngIf="empinfo.state != ''">
-                <b>State</b>
-                <span class="pull-right">{{empinfo.state}}</span>
-            </li>
-            <li *ngIf="empinfo.city != ''">
-                <b>City</b>
-                <span class="pull-right">{{empinfo.city}}</span>
-            </li>
-        </ul>
-    </div>
-    <div role="tabpanel" class="tab-pane fade in active" id="todaytrp">
-        <div *ngFor="let row of tripDT" class="def-box">
-            <div class="row clearfix">
-                <div class="col-md-11">
-                    <b>{{row.nm}}</b>
-                    <br />
-                    <b>Batch : </b>{{row.btch}}
-                </div>
-                <div class="col-md-1" align="right">
-                    <span class="material-icons {{row.sts}}">
-                        {{row.stsi == "0" ? "access_time" : row.stsi == "1" ? "play_arrow" : "done"}}
-                    </span>
-                </div>
-            </div>
-            <div class="row clearfix">
-                <div class="col-md-3">
-                    <span class="{{row.pd == 'p' ? 'pickup' : 'drop'}}">
-                        {{row.pd == "p" ? "Pickup" : "Drop"}}
-                    </span>
-                </div>
-                <div class="col-md-9">
-                    {{row.date}} - {{row.time}}
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="font-bold m-b--35">
+    <img src="{{global.uploadurl + empinfo.empph}}" onerror="this.src='assets/img/default.gif';" height="48px" />
 </div>
+<ul class="dashboard-stat-list">
+    <li *ngIf="empinfo.empcode != ''">
+        <b>Employee Code</b>
+        <span class="pull-right">{{empinfo.empcode}}</span>
+    </li>
+    <li *ngIf="empinfo.empname != ''">
+        <b>Employee Name</b>
+        <span class="pull-right">{{empinfo.empname}}</span>
+    </li>
+    <li *ngIf="empinfo.mobileno1 != ''">
+        <b>Mobile No.</b>
+        <span class="pull-right">{{empinfo.mobileno1}}</span>
+    </li>
+    <li *ngIf="empinfo.email1 != ''">
+        <b>Email</b>
+        <span class="pull-right">{{empinfo.email1}}</span>
+    </li>
+    <li *ngIf="empinfo.address != ''">
+        <b>Address</b>
+        <span class="pull-right">{{empinfo.address}}</span>
+    </li>
+    <li *ngIf="empinfo.country != ''">
+        <b>Country</b>
+        <span class="pull-right">{{empinfo.country}}</span>
+    </li>
+    <li *ngIf="empinfo.state != ''">
+        <b>State</b>
+        <span class="pull-right">{{empinfo.state}}</span>
+    </li>
+    <li *ngIf="empinfo.city != ''">
+        <b>City</b>
+        <span class="pull-right">{{empinfo.city}}</span>
+    </li>
+</ul>

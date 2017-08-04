@@ -15,7 +15,7 @@ export const routes = [
     path: '', children: [
       {
         path: '', component: LoginLogReportsComponent, canActivate: [AuthGuard],
-        data: { "module": "rpt", "submodule": "rptlog", "rights": "view", "urlname": "/loginlog" }
+        data: { "module": "rpt", "submodule": "rptll", "rights": "view", "urlname": "/loginlog" }
       }
     ]
   },

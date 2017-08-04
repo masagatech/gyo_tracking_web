@@ -8,9 +8,9 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 import { SelectItem, GMap } from 'primeng/primeng';
 import { ADHOST } from '@directives';
 import { HOSTComponent } from '@interface';
-import { PSGComponent } from './passengers/psg.comp'
-import { INFOComponent } from './info/info.comp'
-import { HISTORYComponent } from './history/history.comp'
+import { TripsComponent } from './trips/trips.comp';
+import { InfoComponent } from './info/info.comp';
+import { HistoryComponent } from './history/history.comp';
 
 declare var google: any;
 
@@ -21,7 +21,7 @@ declare var google: any;
 
 export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
     global = new Globals();
-    
+
     @ViewChild(ADHOST)
     private _Host: ADHOST;
 
@@ -77,8 +77,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
 
     constructor(private _ttmapservice: TTMapService, private _msg: MessageService, private _autoservice: CommonService,
         private _loginservice: LoginService, private _socketservice: SocketService,
-        private _trackDashbord: TrackDashbord,
-        private componentFactoryResolver: ComponentFactoryResolver) {
+        private _trackDashbord: TrackDashbord, private componentFactoryResolver: ComponentFactoryResolver) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
 
@@ -349,10 +348,10 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
                 el.min = this.getTimeDiff(d.sertm);
                 el.isshow = true;
                 el.ju = false;
-                
+
                 this.moveMarker([el.loc[1], el.loc[0]], el.empid, el.bearing);
             } else if (el.ju) {
-                
+
             } else {
                 el.isshow = false;
             }
@@ -365,7 +364,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
 
         if (mrk !== undefined) {
             let bear = 0;
-            
+
             let _ico = mrk.getIcon().ico;
             mrk.setIcon({ url: 'assets/img/map/' + _ico + '_' + bear + '.png?v=1', ico: _ico })
             mrk.setPosition(new google.maps.LatLng(loc[0], loc[1]));
@@ -476,7 +475,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.sidebarTitle = "Info";
         this.selectedSEmp = emp;
-        this.loadComponent(INFOComponent, { "empid": emp.empid, loginUser: this.loginUser, _wsdetails: this._wsdetails });
+        this.loadComponent(InfoComponent, { "empid": emp.empid, loginUser: this.loginUser, _wsdetails: this._wsdetails });
 
         commonfun.loader("#loaderbody", "pulse", 'Loading Vehicle Info...')
         $.AdminBSB.rightSideBar.Open();
@@ -484,26 +483,18 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private stop_click(emp, event) {
-        if (emp.isshow === undefined || emp.isshow === false) {
-            this._msg.Show(messageType.warn, "Hey", "No Updates found"); return;
-        }
-
         this.sidebarTitle = "Stops";
         this.selectedSEmp = emp;
-        this.loadComponent(PSGComponent, { "tripid": emp.tripid, loginUser: this.loginUser, _wsdetails: this._wsdetails });
+        this.loadComponent(TripsComponent, { "tripid": emp.tripid, loginUser: this.loginUser, _wsdetails: this._wsdetails });
 
-        commonfun.loader("#loaderbody", "pulse", 'Loading Stops...')
-        $.AdminBSB.rightSideBar.Open();
+        // commonfun.loader("#loaderbody", "pulse", 'Loading Stops...')
+        // $.AdminBSB.rightSideBar.Open();
 
         event.stopPropagation();
     }
 
     private history_click(emp, event) {
-        if (emp.isshow === undefined || emp.isshow === false) {
-            this._msg.Show(messageType.warn, "Hey", "No Updates found"); return;
-        }
-
-        this.loadComponent(HISTORYComponent, {
+        this.loadComponent(HistoryComponent, {
             "emp": emp.empid,
             loginUser: this.loginUser, _wsdetails: this._wsdetails, map: this.map
         });
