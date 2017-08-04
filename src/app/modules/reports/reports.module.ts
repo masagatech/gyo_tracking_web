@@ -31,12 +31,12 @@ export const routes = [
                     { path: 'taskallocate', loadChildren: './taskallocate#TaskAllocateReportsModule' },
                     { path: 'taskupdate', loadChildren: './taskupdate#TaskUpdateReportsModule' },
 
-                    { path: 'loginlog', loadChildren: './loginlog#LoginLogReportsModule' },
-                    { path: 'workspace', loadChildren: './workspace#WorkspaceReportsModule' },
+                    { path: 'loginlog', loadChildren: './loginlog#LoginLogModule' },
+                    { path: 'menulog', loadChildren: './menulog#MenuLogModule' },
                
                     { path: 'stops', loadChildren: './stops#StopsReportsModule' },
-                    { path: 'menulog', loadChildren: './menulog#MenuLogReportsModule' },
                     { path: 'employeetag', loadChildren: './employeetag#EmployeeTagReportsModule' },
+                    { path: 'workspace', loadChildren: './workspace#WorkspaceReportsModule' },
                     
                     { path: 'expense', loadChildren: './expense#ExpenseReportsModule' }
                    

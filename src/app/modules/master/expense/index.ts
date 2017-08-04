@@ -10,8 +10,6 @@ import { ViewExpenseComponent } from './view/viewexp.comp';
 
 import { ExpenseService } from '@services/master';
 
-import { OnlyNumber } from '@directives';
-
 import { LazyLoadEvent, DataTableModule, AutoCompleteModule, FileUploadModule } from 'primeng/primeng';
 
 export const routes = [
@@ -28,8 +26,7 @@ export const routes = [
 @NgModule({
   declarations: [
     AddExpenseComponent,
-    ViewExpenseComponent,
-    OnlyNumber
+    ViewExpenseComponent
   ],
 
   imports: [

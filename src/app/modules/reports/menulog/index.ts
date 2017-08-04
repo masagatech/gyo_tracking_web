@@ -6,7 +6,6 @@ import { SharedComponentModule } from '../../../_shared/sharedcomp.module';
 import { AuthGuard } from '../../../_services/authguard-service';
 
 import { MenuLogReportsComponent } from './rptmnlg.comp';
-import { MenuLogReportsService } from '@services/reports';
 
 import { LazyLoadEvent, DataTableModule, AutoCompleteModule } from 'primeng/primeng';
 
@@ -30,9 +29,9 @@ export const routes = [
     CommonModule, FormsModule, SharedComponentModule, RouterModule.forChild(routes), DataTableModule, AutoCompleteModule
   ],
 
-  providers: [AuthGuard, MenuLogReportsService]
+  providers: [AuthGuard]
 })
 
-export class MenuLogReportsModule {
+export class MenuLogModule {
   public static routes = routes;
 }

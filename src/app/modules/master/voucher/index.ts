@@ -10,8 +10,6 @@ import { ViewVoucherComponent } from './view/viewvoucher.comp';
 
 import { VoucherService } from '@services/master';
 
-import { OnlyNumber } from '@directives';
-
 import { LazyLoadEvent, DataTableModule, AutoCompleteModule, FileUploadModule } from 'primeng/primeng';
 
 export const routes = [
@@ -28,8 +26,7 @@ export const routes = [
 @NgModule({
   declarations: [
     AddVoucherComponent,
-    ViewVoucherComponent,
-    OnlyNumber
+    ViewVoucherComponent
   ],
 
   imports: [

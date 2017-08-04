@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, messageType, MenuService, LoginService } from '@services';
+import { UserService } from '@services/master';
 import { LoginUserModel, Globals } from '@models';
-import { LoginLogService } from '@services/master';
 import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import jsPDF from 'jspdf'
 
@@ -12,39 +12,89 @@ import jsPDF from 'jspdf'
 })
 
 export class LoginLogReportsComponent implements OnInit, OnDestroy {
-    entityDT: any = [];
     loginUser: LoginUserModel;
-
     _wsdetails: any = [];
 
-    actaddrights: string = "";
-    acteditrights: string = "";
-    actviewrights: string = "";
+    frmdt: any = "";
+    todt: any = "";
+    uid: number = 0;
+
+    loginlogDT: any = [];
 
     @ViewChild('loginlog') loginlog: ElementRef;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
-        public _menuservice: MenuService, private _loginservice: LoginService, private _loginlogservice: LoginLogService) {
+        public _menuservice: MenuService, private _loginservice: LoginService, private _userservice: UserService) {
         this.loginUser = this._loginservice.getUser();
-        this.viewLoginlogDataRights();
-
         this._wsdetails = Globals.getWSDetails();
+
+        this.setFromDateAndToDate();
+        this.getLoginLog();
     }
 
     public ngOnInit() {
         setTimeout(function () {
             commonfun.navistyle();
-            
+
             $.AdminBSB.islocked = true;
             $.AdminBSB.leftSideBar.Close();
             $.AdminBSB.rightSideBar.activate();
         }, 0);
     }
 
+    // Selected Calendar Date
+
+    formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
+
+    // Format Date
+
+    setFromDateAndToDate() {
+        var date = new Date();
+        var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+        this.frmdt = this.formatDate(today);
+        this.todt = this.formatDate(today);
+    }
+
+    // Get Menu Log
+
+    getLoginLog() {
+        var that = this;
+
+        that._userservice.getUserLoginLog({
+            "flag": "maxlog", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that._wsdetails.wsautoid
+        }).subscribe(data => {
+            try {
+                that.loginlogDT = data.data;
+            }
+            catch (e) {
+                that._msg.Show(messageType.error, "Error", e);
+            }
+
+            commonfun.loaderhide();
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+            commonfun.loaderhide();
+        }, () => {
+
+        })
+    }
+
     // Export
 
     public exportToCSV() {
-        new Angular2Csv(this.entityDT, 'EntityDetials', { "showLabels": true });
+        new Angular2Csv(this.loginlogDT, 'LoginLog', { "showLabels": true });
     }
 
     public exportToPDF() {
@@ -53,62 +103,8 @@ export class LoginLogReportsComponent implements OnInit, OnDestroy {
             pagesplit: true
         };
         pdf.addHTML(this.loginlog.nativeElement, 0, 0, options, () => {
-            pdf.save("LoginlogDetials.pdf");
+            pdf.save("LoginLogDetials.pdf");
         });
-    }
-
-    public viewLoginlogDataRights() {
-        var that = this;
-        var addRights = [];
-        var editRights = [];
-        var viewRights = [];
-
-        that._menuservice.getMenuDetails({
-         "flag": "actrights", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "mcode": "rptloginlog", "utype": that.loginUser.utype
-
-        }).subscribe(data => {
-            addRights = data.data.filter(a => a.mrights === "add");
-            editRights = data.data.filter(a => a.mrights === "edit");
-            viewRights = data.data.filter(a => a.mrights === "view");
-
-            that.actaddrights = addRights.length !== 0 ? addRights[0].mrights : "";
-            that.acteditrights = editRights.length !== 0 ? editRights[0].mrights : "";
-            that.actviewrights = viewRights.length !== 0 ? viewRights[0].mrights : "";
-
-            that.getLoginlogDetails();
-        }, err => {
-            that._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        })
-    }
-
-    getLoginlogDetails() {
-        var that = this;
-
-        if (that.actviewrights === "view") {
-            commonfun.loader();
-
-            that._loginlogservice.getLoginlogDetails({
-                "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
-                "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid
-            }).subscribe(data => {
-                try {
-                    that.entityDT = data.data;
-                }
-                catch (e) {
-                    that._msg.Show(messageType.error, "Error", e);
-                }
-                
-                commonfun.loaderhide();
-            }, err => {
-                that._msg.Show(messageType.error, "Error", err);
-                console.log(err);
-                commonfun.loaderhide();
-            }, () => {
-
-            })
-        }
     }
 
     public ngOnDestroy() {

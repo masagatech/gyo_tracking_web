@@ -7,12 +7,14 @@ import { CurrencyPipe } from '../_pipe/currency.pipe';
 import { GroupByPipe } from '../_pipe/groupby.pipe';
 import { HeaderComponent } from '../modules/usercontrol/header/header.comp';
 import { LeftSideBarComponent } from '../modules/usercontrol/leftsidebar/leftsidebar.comp';
+import { OnlyNumber } from '@directives';
+
 // import { NoPageComponent } from '../no-page';
 
 @NgModule({
     imports: [RouterModule, FormsModule, CommonModule],
-    declarations: [FilterByPipe, CurrencyPipe, GroupByPipe, HeaderComponent, LeftSideBarComponent],
-    exports: [FilterByPipe, CurrencyPipe, GroupByPipe, HeaderComponent, LeftSideBarComponent]
+    declarations: [FilterByPipe, CurrencyPipe, GroupByPipe, HeaderComponent, LeftSideBarComponent, OnlyNumber],
+    exports: [FilterByPipe, CurrencyPipe, GroupByPipe, HeaderComponent, LeftSideBarComponent, OnlyNumber]
 })
 
 export class SharedComponentModule { }

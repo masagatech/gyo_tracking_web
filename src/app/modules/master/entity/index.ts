@@ -2,14 +2,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { SharedComponentModule } from '../../../_shared/sharedcomp.module';
 import { AuthGuard } from '../../../_services/authguard-service';
 
 import { AddEntityComponent } from './aded/addentity.comp';
 import { ViewEntityComponent } from './view/viewentity.comp';
 
 import { EntityService } from '@services/master';
-
-import { OnlyNumber } from '@directives';
 
 import { LazyLoadEvent, DataTableModule, CheckboxModule, FileUploadModule } from 'primeng/primeng';
 
@@ -27,12 +26,12 @@ export const routes = [
 @NgModule({
   declarations: [
     AddEntityComponent,
-    ViewEntityComponent,
-    OnlyNumber
+    ViewEntityComponent
   ],
 
   imports: [
-    CommonModule, FormsModule, RouterModule.forChild(routes), DataTableModule, CheckboxModule, FileUploadModule
+    CommonModule, FormsModule, SharedComponentModule, RouterModule.forChild(routes), DataTableModule,
+    CheckboxModule, FileUploadModule
   ],
 
   providers: [AuthGuard, EntityService]
