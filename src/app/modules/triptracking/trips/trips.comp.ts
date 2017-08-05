@@ -18,26 +18,11 @@ export class TripsComponent implements OnInit {
     constructor(private _msg: MessageService, private _ttmapservice: TTMapService, private _loginservice: LoginService,
         private _trackDashbord: TrackDashbord) {
         this.loginUser = this._loginservice.getUser();
-        this.getUserTask();
+        this.getUserStops();
     }
 
     ngOnInit() {
 
-    }
-
-    getUserTask() {
-        var that = this;
-
-        that._trackDashbord.gettrackboard({
-            "flag": "task", "enttid": "1", "uid": that.loginUser.uid
-        }).subscribe(data => {
-            that.taskDT = data.data;
-            commonfun.loaderhide("#loaderbody");
-        }, err => {
-            that._msg.Show(messageType.error, "Error", err);
-            commonfun.loaderhide("#loaderbody");
-        }, () => {
-        });
     }
 
     getUserStops() {
@@ -47,6 +32,21 @@ export class TripsComponent implements OnInit {
             "flag": "stops", "enttid": "1", "uid": that.loginUser.uid
         }).subscribe(data => {
             that.stopsDT = data.data;
+            commonfun.loaderhide("#loaderbody");
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            commonfun.loaderhide("#loaderbody");
+        }, () => {
+        });
+    }
+
+    getUserTask() {
+        var that = this;
+
+        that._trackDashbord.gettrackboard({
+            "flag": "task", "enttid": "1", "uid": that.loginUser.uid
+        }).subscribe(data => {
+            that.taskDT = data.data;
             commonfun.loaderhide("#loaderbody");
         }, err => {
             that._msg.Show(messageType.error, "Error", err);
