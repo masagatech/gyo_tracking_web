@@ -4,7 +4,7 @@
             <div class="col-md-2">
                 <h4>Holiday</h4>
             </div>
-            <div class="col-md-7 col-xs-7" *ngIf="actviewrights === 'view'">
+            <div class="col-md-7 col-xs-7">
                 <div class="form-group">
                     <div class="form-line">
                         <label class="control-label">Entity Name <strong>*</strong></label>
@@ -13,7 +13,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-2" align="right" *ngIf="actaddrights === 'add'">
+            <div class="col-md-2" align="right">
                 <button type="button" class="btn btn-theme btn-xs" (click)="isshHoliday('grid')">
                     <span class="material-icons">apps</span>
                 </button>
@@ -21,7 +21,7 @@
                     <span class="material-icons">date_range</span>
                 </button>
             </div>
-            <div class="col-md-1" *ngIf="actaddrights === 'add'">
+            <div class="col-md-1">
                 <button type="button" class="btn btn-theme btn-xs" (click)="addHolidayForm()">
                     <span class="material-icons">add</span>
                 </button>

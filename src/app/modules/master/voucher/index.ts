@@ -5,20 +5,38 @@ import { RouterModule } from '@angular/router';
 import { SharedComponentModule } from '../../../_shared/sharedcomp.module';
 import { AuthGuard } from '../../../_services/authguard-service';
 
-import { AddVoucherComponent } from './aded/addvoucher.comp';
-import { ViewVoucherComponent } from './view/viewvoucher.comp';
+import { AddVoucherComponent } from './aded/addvcr.comp';
+import { ViewVoucherComponent } from './view/viewvcr.comp';
+import { PendingVoucherComponent } from './pending/pendvcr.comp';
+import { ApprovalVoucherComponent } from './approval/apprvcr.comp';
 
 import { VoucherService } from '@services/master';
 
-import { LazyLoadEvent, DataTableModule, AutoCompleteModule, FileUploadModule } from 'primeng/primeng';
+import { LazyLoadEvent, DataTableModule, DataGridModule, AutoCompleteModule, FileUploadModule } from 'primeng/primeng';
 
 export const routes = [
   {
     path: '', children: [
-      { path: '', component: ViewVoucherComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "vcr", "rights": "view", "urlname": "/voucher" } },
-      { path: 'add', component: AddVoucherComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "vcr", "rights": "add", "urlname": "/add" } },
-      { path: 'details/:id', component: AddVoucherComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "vcr", "rights": "edit", "urlname": "/edit" } },
-      { path: 'edit/:id', component: AddVoucherComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "vcr", "rights": "edit", "urlname": "/edit" } }
+      {
+        path: '', component: ViewVoucherComponent, canActivate: [AuthGuard],
+        data: { "module": "pentt", "submodule": "vcr", "rights": "view", "urlname": "/voucher" }
+      },
+      {
+        path: 'add', component: AddVoucherComponent, canActivate: [AuthGuard],
+        data: { "module": "pentt", "submodule": "vcr", "rights": "add", "urlname": "/add" }
+      },
+      {
+        path: 'edit/:id', component: AddVoucherComponent, canActivate: [AuthGuard],
+        data: { "module": "pentt", "submodule": "vcr", "rights": "edit", "urlname": "/edit" }
+      },
+      {
+        path: 'pending', component: PendingVoucherComponent, canActivate: [AuthGuard],
+        data: { "module": "pentt", "submodule": "vcrpend", "rights": "view", "urlname": "/pending" }
+      },
+      {
+        path: 'approval/:empid', component: ApprovalVoucherComponent, canActivate: [AuthGuard],
+        data: { "module": "pentt", "submodule": "vcrpend", "rights": "view", "urlname": "/approval" }
+      },
     ]
   },
 ];
@@ -26,11 +44,14 @@ export const routes = [
 @NgModule({
   declarations: [
     AddVoucherComponent,
-    ViewVoucherComponent
+    ViewVoucherComponent,
+    PendingVoucherComponent,
+    ApprovalVoucherComponent
   ],
 
   imports: [
-    CommonModule, FormsModule, SharedComponentModule, RouterModule.forChild(routes), DataTableModule, AutoCompleteModule, FileUploadModule
+    CommonModule, FormsModule, SharedComponentModule, RouterModule.forChild(routes), DataTableModule, DataGridModule,
+    AutoCompleteModule, FileUploadModule
   ],
 
   providers: [AuthGuard, VoucherService]

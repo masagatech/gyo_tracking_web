@@ -116,6 +116,10 @@ export class AddHolidayComponent implements OnInit {
 
         this._autoservice.getAutoData({
             "flag": "team",
+            "uid": this.loginUser.uid,
+            "ucode": this.loginUser.ucode,
+            "utype": this.loginUser.utype,
+            "issysadmin": this.loginUser.issysadmin,
             "wsautoid": this._wsdetails.wsautoid,
             "search": query
         }).subscribe((data) => {

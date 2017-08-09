@@ -9,7 +9,7 @@ declare var $: any;
 declare var commonfun: any;
 
 @Component({
-    templateUrl: 'addvoucher.comp.html',
+    templateUrl: 'addvcr.comp.html',
     providers: [CommonService]
 })
 
@@ -17,19 +17,24 @@ export class AddVoucherComponent implements OnInit {
     loginUser: LoginUserModel;
     _wsdetails: any = [];
 
+    autoid: number = 0;
+
     entityDT: any = [];
+    enttdata: any = [];
     enttid: number = 0;
-    enttname: any = [];
+    enttname: string = "";
 
     employeeDT: any = [];
+    empdata: any = [];
     empid: number = 0;
-    empname: any = [];
+    empname: string = "";
 
     expenseDT: any = [];
+    expdata: any = [];
     expid: number = 0;
-    expname: any = [];
+    expname: string = "";
 
-    amt: number = 0;
+    amount: number = 0;
     noofdoc: string = "";
     remark: string = "";
 
@@ -78,7 +83,8 @@ export class AddVoucherComponent implements OnInit {
 
     selectEntityData(event) {
         this.enttid = event.value;
-        
+        this.enttname = event.label;
+
         Cookie.set("_enttid_", event.value);
         Cookie.set("_enttnm_", event.label);
     }
@@ -110,6 +116,7 @@ export class AddVoucherComponent implements OnInit {
 
     selectEmployeeData(event) {
         this.empid = event.value;
+        this.empname = event.label;
     }
 
     // Auto Completed Expense
@@ -118,8 +125,9 @@ export class AddVoucherComponent implements OnInit {
         let query = event.query;
 
         this._autoservice.getAutoData({
-            "flag": "expense",
+            "flag": "exmpwiseexp",
             "enttid": this.enttid,
+            "empid": this.empid,
             "wsautoid": this._wsdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
@@ -141,31 +149,6 @@ export class AddVoucherComponent implements OnInit {
     // Add Multi Row
 
     addVoucherRow() {
-        this.voucherData.push({
-            "enttid": this.enttid, "enttname": this.enttname,
-            "empid": this.empname.value, "empname": this.empname.label,
-            "expid": this.expname.value, "expname": this.expname.label,
-            "amt": this.amt, "noofdoc": this.noofdoc, "remark": this.remark
-        })
-
-        this.resetVoucherFields();
-    }
-
-    // Clear Fields
-
-    resetVoucherFields() {
-        this.empid = 0;
-        this.empname = [];
-        this.expid = 0;
-        this.expname = [];
-        this.amt = 0;
-        this.noofdoc = "";
-        this.remark = "";
-    }
-
-    // Save Data
-
-    isValidation() {
         var that = this;
 
         if (that.enttid == 0) {
@@ -174,22 +157,46 @@ export class AddVoucherComponent implements OnInit {
         }
         else if (that.empid == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Employye Name");
-            $(".expae").focus();
+            $(".empname input").focus();
         }
         else if (that.expid == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Expense Name");
-            $(".expcd").focus();
+            $(".expname input").focus();
         }
-        else if (that.amt == 0) {
+        else if (that.amount == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Amount");
-            $(".amt ").focus();
+            $(".amount").focus();
         }
         else if (that.noofdoc == "") {
             that._msg.Show(messageType.error, "Error", "Select No Of Docs");
-            $(".nodoc ").focus();
+            $(".noofdoc").focus();
         }
         else {
+            that.voucherData.push({
+                "autoid": that.autoid, "enttid": that.enttid, "enttname": that.enttname,
+                "empid": that.empid, "empname": that.empname, "expid": that.expid, "expname": that.expname,
+                "amount": that.amount, "noofdoc": that.noofdoc, "remark": that.remark,
+                "cuid": that.loginUser.ucode, "wsautoid": that._wsdetails.wsautoid, "isactive": true
+            })
+
+            that.resetVoucherFields();
         }
+    }
+
+    // Clear Fields
+
+    resetVoucherFields() {
+        this.expid = 0;
+        this.expname = "";
+        this.expdata = [];
+        this.amount = 0;
+        this.noofdoc = "";
+        this.remark = "";
+    }
+
+    // Save Data
+
+    isValidation() {
     }
 
     saveVoucherInfo() {
@@ -202,7 +209,7 @@ export class AddVoucherComponent implements OnInit {
         else {
             commonfun.loader();
 
-            that._vchservice.saveVoucherInfo({ "voucherdt": that.voucherData }).subscribe(data => {
+            that._vchservice.saveVoucherInfo({ "voucherdata": that.voucherData }).subscribe(data => {
                 try {
                     var dataResult = data.data[0].funsave_voucherinfo;
                     var msg = dataResult.msg;
@@ -258,14 +265,20 @@ export class AddVoucherComponent implements OnInit {
                 that._vchservice.getVoucherDetails(params).subscribe(data => {
                     try {
                         that.enttid = data.data[0].enttid;
-                        that.enttname.value = data.data[0].enttid;
-                        that.enttname.label = data.data[0].enttname;
-                        that.empname.value = data.data[0].empid;
-                        that.empname.label = data.data[0].empname;
+                        that.enttname = data.data[0].enttname;
+                        that.enttdata.value = that.enttid;
+                        that.enttdata.label = that.enttname;
+
+                        that.empid = data.data[0].empid;
+                        that.empname = data.data[0].empname;
+                        that.empdata.value = that.empid;
+                        that.empdata.label = that.empname;
+
                         that.expid = data.data[0].expid;
-                        that.expname.value = data.data[0].expid;
-                        that.expname.label = data.data[0].expname;
-                        that.amt = data.data[0].amt;
+                        that.expname = data.data[0].expname;
+                        that.expdata.expid = that.expid;
+                        that.expdata.expname = that.expname;
+                        that.amount = data.data[0].amount;
                         that.noofdoc = data.data[0].noofdoc;
                     }
                     catch (e) {

@@ -168,7 +168,7 @@ export class AddExpenseEmployeeMapComponent implements OnInit, OnDestroy {
 
     // Delete Expense
 
-    deleteExpesnse(row) {
+    deleteExpense(row) {
         this.expenseList.splice(this.expenseList.indexOf(row), 1);
         row.isactive = false;
     }

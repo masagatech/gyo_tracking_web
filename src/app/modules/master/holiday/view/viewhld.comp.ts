@@ -20,10 +20,6 @@ export class ViewHolidayComponent implements OnInit {
 
     holidayDT: any = [];
 
-    actaddrights: string = "";
-    acteditrights: string = "";
-    actviewrights: string = "";
-
     private events: any[];
     private header: any;
     private event: MyEvent;
@@ -130,33 +126,27 @@ export class ViewHolidayComponent implements OnInit {
     getHolidayGrid() {
         var that = this;
 
-        if (that.actviewrights === "view") {
-            commonfun.loader();
+        commonfun.loader();
 
-            that._holidayervice.getHoliday({
-                "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
-                "issysadmin": that.loginUser.issysadmin, "schid": that.enttid, "wsautoid": that._wsdetails.wsautoid
-            }).subscribe(data => {
-                try {
-                    that.holidayDT = data.data;
-                }
-                catch (e) {
-                    that._msg.Show(messageType.error, "Error", e);
-                }
+        that._holidayervice.getHoliday({
+            "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
+            "issysadmin": that.loginUser.issysadmin, "schid": that.enttid, "wsautoid": that._wsdetails.wsautoid
+        }).subscribe(data => {
+            try {
+                that.holidayDT = data.data;
+            }
+            catch (e) {
+                that._msg.Show(messageType.error, "Error", e);
+            }
 
-                commonfun.loaderhide();
-            }, err => {
-                that._msg.Show(messageType.error, "Error", err);
-                console.log(err);
-                commonfun.loaderhide();
-            }, () => {
+            commonfun.loaderhide();
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+            commonfun.loaderhide();
+        }, () => {
 
-            })
-        }
-    }
-
-    fetchEvents(eventData) {
-
+        })
     }
 
     getHolidayCalendar(row) {
@@ -165,7 +155,7 @@ export class ViewHolidayComponent implements OnInit {
 
         that._holidayervice.getHoliday({
             "flag": "calendar", "uid": that.loginUser.uid, "utype": that.loginUser.utype,
-            "schid": 1, "monthname": row.view.title
+            "schid": that.enttid, "monthname": row.view.title
         }).subscribe(data => {
             try {
                 that.events = data.data;

@@ -1,0 +1,55 @@
+<div class="card">
+    <div class="header">
+        <h4>Voucher Approval</h4>
+        <ul class="header-dropdown m-r--5">
+            <li>
+                <a role="button" class="btn btn-theme btn-xs" (click)="saveVoucherApproval()">
+                    <i class="material-icons">save</i></a>
+            </li>
+            <li>
+                <a role="button" class="btn btn-theme btn-xs" (click)="backViewData()">
+                    <i class="material-icons">arrow_back</i></a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="body">
+        <div class="row clearfix">
+            <div class="col-md-10 border">
+                <p-dataTable [value]="pendVoucherDT">
+                    <p-column field="expnm" header="Expense Head" [style]="{'width':'200px','text-align':'left'}"></p-column>
+                    <p-column field="remark1" header="Remark" [style]="{'width':'150px', 'text-align':'left'}"></p-column>
+                    <p-column field="noofdoc" header="No. of Doc" [style]="{'width':'100px', 'text-align':'left'}"></p-column>
+                    <p-column header="Amount" [style]="{'width':'150px', 'text-align':'left'}">
+                        <template let-row="rowData" pTemplate type="body">
+							{{row.amount | _currency:loginUser.globsettings[0]}}
+						</template>
+                    </p-column>
+                    <p-column header="Approval Amount" [style]="{'width':'150px', 'text-align':'left'}">
+                        <template let-row="rowData" pTemplate type="body">
+							<input type="text" [(ngModel)]="row.appramt" class="form-control" OnlyNumber="true" min="0" tabindex="1">
+						</template>
+                    </p-column>
+                    <p-column field="remark" header="Remark" [style]="{'text-align':'left'}">
+                        <template let-row="rowData" pTemplate type="body">
+                            <textarea class="form-control" rows="5" [(ngModel)]="row.remark" tabindex="2"></textarea>
+						</template>
+                    </p-column>
+                </p-dataTable>
+            </div>
+            <div class="col-md-2">
+                <div class="card">
+                    <div class="header">
+                        <b>Vouchers</b>
+                    </div>
+                    <div class="body">
+                        <div *ngFor="let row of voucherNoDT" style="padding: 10px;">
+                            <a role="button" (click)="getVoucherDetails(row);">
+                                Voucher No : {{row.expid + " (" + row.countvcr + ")"}}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

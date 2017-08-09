@@ -1,17 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { ExpenseService } from '@services/master';
-import { LazyLoadEvent } from 'primeng/primeng';
+import { VoucherService } from '@services/master';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 
+declare var $: any;
+declare var commonfun: any;
+
 @Component({
-    templateUrl: 'viewexp.comp.html',
-    providers: [MenuService, CommonService]
+    templateUrl: 'pendvcr.comp.html',
+    providers: [CommonService]
 })
 
-export class ViewExpenseComponent implements OnInit {
+export class PendingVoucherComponent implements OnInit {
     loginUser: LoginUserModel;
     _wsdetails: any = [];
 
@@ -19,16 +21,16 @@ export class ViewExpenseComponent implements OnInit {
     enttid: number = 0;
     enttname: any = [];
 
-    expenseDT: any = [];
+    pendVoucherDT: any = [];
 
-    global = new Globals();
-    uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
+    private subscribeParameters: any;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
-        private _expservice: ExpenseService, private _autoservice: CommonService) {
+        private _vcrservice: VoucherService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
-        this.viewExpenseDataRights();
+
+        this.viewVoucherDataRights();
     }
 
     public ngOnInit() {
@@ -65,38 +67,38 @@ export class ViewExpenseComponent implements OnInit {
         Cookie.set("_enttid_", event.value);
         Cookie.set("_enttnm_", event.label);
 
-        this.getExpenseDetails();
+        this.getVoucherDetails();
     }
 
     // View Data Rights
 
-    public viewExpenseDataRights() {
+    public viewVoucherDataRights() {
         var that = this;
 
         if (Cookie.get('_enttnm_') != null) {
             that.enttid = parseInt(Cookie.get('_enttid_'));
             that.enttname.value = parseInt(Cookie.get('_enttid_'));
             that.enttname.label = Cookie.get('_enttnm_');
-            
-            that.getExpenseDetails();
+
+            that.getVoucherDetails();
         }
     }
 
-    getExpenseDetails() {
+    getVoucherDetails() {
         var that = this;
         var params = {};
 
         commonfun.loader();
 
         params = {
-            "flag": "all",
+            "flag": "pending",
             "enttid": that.enttid,
             "wsautoid": that._wsdetails.wsautoid
         }
 
-        that._expservice.getExpenseDetails(params).subscribe(data => {
+        that._vcrservice.getVoucherDetails(params).subscribe(data => {
             try {
-                that.expenseDT = data.data;
+                that.pendVoucherDT = data.data;
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -112,11 +114,7 @@ export class ViewExpenseComponent implements OnInit {
         })
     }
 
-    public addExpenseForm() {
-        this._router.navigate(['/master/expense/add']);
-    }
-
-    public editExpenseForm(row) {
-        this._router.navigate(['/master/expense/edit', row.expid]);
+    public openApprovalForm(row) {
+        this._router.navigate(['/master/voucher/approval/' + row.empid]);
     }
 }

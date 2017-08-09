@@ -217,7 +217,7 @@ export class AddTeamEmployeeMapComponent implements OnInit {
         }
         else if (that.tmid == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Team Name");
-            $(".tmnm").focus();
+            $(".tmnm input").focus();
         }
         else if (that.employeeList.length == 0) {
             that._msg.Show(messageType.error, "Error", "Enter atleast 1 Employee");

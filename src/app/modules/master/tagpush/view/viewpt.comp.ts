@@ -89,6 +89,8 @@ export class ViewPushTagComponent implements OnInit {
         var that = this;
         commonfun.loader();
 
+        that.totCountTags = 0;
+
         that._ptservice.getPushTagDetails({
             "flag": "empwisetag", "enttid": that.enttid, "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {

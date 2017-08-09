@@ -30,7 +30,6 @@ export const routes = [
                     { path: 'leaveemployee', loadChildren: './employeeleave#LeaveEmployeeModule' },
                     { path: 'teamemployeemap', loadChildren: './teamempmap#TeamEmployeeMapModule' },
                     { path: 'teamownershipmap', loadChildren: './teamownermap#TeamOwnershipMapModule' },
-                    { path: 'expense', loadChildren: './expense#ExpenseModule' },
                     { path: 'expenseemployeemap', loadChildren: './expempmap#ExpenseEmployeeMapModule' },
                     
                     { path: 'taskallocate', loadChildren: './taskallocate#TaskAllocateModule' },

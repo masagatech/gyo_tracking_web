@@ -119,7 +119,7 @@ export class AddLeaveEmployeeComponent implements OnInit {
 
         that._lvservice.getLeaveEmployee({ "flag": "dropdown" }).subscribe(data => {
             that.leavetypeDT = data.data;
-            setTimeout(function () { $.AdminBSB.select.refresh('restype'); }, 100);
+            // setTimeout(function () { $.AdminBSB.select.refresh('restype'); }, 100);
             commonfun.loaderhide();
         }, err => {
             that._msg.Show(messageType.error, "Error", err);
