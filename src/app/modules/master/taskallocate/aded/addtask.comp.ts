@@ -253,7 +253,7 @@ export class AddTaskAllocateComponent implements OnInit {
 
             this._atservice.saveTaskAllocate(saveemp).subscribe(data => {
                 try {
-                    var dataResult = data.data[0].funsave_allocatetask;
+                    var dataResult = data.data[0].funsave_taskallocate;
                     var msg = dataResult.msg;
                     var msgid = dataResult.msgid;
 

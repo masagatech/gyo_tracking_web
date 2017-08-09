@@ -17,22 +17,22 @@
         <div class="row clearfix">
             <div class="col-md-10 border">
                 <p-dataTable [value]="pendVoucherDT">
-                    <p-column field="expnm" header="Expense Head" [style]="{'width':'200px','text-align':'left'}"></p-column>
-                    <p-column field="remark1" header="Remark" [style]="{'width':'150px', 'text-align':'left'}"></p-column>
-                    <p-column field="noofdoc" header="No. of Doc" [style]="{'width':'100px', 'text-align':'left'}"></p-column>
-                    <p-column header="Amount" [style]="{'width':'150px', 'text-align':'left'}">
+                    <p-column field="expnm" header="Expense Head" [style]="{'vertical-align':'top', 'width':'200px','text-align':'left'}"></p-column>
+                    <p-column field="remark1" header="Remark" [style]="{'vertical-align':'top', 'width':'150px', 'text-align':'left'}"></p-column>
+                    <p-column field="noofdoc" header="No. of Doc" [style]="{'vertical-align':'top', 'width':'100px', 'text-align':'left'}"></p-column>
+                    <p-column header="Amount" [style]="{'vertical-align':'top', 'width':'150px', 'text-align':'left'}">
                         <template let-row="rowData" pTemplate type="body">
 							{{row.amount | _currency:loginUser.globsettings[0]}}
 						</template>
                     </p-column>
-                    <p-column header="Approval Amount" [style]="{'width':'150px', 'text-align':'left'}">
+                    <p-column header="Approval Amount" [style]="{'vertical-align':'top', 'width':'150px', 'text-align':'left'}">
                         <template let-row="rowData" pTemplate type="body">
 							<input type="text" [(ngModel)]="row.appramt" class="form-control" OnlyNumber="true" min="0" tabindex="1">
 						</template>
                     </p-column>
-                    <p-column field="remark" header="Remark" [style]="{'text-align':'left'}">
+                    <p-column field="remark" header="Remark" [style]="{'vertical-align':'top', 'text-align':'left'}">
                         <template let-row="rowData" pTemplate type="body">
-                            <textarea class="form-control" rows="5" [(ngModel)]="row.remark" tabindex="2"></textarea>
+                            <textarea class="form-control" rows="4" [(ngModel)]="row.remark" tabindex="2"></textarea>
 						</template>
                     </p-column>
                 </p-dataTable>

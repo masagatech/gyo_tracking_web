@@ -3209,6 +3209,7 @@ fieldset[disabled] .form-control {
 
 textarea.form-control {
     height: auto!important;
+    resize: none;
 }
 
 input[type="search"] {

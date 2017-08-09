@@ -47,6 +47,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
     empid: number = 0;
     selectedEmp: any = [];
     selectedSEmp: any = {};
+    selectedFlwEmp: any = {};
 
     tripDT: any = [];
     messageDT: any = [];
@@ -69,10 +70,12 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
 
     //side bar
     sidebarTitle = "Title";
+    trafficLayer: any = new google.maps.TrafficLayer();
 
     markerOptions = {
         showinfo: false,
-        hidelive: false
+        hidelive: false,
+        showtrafic: false
     }
 
     constructor(private _ttmapservice: TTMapService, private _msg: MessageService, private _autoservice: CommonService,
@@ -193,6 +196,8 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
 
                 for (var k = 0; k < that.employeeDT.length; k++) {
                     var el = that.employeeDT[k];
+                    el.isfollow = false;
+                    el.sel = false;
                     that.empIds.push(el.empid);
                 }
                 that.getLastUpdateAndSubscribe(null);
@@ -243,7 +248,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
             else if (_d["evt"] == "data") {
                 try {
                     var geoloc = _d["data"];
-                    let el = that.employeeDT.find(a => a.empid === parseInt(geoloc.empid));
+                    let el = that.employeeDT.find(a => a.empid === parseInt(geoloc.uid));
                     //console.log(el)
                     if (el !== undefined) {
                         el.tripid = geoloc.tripid;
@@ -302,7 +307,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             }
             else {
-                _data.push(_el.empid);
+                _data.push(_el.uid);
             }
         }
 
@@ -336,7 +341,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
     private refreshdata(data) {
         for (let i = 0; i < this.employeeDT.length; i++) {
             let el = this.employeeDT[i];
-            let d = data.find(f => f.empid === el.empid);
+            let d = data.find(f => f.uid === el.empid);
 
             if (d !== undefined) {
                 el.tripid = d.tripid;
@@ -366,34 +371,80 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
             let bear = 0;
 
             let _ico = mrk.getIcon().ico;
-            mrk.setIcon({ url: 'assets/img/map/' + _ico + '_' + bear + '.png?v=1', ico: _ico })
+            // mrk.setIcon({ url: 'assets/img/map/' + _ico + '_' + bear + '.png?v=1', ico: _ico })
+            mrk.setIcon({ url: 'assets/img/map/0.png?v=1', ico: _ico })
             mrk.setPosition(new google.maps.LatLng(loc[0], loc[1]));
+
+            if (this.selectedFlwEmp.empid !== undefined && this.selectedFlwEmp.empid == empid) {
+                this.map.setCenter(new google.maps.LatLng(loc[0], loc[1]))
+            }
         }
     }
 
     //select for map show
 
     private onchange(e, emp) {
-        if (emp.isshow === undefined || emp.isshow === false) {
-            this._msg.Show(messageType.warn, "Hey", "No Updates found"); e.target.checked = false; return
-        }
-        else {
+        // if (emp.isshow === undefined || emp.isshow === false) {
+        //     this._msg.Show(messageType.warn, "Hey", "No Updates found"); e.target.checked = false; return
+        // }
+        // else {
+        //     if (e.target.checked) {
+        //         this.selectedEmp.push(emp.empid);
+        //         this.addmarker(emp);
+        //         this.map.setCenter(new google.maps.LatLng(emp.loc[1], emp.loc[0]))
+        //     } else {
+        //         let i = this.selectedEmp.indexOf(emp.empid);
+
+        //         if (i > -1) {
+        //             this.selectedEmp.splice(i, 1);
+        //         }
+
+        //         this.removemarker(emp.empid);
+        //     }
+        // }
+
+        // e.preventDefault();
+
+        if (emp.isshow === undefined || emp.isshow === false)
+        { this._msg.Show(messageType.warn, "Hey", "No Updates found"); e.target.checked = false; return } else {
             if (e.target.checked) {
+
                 this.selectedEmp.push(emp.empid);
                 this.addmarker(emp);
-                this.map.setCenter(new google.maps.LatLng(emp.loc[1], emp.loc[0]))
+                //this.map.setCenter(new google.maps.LatLng(vh.loc[1], vh.loc[0]))
+                this.boundtomap()
+                //console.log(vh);
             } else {
                 let i = this.selectedEmp.indexOf(emp.empid);
-
                 if (i > -1) {
                     this.selectedEmp.splice(i, 1);
                 }
 
+                if (this.selectedEmp.length > 0) {
+                    this.boundtomap();
+                } else {
+                    this.map.setZoom(5);
+                    this.map.setCenter(new google.maps.LatLng(this.options.center.lat, this.options.center.lng))
+                }
                 this.removemarker(emp.empid);
             }
         }
-
+        // this.selectedVeh.push(vh);
         e.preventDefault();
+    }
+
+    //get bound
+    private boundtomap() {
+        if (this.selectedEmp.length <= 0) {
+            return;
+        }
+        var bounds = new google.maps.LatLngBounds();
+        for (let i = 0; i < this.selectedEmp.length; i++) {
+            let el = this.selectedEmp[i];
+            let mr = this.vhmarkers[el];
+            bounds.extend(mr.getPosition());
+        }
+        this.map.fitBounds(bounds);
     }
 
     private showinfowindow() {
@@ -422,14 +473,36 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    private clickVehicle(emp) {
+    private showHidetraffic() {
+        if (this.markerOptions.showtrafic) {
+            this.trafficLayer.setMap(this.map);
+        } else {
+            this.trafficLayer.setMap(null);
+        }
+    }
+
+    private follow_click(emp) {
+        if (!emp.sel) { return; }
         if (emp.isshow === undefined || emp.isshow === false) { return; }
-        this.map.setCenter(new google.maps.LatLng(emp.loc[1], emp.loc[0]));
+        emp.isfollow = !emp.isfollow;
+
+        console.log(emp.isfollow);
+        if (this.selectedFlwEmp.isfollow !== undefined) {
+            if (emp.empid !== this.selectedFlwEmp.empid)
+                this.selectedFlwEmp.isfollow = false;
+        }
+        if (emp.isfollow && emp.empid !== this.selectedFlwEmp.empid) {
+            this.map.setCenter(new google.maps.LatLng(emp.loc[1], emp.loc[0]));
+            this.selectedFlwEmp = emp;
+            this.map.setZoom(17);
+        } else {
+            this.selectedFlwEmp = {};
+        }
     }
 
     private addmarker(emp) {
         let bearing = 0;//commonfun.getbearing((emp.bearing || 0));
-        let imagePath = 'assets/img/map/' + emp.empph + '_' + bearing + '.png?v=1';
+        let imagePath = 'assets/img/map/0.png?v=1';
         let image = {
             url: imagePath,
             ico: emp.empph
@@ -494,10 +567,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private history_click(emp, event) {
-        this.loadComponent(HistoryComponent, {
-            "emp": emp.empid,
-            loginUser: this.loginUser, _wsdetails: this._wsdetails, map: this.map
-        });
+        this.loadComponent(HistoryComponent, { "empid": emp.empid, loginUser: this.loginUser, _wsdetails: this._wsdetails, map: this.map });
 
         this.sidebarTitle = "History";
         this.selectedSEmp = emp;

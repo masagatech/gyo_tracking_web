@@ -349,6 +349,10 @@ $.AdminBSB.input = {
     }
     //==========================================================================================================================
 
+/* Form - Select - Function ================================================================================================
+ *  You can manage the 'select' of form elements
+ *  
+ */
 // $.AdminBSB.select = {
 //     activate: function () {
 //         if ($.fn.selectpicker) { $('select:not(.ms)').selectpicker(); }
@@ -357,8 +361,12 @@ $.AdminBSB.input = {
 //         $('#' + id).selectpicker('refresh');
 //     }
 // }
-
 //==========================================================================================================================
+
+/* DropdownMenu - Function =================================================================================================
+ *  You can manage the dropdown menu
+ *  
+ */
 
 $.AdminBSB.dropdownMenu = {
         activate: function() {
