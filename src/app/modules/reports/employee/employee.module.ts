@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ReportsComponent } from '../reports/reports.comp';
+import { EntityComponent } from '../employee/employee.comp';
 import { AuthGuard } from '@services';
 import { SharedComponentModule } from '@services';
 
@@ -10,17 +10,16 @@ import { CommonModule } from '@angular/common';
 export const routes = [
     {
         path: '',
-        component: ReportsComponent,
+        component: EntityComponent,
         canActivate: [AuthGuard],
         children: [
             {
                 path: '',
                 children: [
-                    { path: 'workspace', loadChildren: './workspace#WorkspaceModule' },
-                    { path: 'master', loadChildren: './master#MasterModule' },
-                    { path: 'employee', loadChildren: './employee#EmployeeModule' },
-                    { path: 'attendance', loadChildren: './attendance#AttendanceModule' },
-                    { path: 'log', loadChildren: './log#LogModule' },
+                    { path: '', loadChildren: './employee#EmployeeReportsModule' },
+                    { path: 'tag', loadChildren: './employeetag#EmployeeTagReportsModule' },
+                    { path: 'trips', loadChildren: './employeetrips#EmployeeTripReportsModule' },
+                    { path: 'teamwise', loadChildren: './teamwiseemployee#TeamWiseEmployeeModule' },
                 ]
             }
         ]
@@ -34,11 +33,11 @@ export const routes = [
         CommonModule,
     ],
     declarations: [
-        ReportsComponent
+        EntityComponent
     ],
     providers: [AuthGuard]
 })
 
-export class ReportsModule {
+export class EmployeeModule {
 
 }

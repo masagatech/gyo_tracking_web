@@ -31,6 +31,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @Input() enttname: string = "";
   @Input() homeurl: string = "";
 
+  @Input() ismstmenu: boolean = false;
+  @Input() isrptmenu: boolean = false;
+
   mname: string = "";
 
   global = new Globals();

@@ -24,7 +24,7 @@ export class ViewUserComponent implements OnInit {
     enttname: any = [];
 
     utypeDT: any = [];
-    srcutype: string = "";
+    srcutype: string = "all";
 
     autoUserDT: any = [];
 

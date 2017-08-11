@@ -16,8 +16,8 @@ export const routes = [
             {
                 path: '',
                 children: [
-                    { path: 'employeeattendance', loadChildren: './employeeattendance#EmployeeAttendanceReportsModule' },
-                    { path: 'dailyattendance', loadChildren: './dailyattendance#DailyAttendanceReportsModule' },
+                    { path: 'employee', loadChildren: './employeeattendance#EmployeeAttendanceModule' },
+                    { path: 'daily', loadChildren: './dailyattendance#DailyAttendanceModule' },
                 ]
             }
         ]

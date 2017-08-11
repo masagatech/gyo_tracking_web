@@ -12,7 +12,7 @@ import jsPDF from 'jspdf'
     providers: [MenuService, ReportsService, CommonService]
 })
 
-export class DailyAttendanceReportsComponent implements OnInit, OnDestroy {
+export class DailyAttendanceComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
     _wsdetails: any = [];
     _enttdetails: any = [];

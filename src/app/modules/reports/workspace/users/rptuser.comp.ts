@@ -22,7 +22,7 @@ export class UserReportsComponent implements OnInit, OnDestroy {
     autouname: any = [];
 
     utypeDT: any = [];
-    srcutype: string = "";
+    srcutype: string = "all";
 
     usersDT: any = [];
     loginUser: LoginUserModel;

@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthGuard } from '@services';
 
-import { EmployeeAttendanceReportsComponent } from './rptempatt.comp';
+import { EmployeeAttendancesComponent } from './rptempatt.comp';
 import { ReportsService } from '@services/master';
 
 import { LazyLoadEvent, DataTableModule, AutoCompleteModule } from 'primeng/primeng';
@@ -13,7 +13,7 @@ export const routes = [
   {
     path: '', children: [
       {
-        path: '', component: EmployeeAttendanceReportsComponent, canActivate: [AuthGuard],
+        path: '', component: EmployeeAttendancesComponent, canActivate: [AuthGuard],
         data: { "module": "rpt", "submodule": "empatt", "rights": "view", "urlname": "/employeeattendance" }
       }
     ]
@@ -22,7 +22,7 @@ export const routes = [
 
 @NgModule({
   declarations: [
-    EmployeeAttendanceReportsComponent
+    EmployeeAttendancesComponent
   ],
 
   imports: [
@@ -32,6 +32,6 @@ export const routes = [
   providers: [AuthGuard, ReportsService]
 })
 
-export class PassengerAttendanceReportsModule {
+export class EmployeeAttendanceModule {
   public static routes = routes;
 }
