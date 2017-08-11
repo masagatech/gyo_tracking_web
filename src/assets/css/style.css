@@ -9063,14 +9063,14 @@ fieldset[disabled] .form-control {
     background-color: #00BCD4;
     padding-left: 0;
     max-width: 360px;
-    margin: 5% auto;
-    /*overflow-x: hidden;*/
+    margin: 10% auto;
 }
 
 .login-page .login-box .msg {
-    color: #555;
+    color: yellow;
     margin-bottom: 30px;
     text-align: center;
+    font-size: 25px;
 }
 
 .login-page .login-box a {
@@ -9080,7 +9080,6 @@ fieldset[disabled] .form-control {
 }
 
 .login-page .login-box .logo {
-    /*margin-bottom: 20px;*/
     margin: 0;
 }
 

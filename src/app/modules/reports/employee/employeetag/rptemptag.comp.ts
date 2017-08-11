@@ -18,9 +18,11 @@ export class EmployeeTagReportsComponent implements OnInit, OnDestroy {
     _enttdetails: any = [];
 
     emptagDT: any = [];
+
     employeeDT: any = [];
+    empdata: any = [];
     empid: number = 0;
-    empname: any = [];
+    empname: string = "";
 
     @ViewChild('employeetag') employeetag: ElementRef;
 
@@ -62,6 +64,8 @@ export class EmployeeTagReportsComponent implements OnInit, OnDestroy {
         });
     }
 
+    // Auto Completed Employee
+
     getEmployeeData(event) {
         let query = event.query;
 
@@ -87,6 +91,7 @@ export class EmployeeTagReportsComponent implements OnInit, OnDestroy {
 
     selectEmployeeData(event) {
         this.empid = event.value;
+        this.empname = event.label;
     }
 
     getPushTagDetails() {

@@ -1,10 +1,19 @@
 <div class="card">
     <div class="header">
         <div class="row clearfix">
-            <div class="col-md-2">
+            <div class="col-md-2 col-xs-2">
                 <h4>Employee Trips</h4>
             </div>
-            <div class="col-md-1" style="padding-top: 20px;">
+            <div class="col-md-4 col-xs-8">
+                <div class="form-group">
+                    <div class="form-line">
+                        <label class="control-label">Employee Name <strong>*</strong></label>
+                        <p-autoComplete id="empname" name="empname" [(ngModel)]="empdata" [tabindex]="1" (onSelect)="selectEmployeeData($event)" [suggestions]="employeeDT" (completeMethod)="getEmployeeData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete empname"></p-autoComplete>
+                        <span class="material-icons inputserachico">search</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1 col-xs-2" style="padding-top: 20px;">
                 <div class="form-group">
                     <button type="button" class="btn btn-theme btn-xs" (click)="getTripReports()">
                         <span class="material-icons">subdirectory_arrow_right</span>

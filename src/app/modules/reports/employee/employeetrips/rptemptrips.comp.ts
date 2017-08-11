@@ -17,6 +17,11 @@ export class TripReportsComponent implements OnInit, OnDestroy {
     _wsdetails: any = [];
     _enttdetails: any = [];
 
+    employeeDT: any = [];
+    empdata: any = [];
+    empid: number = 0;
+    empname: string = "";
+
     monthDT: any = [];
 
     monthname: string = "";
@@ -61,6 +66,36 @@ export class TripReportsComponent implements OnInit, OnDestroy {
         });
     }
 
+    // Auto Completed Employee
+
+    getEmployeeData(event) {
+        let query = event.query;
+
+        this._autoservice.getAutoData({
+            "flag": "employee",
+            "uid": this.loginUser.uid,
+            "ucode": this.loginUser.ucode,
+            "utype": this.loginUser.utype,
+            "enttid": this._enttdetails.enttid,
+            "issysadmin": this.loginUser.issysadmin,
+            "wsautoid": this._wsdetails.wsautoid,
+            "search": query
+        }).subscribe((data) => {
+            this.employeeDT = data.data;
+        }, err => {
+            this._msg.Show(messageType.error, "Error", err);
+        }, () => {
+
+        });
+    }
+
+    // Selected Employee
+
+    selectEmployeeData(event) {
+        this.empid = event.value;
+        this.empname = event.label;
+    }
+
     // Get Trip Data
 
     deg2rad(deg) {
@@ -97,7 +132,7 @@ export class TripReportsComponent implements OnInit, OnDestroy {
         var that = this;
 
         that._rptservice.getTripReports({
-            "enttid": that._enttdetails.enttid, "uid": that.loginUser.uid
+            "enttid": that._enttdetails.enttid, "uid": that.empid
         }).subscribe(data => {
             try {
                 if (data.data.length !== 0) {
