@@ -20,15 +20,6 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <div class="form-line">
-                                <label>Entity</label>
-                                <p-autoComplete id="enttname" name="enttname" [(ngModel)]="enttdata" [tabindex]="1" (onSelect)="selectEntityData($event)" [suggestions]="entityDT" (completeMethod)="getEntityData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete enttname"></p-autoComplete>
-                                <span class="material-icons inputserachico">search</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <div class="form-line">
                                 <label>Employee:</label>
                                 <p-autoComplete id="empname" name="empname" [(ngModel)]="empdata" [tabindex]="2" (onSelect)="selectEmployeeData($event)" [suggestions]="employeeDT" (completeMethod)="getEmployeeData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete empname"></p-autoComplete>
                                 <span class="material-icons inputserachico">search</span>

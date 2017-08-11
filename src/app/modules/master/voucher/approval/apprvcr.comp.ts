@@ -16,8 +16,8 @@ declare var commonfun: any;
 export class ApprovalVoucherComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
     _wsdetails: any = [];
+    _enttdetails: any = [];
 
-    enttid: number = 0;
     empid: number = 0;
 
     voucherNoDT: any = [];
@@ -29,8 +29,9 @@ export class ApprovalVoucherComponent implements OnInit, OnDestroy {
         private _vcrservice: VoucherService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
 
-        this.viewVoucherNoRights();
+        this.getVoucherNo();
     }
 
     public ngOnInit() {
@@ -46,16 +47,6 @@ export class ApprovalVoucherComponent implements OnInit, OnDestroy {
 
     // Get Voucher No
 
-    viewVoucherNoRights() {
-        var that = this;
-
-        if (Cookie.get('_enttnm_') != null) {
-            that.enttid = parseInt(Cookie.get('_enttid_'));
-
-            that.getVoucherNo();
-        }
-    }
-
     getVoucherNo() {
         var that = this;
         var params = {};
@@ -68,7 +59,7 @@ export class ApprovalVoucherComponent implements OnInit, OnDestroy {
 
                 params = {
                     "flag": "voucherno",
-                    "enttid": that.enttid,
+                    "enttid": that._enttdetails.enttid,
                     "empid": that.empid,
                     "wsautoid": that._wsdetails.wsautoid
                 }

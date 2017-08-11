@@ -17,13 +17,6 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <div class="form-line">
-                        <label>Entity</label>
-                        <p-autoComplete id="enttname" name="enttname" [(ngModel)]="enttname" [tabindex]="1" (onSelect)="selectEntityData($event)" [suggestions]="entityDT" (completeMethod)="getEntityData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete enttname"></p-autoComplete>
-                        <span class="material-icons inputserachico">search</span>
-                    </div>
-                </div>
-                <div class="form-group">
                     <label>Expense Code:</label>
                     <div class="form-line">
                         <input type="text" class="form-control" [(ngModel)]="expcd" tabindex="2">

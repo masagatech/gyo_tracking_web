@@ -12,10 +12,7 @@ import { EmployeeService } from '@services/master';
 export class AddExpenseEmployeeMapComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
     _wsdetails: any = [];
-
-    entityDT: any = [];
-    enttid: number = 0;
-    enttname: any = [];
+    _enttdetails: any = [];
 
     employeeDT: any = [];
     empid: number = 0;
@@ -30,6 +27,7 @@ export class AddExpenseEmployeeMapComponent implements OnInit, OnDestroy {
         private _empservice: EmployeeService, private _loginservice: LoginService, private _msg: MessageService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
     }
 
     ngOnInit() {
@@ -44,34 +42,6 @@ export class AddExpenseEmployeeMapComponent implements OnInit, OnDestroy {
         this.expname = [];
     }
 
-    // Auto Completed Entity
-
-    getEntityData(event) {
-        let query = event.query;
-
-        this._autoservice.getAutoData({
-            "flag": "entity",
-            "uid": this.loginUser.uid,
-            "ucode": this.loginUser.ucode,
-            "utype": this.loginUser.utype,
-            "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
-        }).subscribe((data) => {
-            this.entityDT = data.data;
-        }, err => {
-            this._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        });
-    }
-
-    // Selected Entity
-
-    selectEntityData(event) {
-        this.enttid = event.value;
-    }
-
     // Auto Completed Employee
 
     getEmployeeData(event) {
@@ -82,7 +52,7 @@ export class AddExpenseEmployeeMapComponent implements OnInit, OnDestroy {
             "uid": this.loginUser.uid,
             "ucode": this.loginUser.ucode,
             "utype": this.loginUser.utype,
-            "enttid": this.enttid,
+            "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
             "wsautoid": this._wsdetails.wsautoid,
             "search": query
@@ -109,7 +79,7 @@ export class AddExpenseEmployeeMapComponent implements OnInit, OnDestroy {
 
         this._autoservice.getAutoData({
             "flag": "expense",
-            "enttid": this.enttid,
+            "enttid": this._enttdetails.enttid,
             "wsautoid": this._wsdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
@@ -212,11 +182,7 @@ export class AddExpenseEmployeeMapComponent implements OnInit, OnDestroy {
     saveExpenseEmployeeMap() {
         var that = this;
 
-        if (that.enttid == 0) {
-            that._msg.Show(messageType.error, "Error", "Enter Entity");
-            $(".enttname input").focus();
-        }
-        else if (that.empid == 0) {
+        if (that.empid == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Employee");
             $(".empname input").focus();
         }

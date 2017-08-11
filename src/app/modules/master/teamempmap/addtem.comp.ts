@@ -14,13 +14,10 @@ declare var google: any;
 
 export class AddTeamEmployeeMapComponent implements OnInit {
     loginUser: LoginUserModel;
+    _wsdetails: any = [];
+    _enttdetails: any = [];
 
     temid: number = 0;
-
-    entityDT: any = [];
-    enttdata: any = [];
-    enttid: number = 0;
-    enttname: string = "";
 
     employeeDT: any = [];
     empdata: any = [];
@@ -33,52 +30,17 @@ export class AddTeamEmployeeMapComponent implements OnInit {
     tmid: number = 0;
     tmnm: string = "";
 
-    _wsdetails: any = [];
     private subscribeParameters: any;
 
     constructor(private _temservice: TeamEmployeeMapService, private _routeParams: ActivatedRoute, private _router: Router,
         private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
     }
 
     public ngOnInit() {
-        setTimeout(function () {
-            $(".enttname input").focus();
-        }, 100);
-
         this.getTeamEmployeeMap();
-    }
-
-    // Auto Completed Entity
-
-    getEntityData(event) {
-        let query = event.query;
-
-        this._autoservice.getAutoData({
-            "flag": "entity",
-            "uid": this.loginUser.uid,
-            "ucode": this.loginUser.ucode,
-            "utype": this.loginUser.utype,
-            "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
-        }).subscribe((data) => {
-            this.entityDT = data.data;
-        }, err => {
-            this._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        });
-    }
-
-    // Selected Entity
-
-    selectEntityData(event) {
-        this.enttid = event.value;
-        
-        Cookie.set("_enttid_", event.value);
-        Cookie.set("_enttnm_", event.label);
     }
 
     // Auto Completed Team
@@ -91,7 +53,7 @@ export class AddTeamEmployeeMapComponent implements OnInit {
             "uid": this.loginUser.uid,
             "ucode": this.loginUser.ucode,
             "utype": this.loginUser.utype,
-            "enttid": this.enttid,
+            "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
             "wsautoid": this._wsdetails.wsautoid,
             "search": query
@@ -121,7 +83,7 @@ export class AddTeamEmployeeMapComponent implements OnInit {
             "uid": this.loginUser.uid,
             "ucode": this.loginUser.ucode,
             "utype": this.loginUser.utype,
-            "enttid": this.enttid,
+            "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
             "wsautoid": this._wsdetails.wsautoid,
             "search": query
@@ -171,7 +133,7 @@ export class AddTeamEmployeeMapComponent implements OnInit {
         if (!duplicateEmployee) {
             that.employeeList.push({
                 "temid": that.temid,
-                "enttid": that.enttid, "enttname": that.enttname,
+                "enttid": that._enttdetails.enttid, "enttname": that._enttdetails.enttname,
                 "tmid": that.tmid, "tmnm": that.tmnm,
                 "empid": that.empid, "empname": that.empname,
                 "wsautoid": that._wsdetails.wsautoid, "isactive": true
@@ -211,11 +173,7 @@ export class AddTeamEmployeeMapComponent implements OnInit {
     saveTeamEmployeeMap() {
         var that = this;
 
-        if (that.enttid == 0) {
-            that._msg.Show(messageType.error, "Error", "Select Entity");
-            $(".enttid").focus();
-        }
-        else if (that.tmid == 0) {
+        if (that.tmid == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Team Name");
             $(".tmnm input").focus();
         }
@@ -267,7 +225,7 @@ export class AddTeamEmployeeMapComponent implements OnInit {
 
         that._temservice.getTeamEmployeeMap({
             "flag": "edit",
-            "enttid": that.enttid,
+            "enttid": that._enttdetails.enttid,
             "tmid": that.tmid,
             "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {

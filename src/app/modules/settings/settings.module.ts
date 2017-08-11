@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SettingsComponent } from '../settings/settings.comp';
-import { AuthGuard } from '../../_services/authguard-service';
-
-import { DashboardModule } from './dashboard';
+import { AuthGuard } from '@services';
+import { SharedComponentModule } from '@services';
 
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -27,6 +26,7 @@ export const routes = [
 
 @NgModule({
     imports: [RouterModule.forChild(routes),
+        SharedComponentModule,
         FormsModule,
         CommonModule,
     ],

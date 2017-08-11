@@ -14,14 +14,13 @@ declare var google: any;
 
 export class AddNotificationComponent implements OnInit {
     loginUser: LoginUserModel;
+    _wsdetails: any = [];
+    _enttdetails: any = [];
 
     ntfid: number = 0;
 
-    entityDT: any = [];
-    enttid: number = 0;
-    enttname: any = [];
-
     teamDT: any = [];
+    tmdata: any = [];
     tmid: number = 0;
     tmnm: string = "";
 
@@ -34,52 +33,17 @@ export class AddNotificationComponent implements OnInit {
     title: string = "";
     msg: string = "";
 
-    _wsdetails: any = [];
     private subscribeParameters: any;
 
     constructor(private _temservice: TeamEmployeeMapService, private _ntfservice: NotificationService, private _routeParams: ActivatedRoute,
         private _router: Router, private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
     }
 
     public ngOnInit() {
-        setTimeout(function () {
-            $(".enttname input").focus();
-        }, 100);
-
         this.getNotification();
-    }
-
-    // Auto Completed Entity
-
-    getEntityData(event) {
-        let query = event.query;
-
-        this._autoservice.getAutoData({
-            "flag": "entity",
-            "uid": this.loginUser.uid,
-            "ucode": this.loginUser.ucode,
-            "utype": this.loginUser.utype,
-            "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
-        }).subscribe((data) => {
-            this.entityDT = data.data;
-        }, err => {
-            this._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        });
-    }
-
-    // Selected Entity
-
-    selectEntityData(event) {
-        this.enttid = event.value;
-
-        Cookie.set("_enttid_", event.value);
-        Cookie.set("_enttnm_", event.label);
     }
 
     // Auto Completed Team
@@ -89,6 +53,11 @@ export class AddNotificationComponent implements OnInit {
 
         this._autoservice.getAutoData({
             "flag": "team",
+            "uid": this.loginUser.uid,
+            "ucode": this.loginUser.ucode,
+            "utype": this.loginUser.utype,
+            "enttid": this._enttdetails.enttid,
+            "issysadmin": this.loginUser.issysadmin,
             "wsautoid": this._wsdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
@@ -116,7 +85,7 @@ export class AddNotificationComponent implements OnInit {
 
         that._temservice.getTeamEmployeeMap({
             "flag": "edit",
-            "enttid": that.enttid,
+            "enttid": that._enttdetails.enttid,
             "tmid": that.tmid,
             "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {
@@ -199,11 +168,7 @@ export class AddNotificationComponent implements OnInit {
         var that = this;
         var selemplist = {};
 
-        if (that.enttid == 0) {
-            that._msg.Show(messageType.error, "Error", "Enter Entity");
-            $(".empname input").focus();
-        }
-        else if (that.tmid == 0) {
+        if (that.tmid == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Team");
             $(".tmnm input").focus();
         }
@@ -230,7 +195,7 @@ export class AddNotificationComponent implements OnInit {
 
                 var saveemp = {
                     "ntfid": that.ntfid,
-                    "enttid": that.enttid,
+                    "enttid": that._enttdetails.enttid,
                     "tmid": that.tmid,
                     "empid": selemplist,
                     "title": that.title,
@@ -292,9 +257,6 @@ export class AddNotificationComponent implements OnInit {
                 }).subscribe(data => {
                     try {
                         that.ntfid = data.data[0].ntfid;
-                        that.enttid = data.data[0].enttid;
-                        that.enttname.value = data.data[0].enttid;
-                        that.enttname.label = data.data[0].enttname;
                         that.tmid = data.data[0].tmid;
                         that.tmnm = data.data[0].tmnm;
                         // that.employeeList = data.data[0].empdata;
@@ -317,12 +279,6 @@ export class AddNotificationComponent implements OnInit {
                 })
             }
             else {
-                if (Cookie.get('_enttnm_') != null) {
-                    that.enttid = parseInt(Cookie.get('_enttid_'));
-                    that.enttname.value = parseInt(Cookie.get('_enttid_'));
-                    that.enttname.label = Cookie.get('_enttnm_');
-                }
-
                 that.resetNotificationFields();
                 commonfun.loaderhide();
             }

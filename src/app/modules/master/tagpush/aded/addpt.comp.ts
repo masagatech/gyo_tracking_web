@@ -14,15 +14,13 @@ declare var google: any;
 
 export class AddPushTagComponent implements OnInit {
     loginUser: LoginUserModel;
+    _wsdetails: any = [];
+    _enttdetails: any = [];
 
     disableentt: boolean = false;
     disabletag: boolean = false;
 
     ptid: number = 0;
-
-    entityDT: any = [];
-    enttid: number = 0;
-    enttname: any = [];
 
     tagDT: any = [];
     tagid: number = 0;
@@ -44,13 +42,14 @@ export class AddPushTagComponent implements OnInit {
 
     remark: string = "";
 
-    _wsdetails: any = [];
     private subscribeParameters: any;
 
     constructor(private _temservice: TeamEmployeeMapService, private _ptservice: TagService, private _routeParams: ActivatedRoute,
         private _router: Router, private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
+
         this.hidewhenTeamOrEmployee();
     }
 
@@ -64,39 +63,6 @@ export class AddPushTagComponent implements OnInit {
         this.getPushTagDetails();
     }
 
-    // Auto Completed Entity
-
-    getEntityData(event) {
-        let query = event.query;
-
-        this._autoservice.getAutoData({
-            "flag": "entity",
-            "uid": this.loginUser.uid,
-            "ucode": this.loginUser.ucode,
-            "utype": this.loginUser.utype,
-            "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
-        }).subscribe((data) => {
-            this.entityDT = data.data;
-        }, err => {
-            this._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        });
-    }
-
-    // Selected Entity
-
-    selectEntityData(event) {
-        this.enttid = event.value;
-
-        Cookie.set("_enttid_", event.value);
-        Cookie.set("_enttnm_", event.label);
-
-        this.getTagData(event);
-    }
-
     // Auto Completed Tag
 
     getTagData(event) {
@@ -104,7 +70,7 @@ export class AddPushTagComponent implements OnInit {
 
         this._autoservice.getAutoData({
             "flag": "tag",
-            "enttid": this.enttid,
+            "enttid": this._enttdetails.enttid,
             "wsautoid": this._wsdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
@@ -143,9 +109,14 @@ export class AddPushTagComponent implements OnInit {
         let query = event.query;
 
         this._autoservice.getAutoData({
-            "flag": "team",
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
+            "flag":"team",
+            "uid":this.loginUser.uid,
+            "ucode":this.loginUser.ucode,
+            "utype":this.loginUser.utype,
+            "enttid":this._enttdetails.enttid,
+            "issysadmin":this.loginUser.issysadmin,
+            "wsautoid":this._wsdetails.wsautoid,
+            "search":query
         }).subscribe((data) => {
             this.teamDT = data.data;
         }, err => {
@@ -170,7 +141,7 @@ export class AddPushTagComponent implements OnInit {
 
         that._temservice.getTeamEmployeeMap({
             "flag": "edit",
-            "enttid": that.enttid,
+            "enttid": that._enttdetails.enttid,
             "tmid": that.tmid,
             "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {
@@ -210,7 +181,7 @@ export class AddPushTagComponent implements OnInit {
             "uid": this.loginUser.uid,
             "ucode": this.loginUser.ucode,
             "utype": this.loginUser.utype,
-            "enttid": this.enttid,
+            "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
             "wsautoid": this._wsdetails.wsautoid,
             "search": query
@@ -321,12 +292,7 @@ export class AddPushTagComponent implements OnInit {
     isValidationPushTag() {
         var that = this;
 
-        if (that.enttid == 0) {
-            that._msg.Show(messageType.error, "Error", "Enter Entity");
-            $(".empname input").focus();
-            return false;
-        }
-        else if (that.tagid == 0) {
+        if (that.tagid == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Tag");
             $(".tagnm input").focus();
             return false;
@@ -369,7 +335,7 @@ export class AddPushTagComponent implements OnInit {
 
                 var saveemp = {
                     "ptid": that.ptid,
-                    "enttid": that.enttid,
+                    "enttid": that._enttdetails.enttid,
                     "tagid": that.tagid,
                     "empid": selemplist,
                     "emptype": that.selectedPType,
@@ -433,9 +399,6 @@ export class AddPushTagComponent implements OnInit {
                 }).subscribe(data => {
                     try {
                         that.ptid = data.data[0].ptid;
-                        that.enttid = data.data[0].enttid;
-                        that.enttname.value = data.data[0].enttid;
-                        that.enttname.label = data.data[0].enttname;
                         that.tagid = data.data[0].tagid;
                         that.tagnm.value = data.data[0].tagid;
                         that.tagnm.label = data.data[0].tagnm;
@@ -459,12 +422,6 @@ export class AddPushTagComponent implements OnInit {
                 })
             }
             else {
-                if (Cookie.get('_enttnm_') != null) {
-                    that.enttid = parseInt(Cookie.get('_enttid_'));
-                    that.enttname.value = parseInt(Cookie.get('_enttid_'));
-                    that.enttname = Cookie.get('_enttnm_');
-                }
-
                 that.resetPushTagFields();
                 commonfun.loaderhide();
             }

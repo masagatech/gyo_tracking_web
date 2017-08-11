@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MasterComponent } from '../master/master.comp';
-import { AuthGuard } from '../../_services/authguard-service';
+import { AuthGuard } from '@services';
 
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -15,11 +15,7 @@ export const routes = [
             {
                 path: '',
                 children: [
-                    { path: 'entity', loadChildren: './entity#EntityModule' },
                     { path: 'vehicle', loadChildren: './vehicle#VehicleModule' },
-                    { path: 'holiday', loadChildren: './holiday#HolidayModule' },
-                    { path: 'user', loadChildren: './users#UserModule' },
-                    { path: 'location', loadChildren: './location#LocationModule' },
                     { path: 'status', loadChildren: './status#StatusModule' },
 
                     { path: 'tag', loadChildren: './tag#TagModule' },

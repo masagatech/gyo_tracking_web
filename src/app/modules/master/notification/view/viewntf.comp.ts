@@ -12,62 +12,27 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 })
 
 export class ViewNotificationComponent implements OnInit {
-    notificationDT: any = [];
     loginUser: LoginUserModel;
-
     _wsdetails: any = [];
-
-    entityDT: any = [];
-    enttid: number = 0;
-    enttname: any = [];
+    _enttdetails: any = [];
 
     employeeDT: any = [];
     empid: number = 0;
     empname: any = [];
+    
+    notificationDT: any = [];
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
         private _loginservice: LoginService, private _autoservice: CommonService, private _ntfservice: NotificationService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
 
         this.viewNotificationRights();
     }
 
     public ngOnInit() {
 
-    }
-
-    // Auto Completed Entity
-
-    getEntityData(event) {
-        let query = event.query;
-
-        this._autoservice.getAutoData({
-            "flag": "entity",
-            "uid": this.loginUser.uid,
-            "ucode": this.loginUser.ucode,
-            "utype": this.loginUser.utype,
-            "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
-        }).subscribe((data) => {
-            this.entityDT = data.data;
-        }, err => {
-            this._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        });
-    }
-
-    // Selected Entity
-
-    selectEntityData(event) {
-        this.enttid = event.value;
-        
-        Cookie.set("_enttid_", event.value);
-        Cookie.set("_enttnm_", event.label);
-
-        this.getEmployeeData(event);
     }
 
     // Auto Completed Employee
@@ -80,7 +45,7 @@ export class ViewNotificationComponent implements OnInit {
             "uid": this.loginUser.uid,
             "ucode": this.loginUser.ucode,
             "utype": this.loginUser.utype,
-            "enttid": this.enttid,
+            "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
             "wsautoid": this._wsdetails.wsautoid,
             "search": query
@@ -109,11 +74,7 @@ export class ViewNotificationComponent implements OnInit {
     public viewNotificationRights() {
         var that = this;
 
-        if (Cookie.get('_enttnm_') != null) {
-            that.enttid = parseInt(Cookie.get('_enttid_'));
-            that.enttname.value = parseInt(Cookie.get('_enttid_'));
-            that.enttname.label = Cookie.get('_enttnm_');
-            
+        if (Cookie.get('_empname_') != null) {
             that.empid = parseInt(Cookie.get('_empid_'));
             that.empname.value = parseInt(Cookie.get('_empid_'));
             that.empname.label = Cookie.get('_empname_');
@@ -127,7 +88,7 @@ export class ViewNotificationComponent implements OnInit {
         commonfun.loader();
 
         that._ntfservice.getNotification({
-            "flag": "all", "wsautoid": that._wsdetails.wsautoid, "enttid": that.enttid, "empid": that.empid
+            "flag": "all", "wsautoid": that._wsdetails.wsautoid, "enttid": that._enttdetails.enttid, "empid": that.empid
         }).subscribe(data => {
             try {
                 that.notificationDT = data.data;

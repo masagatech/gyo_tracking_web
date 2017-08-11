@@ -14,13 +14,9 @@ declare var commonfun: any;
 
 export class AddStatusComponent implements OnInit {
     loginUser: LoginUserModel;
-
-    entityDT: any = [];
-    enttid: number = 0;
-    enttname: any = [];
-
     _wsdetails: any = [];
-
+    _enttdetails: any = [];
+    
     statusid: number = 0;
     statusnm: string = "";
     ordno: number = 0;
@@ -35,6 +31,7 @@ export class AddStatusComponent implements OnInit {
         private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
     }
 
     public ngOnInit() {
@@ -52,37 +49,6 @@ export class AddStatusComponent implements OnInit {
         this.statusnm = "";
         this.ordno = 0;
         this.remark = "";
-    }
-
-    // Auto Completed Entity
-
-    getEntityData(event) {
-        let query = event.query;
-
-        this._autoservice.getAutoData({
-            "flag": "entity",
-            "uid": this.loginUser.uid,
-            "ucode": this.loginUser.ucode,
-            "utype": this.loginUser.utype,
-            "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
-        }).subscribe((data) => {
-            this.entityDT = data.data;
-        }, err => {
-            this._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        });
-    }
-
-    // Selected Entity
-
-    selectEntityData(event) {
-        this.enttid = event.value;
-        
-        Cookie.set("_enttid_", event.value);
-        Cookie.set("_enttnm_", event.label);
     }
 
     // Save Data
@@ -108,7 +74,7 @@ export class AddStatusComponent implements OnInit {
                 "ordno": that.ordno,
                 "group": "taskstatus",
                 "cuid": that.loginUser.ucode,
-                "enttid": that.enttid,
+                "enttid": that._enttdetails.enttid,
                 "wsautoid": that._wsdetails.wsautoid,
                 "isactive": that.isactive,
                 "mode": ""
@@ -170,9 +136,6 @@ export class AddStatusComponent implements OnInit {
 
                 that._autoservice.getMOM(params).subscribe(data => {
                     try {
-                        that.enttid = data.data[0].enttid;
-                        that.enttname.value = data.data[0].enttid;
-                        that.enttname.label = data.data[0].enttname;
                         that.statusid = data.data[0].autoid;
                         that.statusnm = data.data[0].val;
                         that.ordno = data.data[0].ordno;

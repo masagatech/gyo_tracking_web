@@ -16,10 +16,7 @@ declare var commonfun: any;
 export class PendingVoucherComponent implements OnInit {
     loginUser: LoginUserModel;
     _wsdetails: any = [];
-
-    entityDT: any = [];
-    enttid: number = 0;
-    enttname: any = [];
+    _enttdetails: any = [];
 
     pendVoucherDT: any = [];
 
@@ -29,60 +26,16 @@ export class PendingVoucherComponent implements OnInit {
         private _vcrservice: VoucherService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
 
-        this.viewVoucherDataRights();
+        this.getVoucherDetails();
     }
 
     public ngOnInit() {
 
     }
 
-    // Auto Completed Entity
-
-    getEntityData(event) {
-        let query = event.query;
-
-        this._autoservice.getAutoData({
-            "flag": "entity",
-            "uid": this.loginUser.uid,
-            "ucode": this.loginUser.ucode,
-            "utype": this.loginUser.utype,
-            "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
-        }).subscribe((data) => {
-            this.entityDT = data.data;
-        }, err => {
-            this._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        });
-    }
-
-    // Selected Entity
-
-    selectEntityData(event) {
-        this.enttid = event.value;
-
-        Cookie.set("_enttid_", event.value);
-        Cookie.set("_enttnm_", event.label);
-
-        this.getVoucherDetails();
-    }
-
     // View Data Rights
-
-    public viewVoucherDataRights() {
-        var that = this;
-
-        if (Cookie.get('_enttnm_') != null) {
-            that.enttid = parseInt(Cookie.get('_enttid_'));
-            that.enttname.value = parseInt(Cookie.get('_enttid_'));
-            that.enttname.label = Cookie.get('_enttnm_');
-
-            that.getVoucherDetails();
-        }
-    }
 
     getVoucherDetails() {
         var that = this;
@@ -92,7 +45,7 @@ export class PendingVoucherComponent implements OnInit {
 
         params = {
             "flag": "pending",
-            "enttid": that.enttid,
+            "enttid": that._enttdetails.enttid,
             "wsautoid": that._wsdetails.wsautoid
         }
 

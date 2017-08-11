@@ -1,36 +1,44 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Router, ActivatedRoute, NavigationStart, NavigationEnd, NavigationError, NavigationCancel, Event as NavigationEvent } from '@angular/router';
-import { AppState } from '../../../app.service';
-import { Cookie } from 'ng2-cookies/ng2-cookies';
 import { MessageService, messageType, MenuService, LoginService, AuthenticationService } from '@services';
 import { LoginUserModel, Globals } from '@models';
+import { AppState } from '../../../app.service';
+import { EntityService } from '@services/master';
+import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 declare var $: any;
 declare var loader: any;
 
 @Component({
   selector: '<app-head></app-head>',
-  templateUrl: 'header.comp.html'
+  templateUrl: 'header.comp.html',
+  providers: [EntityService]
 })
 
 export class HeaderComponent implements OnInit, OnDestroy {
   loginUser: LoginUserModel;
   _wsdetails: any = [];
+  _enttdetails: any = [];
+
+  entityDT: any = [];
 
   ufullname: string = "";
   utype: string = "";
   uphoto: string = "";
-  wsname: string = "";
-  wslogo: string = "";
+
+  @Input() wsname: string = "";
+  @Input() wslogo: string = "";
+  @Input() enttname: string = "";
+  @Input() homeurl: string = "";
+
+  mname: string = "";
 
   global = new Globals();
   uploadconfig = { server: "", serverpath: "", uploadurl: "", method: "post", maxFilesize: "", acceptedFiles: "" };
 
+  mastersMenuDT: any = [];
   reportsMenuDT: any = [];
-
-  public angularclassLogo = 'assets/img/angularclass-avatar.png';
-  public name = 'Angular 2 Webpack Starter';
-  public url = 'https://twitter.com/AngularClass';
+  settingsMenuDT: any = [];
 
   private themes: any = [
     { nm: 'red', disp: 'Red' },
@@ -56,9 +64,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ];
 
   constructor(private _authservice: AuthenticationService, public _menuservice: MenuService, private _loginservice: LoginService,
-    private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService) {
+    private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _entityservice: EntityService) {
     this.loginUser = this._loginservice.getUser();
     this._wsdetails = Globals.getWSDetails();
+    this._enttdetails = Globals.getEntityDetails();
 
     this.getHeaderDetails();
     this.getTopMenuList();
@@ -82,29 +91,29 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
   }
 
-  getHeaderDetails() {
-    this.ufullname = this.loginUser.fullname;
-    this.utype = this.loginUser.utypename;
-    this.uphoto = this.global.uploadurl + this._wsdetails.uphoto;
-    this.wsname = this._wsdetails.wsname;
-    this.wslogo = this.global.uploadurl + this._wsdetails.wslogo;
-  }
-
   ngOnInit() {
-
   }
 
   public ngAfterViewInit() {
     loader.loadall();
   }
 
+  getHeaderDetails() {
+    this.ufullname = this.loginUser.fullname;
+    this.utype = this.loginUser.utypename;
+    this.uphoto = this.global.uploadurl + this.loginUser.uphoto;
+  }
+
   public getTopMenuList() {
     var that = this;
 
     that._menuservice.getMenuDetails({
-      "flag": "topmenu", "uid": that.loginUser.uid, "issysadmin": that.loginUser.issysadmin, "utype": that.loginUser.utype
+      "flag": "topmenu", "uid": that.loginUser.uid, "issysadmin": that.loginUser.issysadmin,
+      "utype": that.loginUser.utype
     }).subscribe(data => {
+      that.mastersMenuDT = data.data.filter(a => a.mptype === "master");
       that.reportsMenuDT = data.data.filter(a => a.mptype === "reports");
+      that.settingsMenuDT = data.data.filter(a => a.mptype === "settings");
     }, err => {
       that._msg.Show(messageType.error, "Error", err);
     }, () => {
@@ -113,13 +122,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private changeSkin(theme: any) {
     loader.skinChanger(theme);
-  }
-
-  openWorkspaceForm() {
-    Cookie.delete("_enttid_");
-    Cookie.delete("_enttnm_");
-    Cookie.delete("_wsdetails_");
-    this._router.navigate(['/workspace']);
   }
 
   logout() {

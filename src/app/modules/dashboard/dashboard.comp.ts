@@ -10,15 +10,30 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 })
 
 export class DashboardComponent implements OnInit, OnDestroy {
-    dashboardDT: any = [];
     loginUser: LoginUserModel;
-
     _wsdetails: any = [];
+    _enttdetails: any = [];
+
+    dashboardDT: any = [];
 
     constructor(private _autoservice: CommonService, private _loginservice: LoginService, private _routeParams: ActivatedRoute,
         private _router: Router, private _msg: MessageService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
+
+        let _wsdetails = Cookie.get("_wsdetails_");
+        let _enttdetails = Cookie.get("_enttdetails_");
+
+        if (_wsdetails == null && _wsdetails == undefined) {
+            this._router.navigate(['/admin/workspace']);
+        }
+        else {
+            if (_enttdetails == null && _enttdetails == undefined) {
+                this._router.navigate(['/workspace/entity']);
+            }
+        }
+
         this.getDashboard();
     }
 
@@ -30,7 +45,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
         var dbparams = {
             "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
-            "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid
+            "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid,
+            "enttid": that._enttdetails.enttid, "dbview": "entt"
         }
 
         that._autoservice.getDashboard(dbparams).subscribe(data => {
@@ -58,9 +74,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
         var that = this;
 
         if (row.dbtype == "user") {
-            console.log(row.dbcode);
             Cookie.delete('_srcutype_');
+            Cookie.delete('_enttid_');
+            Cookie.delete('_enttnm_');
+
             Cookie.set("_srcutype_", row.dbcode);
+            Cookie.set("_enttid_", that._enttdetails.enttid);
+            Cookie.set("_enttnm_", that._enttdetails.enttname);
+        }
+        else if (row.dbtype == "entity") {
+            Cookie.delete('_entttype_');
+            Cookie.set("_entttype_", row.dbcode);
         }
 
         that._router.navigate([row.dblink]);

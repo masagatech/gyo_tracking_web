@@ -20,13 +20,14 @@ declare var google: any;
 })
 
 export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
+    loginUser: LoginUserModel;
+    _wsdetails: any = [];
+    _enttdetails: any = [];
+
     global = new Globals();
 
     @ViewChild(ADHOST)
     private _Host: ADHOST;
-
-    loginUser: LoginUserModel;
-    _wsdetails: any = [];
 
     selectedTripType: number = 0;
     triptype: SelectItem[];
@@ -37,10 +38,6 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
     map: any;
     marker: any;
     overlays: any = [];
-
-    entityDT: any = [];
-    enttid: number = 0;
-    enttname: any = [];
 
     employeeDT: any = [];
     empIds: any = [];
@@ -83,6 +80,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
         private _trackDashbord: TrackDashbord, private componentFactoryResolver: ComponentFactoryResolver) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
 
         this.getMessage();
     }
@@ -107,7 +105,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
             $('.container-fluid').css('padding-left', '0px').css('padding-right', '0px');
         }, 100);
 
-        this.viewEmployeeDataRights();
+        this.fillEmployeeDropDown();
     }
 
     public ngAfterViewInit() {
@@ -129,51 +127,6 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
         this.triptype.push({ "label": "Completed", "value": "2" });
     }
 
-    // Auto Completed Entity
-
-    getEntityData(event) {
-        let query = event.query;
-
-        this._autoservice.getAutoData({
-            "flag": "entity",
-            "uid": this.loginUser.uid,
-            "ucode": this.loginUser.ucode,
-            "utype": this.loginUser.utype,
-            "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
-        }).subscribe((data) => {
-            this.entityDT = data.data;
-        }, err => {
-            this._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        });
-    }
-
-    // Selected Entity
-
-    private selectEntityData(event) {
-        this.enttid = event.value;
-
-        Cookie.set("_enttid_", event.value);
-        Cookie.set("_enttnm_", event.label);
-
-        this.fillEmployeeDropDown();
-    }
-
-    public viewEmployeeDataRights() {
-        var that = this;
-
-        if (Cookie.get('_enttnm_') != null) {
-            that.enttid = parseInt(Cookie.get('_enttid_'));
-            that.enttname.value = parseInt(Cookie.get('_enttid_'));
-            that.enttname.label = Cookie.get('_enttnm_');
-
-            that.fillEmployeeDropDown();
-        }
-    }
-
     // Employee DropDown
 
     private fillEmployeeDropDown() {
@@ -184,7 +137,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
 
         that._trackDashbord.gettrackboard({
             "flag": "employee",
-            "enttid": that.enttid,
+            "enttid": that._enttdetails.enttid,
             "uid": that.loginUser.uid,
             "ucode": that.loginUser.ucode,
             "utype": that.loginUser.utype,

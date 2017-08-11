@@ -12,10 +12,8 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 export class AddVehicleComponent implements OnInit {
     loginUser: LoginUserModel;
-
-    entityDT: any = [];
-    enttid: number = 0;
-    enttname: any = [];
+    _wsdetails: any = [];
+    _enttdetails: any = [];
 
     vehtypeDT: any = [];
 
@@ -32,53 +30,19 @@ export class AddVehicleComponent implements OnInit {
     mode: string = "";
     isactive: boolean = true;
 
-    _wsdetails: any = [];
     private subscribeParameters: any;
 
     constructor(private _vehservice: VehicleService, private _routeParams: ActivatedRoute, private _router: Router,
         private _msg: MessageService, private _loginservice: LoginService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
+
         this.fillDropDownList();
     }
 
     public ngOnInit() {
-        setTimeout(function () {
-            $(".enttname input").focus();
-        }, 100);
-
         this.getVehicleDetails();
-    }
-
-    // Auto Completed Entity
-
-    getEntityData(event) {
-        let query = event.query;
-
-        this._autoservice.getAutoData({
-            "flag": "entity",
-            "uid": this.loginUser.uid,
-            "ucode": this.loginUser.ucode,
-            "utype": this.loginUser.utype,
-            "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
-        }).subscribe((data) => {
-            this.entityDT = data.data;
-        }, err => {
-            this._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        });
-    }
-
-    // Selected Entity
-
-    selectEntityData(event) {
-        this.enttid = event.value;
-
-        Cookie.set("_enttid_", event.value);
-        Cookie.set("_enttnm_", event.label);
     }
 
     // Fill Vehicle Type Drop Down
@@ -98,7 +62,7 @@ export class AddVehicleComponent implements OnInit {
 
             commonfun.loaderhide();
         }, err => {
-            //that._msg.Show(messageType.error, "Error", err);
+            that._msg.Show(messageType.error, "Error", err);
             console.log(err);
             commonfun.loaderhide();
         }, () => {
@@ -157,11 +121,7 @@ export class AddVehicleComponent implements OnInit {
     saveVehicleInfo() {
         var that = this;
 
-        if (that.enttid == 0) {
-            that._msg.Show(messageType.error, "Error", "Enter Entity");
-            $(".enttname input").focus();
-        }
-        else if (that.vehtype == "") {
+        if (that.vehtype == "") {
             that._msg.Show(messageType.error, "Error", "Select Vehicle Type");
             $(".vehtype").focus();
         }
@@ -187,7 +147,7 @@ export class AddVehicleComponent implements OnInit {
                 "vehtype": that.vehtype,
                 "vehmake": that.vehmake,
                 "vehmdl": that.vehmdl,
-                "enttid": that.enttid,
+                "enttid": that._enttdetails.enttid,
                 "capacity": that.capacity,
                 "vehcond": that.vehcond,
                 "vehfclt": that.vehfclt,
@@ -250,8 +210,6 @@ export class AddVehicleComponent implements OnInit {
                         var _vehicledata = data.data;
 
                         that.vehid = _vehicledata[0].autoid;
-                        that.enttid = _vehicledata[0].enttid;
-                        that.enttname = _vehicledata[0].enttname;
                         that.vehno = _vehicledata[0].vehicleno;
                         that.vehregno = _vehicledata[0].vehregno;
                         that.vehtype = _vehicledata[0].vehicletype;
@@ -277,12 +235,6 @@ export class AddVehicleComponent implements OnInit {
                 })
             }
             else {
-                if (Cookie.get('_enttnm_') != null) {
-                    that.enttid = parseInt(Cookie.get('_enttid_'));
-                    that.enttname.value = parseInt(Cookie.get('_enttid_'));
-                    that.enttname = Cookie.get('_enttnm_');
-                }
-
                 that.resetVehicleFields();
                 commonfun.loaderhide();
             }

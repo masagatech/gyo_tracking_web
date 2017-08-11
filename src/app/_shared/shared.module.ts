@@ -1,7 +1,7 @@
 import { NgModule, ModuleWithProviders } from "@angular/core";
 import { AuthenticationService } from "../_services/auth-service";
 import { LoginService } from "../_services/login/login-service"
-import { AuthGuard } from "../_services/authguard-service"
+import { AuthGuard } from "@services"
 import { DataService } from '../_services/dataconnect';
 
 @NgModule({})

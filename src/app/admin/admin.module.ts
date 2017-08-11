@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AdminComponent } from '../admin/admin.comp';
-import { AuthGuard } from '../_services/authguard-service';
-import { SharedComponentModule } from '../_shared/sharedcomp.module';
+import { AuthGuard } from '@services';
+import { SharedComponentModule } from '@services';
 
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -16,8 +16,7 @@ export const routes = [
             {
                 path: '',
                 children: [
-                    { path: '', loadChildren: './workspace#WorkspaceModule' },
-                    // { path: 'no-page', component: NoPageComponent },
+                    { path: 'workspace', loadChildren: './workspace#WorkspaceModule' },
                 ]
             }
         ]

@@ -14,12 +14,10 @@ declare var google: any;
 
 export class AddTeamOwnershipComponent implements OnInit {
     loginUser: LoginUserModel;
+    _wsdetails: any = [];
+    _enttdetails: any = [];
 
     tomid: number = 0;
-
-    entityDT: any = [];
-    enttid: number = 0;
-    enttname: any = [];
 
     employeeList: any = [];
 
@@ -32,52 +30,17 @@ export class AddTeamOwnershipComponent implements OnInit {
     tmid: number = 0;
     tmnm: any = [];
 
-    _wsdetails: any = [];
     private subscribeParameters: any;
 
     constructor(private _temservice: TeamEmployeeMapService, private _tomservice: TeamOwnershipMapService, private _routeParams: ActivatedRoute,
         private _router: Router, private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
     }
 
     public ngOnInit() {
-        setTimeout(function () {
-            $(".enttname input").focus();
-        }, 100);
-
         this.getTeamOwnershipMap();
-    }
-
-    // Auto Completed Entity
-
-    getEntityData(event) {
-        let query = event.query;
-
-        this._autoservice.getAutoData({
-            "flag": "entity",
-            "uid": this.loginUser.uid,
-            "ucode": this.loginUser.ucode,
-            "utype": this.loginUser.utype,
-            "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
-        }).subscribe((data) => {
-            this.entityDT = data.data;
-        }, err => {
-            this._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        });
-    }
-
-    // Selected Entity
-
-    selectEntityData(event) {
-        this.enttid = event.value;
-        
-        Cookie.set("_enttid_", event.value);
-        Cookie.set("_enttnm_", event.label);
     }
 
     // Auto Completed Team
@@ -90,7 +53,7 @@ export class AddTeamOwnershipComponent implements OnInit {
             "uid": this.loginUser.uid,
             "ucode": this.loginUser.ucode,
             "utype": this.loginUser.utype,
-            "enttid": this.enttid,
+            "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
             "wsautoid": this._wsdetails.wsautoid,
             "search": query
@@ -120,7 +83,7 @@ export class AddTeamOwnershipComponent implements OnInit {
 
         that._temservice.getTeamEmployeeMap({
             "flag": "edit",
-            "enttid": that.enttid,
+            "enttid": that._enttdetails.enttid,
             "tmid": that.tmid,
             "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {
@@ -160,7 +123,7 @@ export class AddTeamOwnershipComponent implements OnInit {
             "uid": this.loginUser.uid,
             "ucode": this.loginUser.ucode,
             "utype": this.loginUser.utype,
-            "enttid": this.enttid,
+            "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
             "wsautoid": this._wsdetails.wsautoid,
             "search": query
@@ -208,7 +171,7 @@ export class AddTeamOwnershipComponent implements OnInit {
         if (!duplicateOwnership) {
             that.ownershipList.push({
                 "tomid": that.tomid,
-                "enttid": that.enttid, "enttname": that.enttname,
+                "enttid": that._enttdetails.enttid, "enttname": that._enttdetails.enttname,
                 "tmid": that.tmnm.value, "tmnm": that.tmnm.label,
                 "onrid": that.onrname.value, "onrname": that.onrname.label,
                 "wsautoid": that._wsdetails.wsautoid, "isactive": true
@@ -246,11 +209,7 @@ export class AddTeamOwnershipComponent implements OnInit {
     saveTeamOwnershipMap() {
         var that = this;
 
-        if (that.enttid == 0) {
-            that._msg.Show(messageType.error, "Error", "Select Entity");
-            $(".enttname input").focus();
-        }
-        else if (that.tmid == 0) {
+        if (that.tmid == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Team Name");
             $(".tmnm input").focus();
         }
@@ -302,7 +261,7 @@ export class AddTeamOwnershipComponent implements OnInit {
 
         that._tomservice.getTeamOwnershipMap({
             "flag": "edit",
-            "enttid": that.enttid,
+            "enttid": that._enttdetails.enttid,
             "tmid": that.tmid,
             "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {

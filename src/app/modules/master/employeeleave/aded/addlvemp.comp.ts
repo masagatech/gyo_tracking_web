@@ -16,12 +16,10 @@ declare var commonfun: any;
 export class AddLeaveEmployeeComponent implements OnInit {
     loginUser: LoginUserModel;
     _wsdetails: any = [];
+    _enttdetails: any = [];
 
     elid: number = 0;
-    entityDT: any = [];
-    enttid: number = 0;
-    enttname: any = [];
-
+    
     employeeDT: any = [];
     empid: number = 0;
     empname: any = [];
@@ -41,6 +39,7 @@ export class AddLeaveEmployeeComponent implements OnInit {
         private _lvservice: LeaveEmployeeService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
 
         this.fillLeaveTypeDropDown();
     }
@@ -53,37 +52,6 @@ export class AddLeaveEmployeeComponent implements OnInit {
         this.getLeaveEmployee();
     }
 
-    // Auto Completed Entity
-
-    getEntityData(event) {
-        let query = event.query;
-
-        this._autoservice.getAutoData({
-            "flag": "entity",
-            "uid": this.loginUser.uid,
-            "ucode": this.loginUser.ucode,
-            "utype": this.loginUser.utype,
-            "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
-        }).subscribe((data) => {
-            this.entityDT = data.data;
-        }, err => {
-            this._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        });
-    }
-
-    // Selected Entity
-
-    selectEntityData(event) {
-        this.enttid = event.value;
-        
-        Cookie.set("_enttid_", event.value);
-        Cookie.set("_enttnm_", event.label);
-    }
-
     getEmployeeData(event) {
         let query = event.query;
 
@@ -92,7 +60,7 @@ export class AddLeaveEmployeeComponent implements OnInit {
             "uid": this.loginUser.uid,
             "ucode": this.loginUser.ucode,
             "utype": this.loginUser.utype,
-            "enttid": this.enttid,
+            "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
             "wsautoid": this._wsdetails.wsautoid,
             "search": query
@@ -145,11 +113,7 @@ export class AddLeaveEmployeeComponent implements OnInit {
     saveLeaveEmployee() {
         var that = this;
 
-        if (that.enttid == 0) {
-            that._msg.Show(messageType.error, "Error", "Enter Entity Name");
-            $(".enttname input").focus();
-        }
-        else if (that.empid == 0) {
+        if (that.empid == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Employee Name");
             $(".empname input").focus();
         }
@@ -166,7 +130,7 @@ export class AddLeaveEmployeeComponent implements OnInit {
 
             var saveLeaveEmployee = {
                 "elid": that.elid,
-                "enttid": that.enttid,
+                "enttid": that._enttdetails.enttid,
                 "empid": that.empid,
                 "frmdt": that.frmdt,
                 "todt": that.todt,
@@ -234,9 +198,6 @@ export class AddLeaveEmployeeComponent implements OnInit {
                 that._lvservice.getLeaveEmployee(params).subscribe(data => {
                     try {
                         that.elid = data.data[0].elid;
-                        that.enttid = data.data[0].enttid;
-                        that.enttname.value = data.data[0].enttid;
-                        that.enttname.label = data.data[0].enttname;
                         that.empid = data.data[0].empid;
                         that.empname.value = data.data[0].empid;
                         that.empname.label = data.data[0].empname;

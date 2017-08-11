@@ -18,13 +18,6 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <div class="form-line">
-                        <label class="control-label">Entity Name <strong>*</strong></label>
-                        <p-autoComplete id="enttname" name="enttname" [(ngModel)]="enttname" [tabindex]="1" (onSelect)="selectEntityData($event)" [suggestions]="entityDT" (completeMethod)="getEntityData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete enttname"></p-autoComplete>
-                        <span class="material-icons inputserachico">search</span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="form-line">
                         <label class="control-label">Employee Name <strong>*</strong></label>
                         <p-autoComplete id="empname" name="empname" [(ngModel)]="empname" [tabindex]="1" (onSelect)="selectEmployeeData($event)" [suggestions]="employeeDT" (completeMethod)="getEmployeeData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete empname"></p-autoComplete>
                         <span class="material-icons inputserachico">search</span>

@@ -16,13 +16,9 @@ declare var commonfun: any;
 export class AddVoucherComponent implements OnInit {
     loginUser: LoginUserModel;
     _wsdetails: any = [];
+    _enttdetails: any = [];
 
     autoid: number = 0;
-
-    entityDT: any = [];
-    enttdata: any = [];
-    enttid: number = 0;
-    enttname: string = "";
 
     employeeDT: any = [];
     empdata: any = [];
@@ -46,7 +42,7 @@ export class AddVoucherComponent implements OnInit {
         private _vchservice: VoucherService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
-
+        this._enttdetails = Globals.getEntityDetails();
     }
 
     public ngOnInit() {
@@ -55,38 +51,6 @@ export class AddVoucherComponent implements OnInit {
         }, 100);
 
         this.getVoucherDetails();
-    }
-
-    // Auto Completed Entity
-
-    getEntityData(event) {
-        let query = event.query;
-
-        this._autoservice.getAutoData({
-            "flag": "entity",
-            "uid": this.loginUser.uid,
-            "ucode": this.loginUser.ucode,
-            "utype": this.loginUser.utype,
-            "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
-        }).subscribe((data) => {
-            this.entityDT = data.data;
-        }, err => {
-            this._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        });
-    }
-
-    // Selected Entity
-
-    selectEntityData(event) {
-        this.enttid = event.value;
-        this.enttname = event.label;
-
-        Cookie.set("_enttid_", event.value);
-        Cookie.set("_enttnm_", event.label);
     }
 
     // Auto Completed Employee
@@ -99,7 +63,7 @@ export class AddVoucherComponent implements OnInit {
             "uid": this.loginUser.uid,
             "ucode": this.loginUser.ucode,
             "utype": this.loginUser.utype,
-            "enttid": this.enttid,
+            "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
             "wsautoid": this._wsdetails.wsautoid,
             "search": query
@@ -126,7 +90,7 @@ export class AddVoucherComponent implements OnInit {
 
         this._autoservice.getAutoData({
             "flag": "exmpwiseexp",
-            "enttid": this.enttid,
+            "enttid": this._enttdetails.enttid,
             "empid": this.empid,
             "wsautoid": this._wsdetails.wsautoid,
             "search": query
@@ -151,11 +115,7 @@ export class AddVoucherComponent implements OnInit {
     addVoucherRow() {
         var that = this;
 
-        if (that.enttid == 0) {
-            that._msg.Show(messageType.error, "Error", "Enter Entity Name");
-            $(".enttname input").focus();
-        }
-        else if (that.empid == 0) {
+        if (that.empid == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Employye Name");
             $(".empname input").focus();
         }
@@ -173,7 +133,7 @@ export class AddVoucherComponent implements OnInit {
         }
         else {
             that.voucherData.push({
-                "autoid": that.autoid, "enttid": that.enttid, "enttname": that.enttname,
+                "autoid": that.autoid, "enttid": that._enttdetails.enttid, "enttname": that._enttdetails.enttname,
                 "empid": that.empid, "empname": that.empname, "expid": that.expid, "expname": that.expname,
                 "amount": that.amount, "noofdoc": that.noofdoc, "remark": that.remark,
                 "cuid": that.loginUser.ucode, "wsautoid": that._wsdetails.wsautoid, "isactive": true
@@ -264,11 +224,6 @@ export class AddVoucherComponent implements OnInit {
 
                 that._vchservice.getVoucherDetails(params).subscribe(data => {
                     try {
-                        that.enttid = data.data[0].enttid;
-                        that.enttname = data.data[0].enttname;
-                        that.enttdata.value = that.enttid;
-                        that.enttdata.label = that.enttname;
-
                         that.empid = data.data[0].empid;
                         that.empname = data.data[0].empname;
                         that.empdata.value = that.empid;

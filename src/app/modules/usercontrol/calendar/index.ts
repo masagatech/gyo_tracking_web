@@ -1,6 +1,6 @@
 import { NgModule, Component, OnInit, Input, ViewChild } from '@angular/core';
 import { InputMaskModule, InputMask } from 'primeng/primeng';
-import { MessageService, messageType } from '../../../_services/messages/message-service';
+import { MessageService, messageType } from '@services';
 
 declare var $: any;
 declare var moment: any;

@@ -15,10 +15,7 @@ declare var google: any;
 export class AddEmployeeComponent implements OnInit {
     loginUser: LoginUserModel;
     _wsdetails: any = [];
-
-    entityDT: any = [];
-    enttid: number = 0;
-    enttname: any = [];
+    _enttdetails: any = [];
 
     stateDT: any = [];
     cityDT: any = [];
@@ -58,6 +55,7 @@ export class AddEmployeeComponent implements OnInit {
         private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
 
         this.getUploadConfig();
 
@@ -72,37 +70,6 @@ export class AddEmployeeComponent implements OnInit {
         }, 100);
 
         this.getEmployeeDetails();
-    }
-
-    // Auto Completed Entity
-
-    getEntityData(event) {
-        let query = event.query;
-
-        this._autoservice.getAutoData({
-            "flag": "entity",
-            "uid": this.loginUser.uid,
-            "ucode": this.loginUser.ucode,
-            "utype": this.loginUser.utype,
-            "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
-        }).subscribe((data) => {
-            this.entityDT = data.data;
-        }, err => {
-            this._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        });
-    }
-
-    // Selected Entity
-
-    selectEntityData(event) {
-        this.enttid = event.value;
-
-        Cookie.set("_enttid_", event.value);
-        Cookie.set("_enttnm_", event.label);
     }
 
     // Get State DropDown
@@ -312,11 +279,7 @@ export class AddEmployeeComponent implements OnInit {
     saveEmployeeInfo() {
         var that = this;
 
-        if (that.enttid == 0) {
-            that._msg.Show(messageType.error, "Error", "Select Entity");
-            $(".enttid").focus();
-        }
-        else if (that.empcode == "") {
+        if (that.empcode == "") {
             that._msg.Show(messageType.error, "Error", "Enter emp Code");
             $(".empcode").focus();
         }
@@ -358,7 +321,7 @@ export class AddEmployeeComponent implements OnInit {
                 "city": that.city,
                 "area": that.area,
                 "pincode": that.pincode.toString() == "" ? 0 : that.pincode,
-                "enttid": that.enttid,
+                "enttid": that._enttdetails.enttid,
                 "attachdocs": that.attachDocsDT,
                 "remark1": that.remark1,
                 "cuid": that.loginUser.ucode,
@@ -419,10 +382,6 @@ export class AddEmployeeComponent implements OnInit {
                 }).subscribe(data => {
                     try {
                         var _empdata = data.data;
-
-                        that.enttid = data.data[0].enttid;
-                        that.enttname.value = _empdata[0].enttid;
-                        that.enttname.label = _empdata[0].enttname;
                         that.empid = _empdata[0].empid;
                         that.loginid = _empdata[0].loginid;
                         that.empcode = _empdata[0].empcode;
@@ -465,12 +424,6 @@ export class AddEmployeeComponent implements OnInit {
                 })
             }
             else {
-                if (Cookie.get('_enttnm_') != null) {
-                    that.enttid = parseInt(Cookie.get('_enttid_'));
-                    that.enttname.value = parseInt(Cookie.get('_enttid_'));
-                    that.enttname.label = Cookie.get('_enttnm_');
-                }
-
                 that.resetEmployeeFields();
                 commonfun.loaderhide();
             }

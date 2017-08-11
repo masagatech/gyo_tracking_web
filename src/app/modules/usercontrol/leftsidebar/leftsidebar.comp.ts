@@ -1,11 +1,7 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MessageService, messageType } from '../../../_services/messages/message-service';
-import { AuthenticationService } from '../../../_services/auth-service'
-import { MenuService } from '../../../_services/menus/menu-service';
-import { LoginService } from '../../../_services/login/login-service';
-import { LoginUserModel } from '../../../_model/user_model';
-import { Globals } from '../../../_const/globals';
+import { MessageService, messageType, MenuService, LoginService, AuthenticationService, CommonService } from '@services';
+import { LoginUserModel, Globals } from '@models';
 
 declare var $: any;
 
@@ -16,12 +12,14 @@ declare var $: any;
 
 export class LeftSideBarComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
-
     _wsdetails: any = [];
+    _enttdetails: any = [];
 
-    userfullname: string = "";
-    usertype: string = "";
-    userphoto: string = "";
+    global = new Globals();
+
+    ufullname: string = "";
+    utype: string = "";
+    uphoto: string = "";
     wsname: string = "";
     toggleClass: string = "";
 
@@ -31,15 +29,16 @@ export class LeftSideBarComponent implements OnInit, OnDestroy {
     constructor(private _authservice: AuthenticationService, public _menuservice: MenuService, private _loginservice: LoginService,
         private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService) {
         this.loginUser = this._loginservice.getUser();
-        this.userfullname = this.loginUser.fullname;
-        this.usertype = this.loginUser.utype;
-        this.userphoto = this.loginUser.uphoto;
+        this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
+
+        this.ufullname = this.loginUser.fullname;
+        this.utype = this.loginUser.utype;
+        this.uphoto = this.global.uploadurl + this.loginUser.uphoto;
         this.wsname = this.loginUser.wsname;
 
         this.getMainMenuList();
         this.getParentMenuList();
-        
-        this._wsdetails = Globals.getWSDetails();
     }
 
     ngOnInit() {
@@ -50,7 +49,8 @@ export class LeftSideBarComponent implements OnInit, OnDestroy {
         var that = this;
 
         that._menuservice.getMenuDetails({
-            "flag": "main", "uid": that.loginUser.uid, "issysadmin": that.loginUser.issysadmin, "utype": that.loginUser.utype
+            "flag": "main", "uid": that.loginUser.uid, "issysadmin": that.loginUser.issysadmin,
+            "utype": that.loginUser.utype
         }).subscribe(data => {
             that.mainMenuDT = data.data;
 
@@ -68,7 +68,8 @@ export class LeftSideBarComponent implements OnInit, OnDestroy {
         var that = this;
 
         that._menuservice.getMenuDetails({
-            "flag": "parent", "uid": that.loginUser.uid, "issysadmin": that.loginUser.issysadmin, "utype": that.loginUser.utype
+            "flag": "parent", "uid": that.loginUser.uid, "issysadmin": that.loginUser.issysadmin,
+            "utype": that.loginUser.utype
         }).subscribe(data => {
             that.parentMenuDT = data.data;
         }, err => {

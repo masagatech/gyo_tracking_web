@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ModuleComponent } from '../modules/module.comp';
-import { AuthGuard } from '../_services/authguard-service';
-import { SharedComponentModule } from '../_shared/sharedcomp.module';
+import { SharedComponentModule } from '@services';
+import { AuthGuard } from '@services';
 
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -21,7 +21,7 @@ export const routes = [
                     // Trip Tracking
                     { path: 'triptracking', loadChildren: './triptracking#TripTrackingModule' },
 
-                    // Masters
+                    // Entity
                     { path: 'master', loadChildren: './master#MasterModule' },
 
                     // Reports
@@ -29,8 +29,6 @@ export const routes = [
 
                     // Setting
                     { path: 'settings', loadChildren: './settings#SettingsModule' },
-
-                    // { path: 'no-page', component: NoPageComponent },
                 ]
             }
         ]

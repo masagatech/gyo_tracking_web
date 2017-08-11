@@ -12,14 +12,11 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 })
 
 export class ViewEmployeeComponent implements OnInit {
-    employeeDT: any = [];
     loginUser: LoginUserModel;
-
     _wsdetails: any = [];
+    _enttdetails: any = [];
 
-    entityDT: any = [];
-    enttid: number = 0;
-    enttname: any = [];
+    employeeDT: any = [];
 
     global = new Globals();
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
@@ -28,60 +25,13 @@ export class ViewEmployeeComponent implements OnInit {
         private _loginservice: LoginService, private _autoservice: CommonService, private _empservice: EmployeeService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
-
-        this.viewEmployeeDataRights();
-    }
-
-    public ngOnInit() {
-        setTimeout(function () {
-            commonfun.navistyle();
-            $(".entityname input").focus();
-        }, 100);
-    }
-
-    // Auto Completed Entity
-
-    getEntityData(event) {
-        let query = event.query;
-
-        this._autoservice.getAutoData({
-            "flag": "entity",
-            "uid": this.loginUser.uid,
-            "ucode": this.loginUser.ucode,
-            "utype": this.loginUser.utype,
-            "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
-        }).subscribe((data) => {
-            this.entityDT = data.data;
-        }, err => {
-            this._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        });
-    }
-
-    // Selected Owners
-
-    selectEntityData(event) {
-        this.enttid = event.value;
-
-        Cookie.set("_enttid_", event.value);
-        Cookie.set("_enttnm_", event.label);
+        this._enttdetails = Globals.getEntityDetails();
 
         this.getEmployeeDetails();
     }
 
-    public viewEmployeeDataRights() {
-        var that = this;
-
-        if (Cookie.get('_enttnm_') != null) {
-            that.enttid = parseInt(Cookie.get('_enttid_'));
-            that.enttname.value = parseInt(Cookie.get('_enttid_'));
-            that.enttname.label = Cookie.get('_enttnm_');
-
-            that.getEmployeeDetails();
-        }
+    public ngOnInit() {
+        
     }
 
     getEmployeeDetails() {
@@ -92,7 +42,7 @@ export class ViewEmployeeComponent implements OnInit {
 
         params = {
             "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
-            "enttid": that.enttid, "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid
+            "enttid": that._enttdetails.enttid, "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid
         }
 
         console.log(JSON.stringify(params));

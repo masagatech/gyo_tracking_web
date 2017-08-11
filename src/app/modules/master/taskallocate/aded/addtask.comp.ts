@@ -14,17 +14,22 @@ declare var google: any;
 
 export class AddTaskAllocateComponent implements OnInit {
     loginUser: LoginUserModel;
+    _wsdetails: any = [];
+    _enttdetails: any = [];
 
     tskid: number = 0;
 
-    entityDT: any = [];
-    enttid: number = 0;
-    enttname: any = [];
-
     employeeDT: any = [];
+    empdata: any = [];
     employeeList: any = [];
     empid: number = 0;
-    empname: any = [];
+    empname: string = "";
+
+    tagDT: any = [];
+    tagdata: any = [];
+    tagList: any = [];
+    tagid: number = 0;
+    tagname: string = "";
 
     tsktitle: string = "";
     tskdesc: string = "";
@@ -36,54 +41,19 @@ export class AddTaskAllocateComponent implements OnInit {
 
     remark: string = "";
 
-    _wsdetails: any = [];
     private subscribeParameters: any;
 
     constructor(private _atservice: TaskAllocateService, private _routeParams: ActivatedRoute, private _router: Router,
         private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
 
         this.fillNatureOfGroupDDL();
     }
 
     public ngOnInit() {
-        setTimeout(function () {
-            $(".enttname input").focus();
-        }, 100);
-
         this.getTaskAllocate();
-    }
-
-    // Auto Completed Entity
-
-    getEntityData(event) {
-        let query = event.query;
-
-        this._autoservice.getAutoData({
-            "flag": "entity",
-            "uid": this.loginUser.uid,
-            "ucode": this.loginUser.ucode,
-            "utype": this.loginUser.utype,
-            "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
-        }).subscribe((data) => {
-            this.entityDT = data.data;
-        }, err => {
-            this._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        });
-    }
-
-    // Selected Entity
-
-    selectEntityData(event) {
-        this.enttid = event.value;
-
-        Cookie.set("_enttid_", event.value);
-        Cookie.set("_enttnm_", event.label);
     }
 
     // Auto Completed Employee
@@ -96,7 +66,7 @@ export class AddTaskAllocateComponent implements OnInit {
             "uid": this.loginUser.uid,
             "ucode": this.loginUser.ucode,
             "utype": this.loginUser.utype,
-            "enttid": this.enttid,
+            "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
             "wsautoid": this._wsdetails.wsautoid,
             "search": query
@@ -113,6 +83,7 @@ export class AddTaskAllocateComponent implements OnInit {
 
     selectEmployeeData(event) {
         this.empid = event.value;
+        this.empname = event.label;
         this.addEmployeeList();
     }
 
@@ -143,12 +114,13 @@ export class AddTaskAllocateComponent implements OnInit {
 
         if (!duplicateEmployee) {
             that.employeeList.push({
-                "empid": that.empname.value, "empname": that.empname.label
+                "empid": that.empid, "empname": that.empname
             });
         }
 
         that.empid = 0;
-        that.empname = [];
+        that.empname = "";
+        that.empdata = [];
         $(".empname input").focus();
         commonfun.loaderhide("#divEmployee");
     }
@@ -160,6 +132,81 @@ export class AddTaskAllocateComponent implements OnInit {
         row.isactive = false;
     }
 
+    // Auto Completed Tag
+
+    getTagData(event) {
+        let query = event.query;
+
+        this._autoservice.getAutoData({
+            "flag": "tag",
+            "uid": this.loginUser.uid,
+            "ucode": this.loginUser.ucode,
+            "utype": this.loginUser.utype,
+            "enttid": this._enttdetails.enttid,
+            "issysadmin": this.loginUser.issysadmin,
+            "wsautoid": this._wsdetails.wsautoid,
+            "search": query
+        }).subscribe((data) => {
+            this.employeeDT = data.data;
+        }, err => {
+            this._msg.Show(messageType.error, "Error", err);
+        }, () => {
+
+        });
+    }
+
+    // Selected Tag
+
+    selectTagData(event) {
+        this.tagid = event.value;
+        this.tagname = event.label;
+        this.addTagList();
+    }
+
+    // Check Duplicate Tag
+
+    isDuplicateTag() {
+        var that = this;
+
+        for (var i = 0; i < that.tagList.length; i++) {
+            var field = that.tagList[i];
+
+            if (field.tagid == this.tagid) {
+                this._msg.Show(messageType.error, "Error", "Duplicate Tag not Allowed");
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // Read Get Tag
+
+    addTagList() {
+        var that = this;
+        commonfun.loader("#divTag");
+
+        var duplicateTag = that.isDuplicateTag();
+
+        if (!duplicateTag) {
+            that.tagList.push({
+                "tagid": that.tagid, "tagname": that.tagname
+            });
+        }
+
+        that.tagid = 0;
+        that.tagname = "";
+        that.tagdata = [];
+        $(".tagname input").focus();
+        commonfun.loaderhide("#divTag");
+    }
+
+    // Delete Tag
+
+    deleteTag(row) {
+        this.tagList.splice(this.tagList.indexOf(row), 1);
+        row.isactive = false;
+    }
 
     // Get Allocate Task
 
@@ -198,7 +245,11 @@ export class AddTaskAllocateComponent implements OnInit {
         that.ntrgrp = "";
         that.remark = "";
         that.empid = 0;
-        that.empname = [];
+        that.empname = "";
+        that.empdata = [];
+        that.tagid = 0;
+        that.tagname = "";
+        that.tagdata = [];
         that.employeeList = [];
     }
 
@@ -207,11 +258,7 @@ export class AddTaskAllocateComponent implements OnInit {
     saveTaskAllocate() {
         var that = this;
 
-        if (that.enttid == 0) {
-            that._msg.Show(messageType.error, "Error", "Select Entity");
-            $(".enttname input").focus();
-        }
-        else if (that.tsktitle == "") {
+        if (that.tsktitle == "") {
             that._msg.Show(messageType.error, "Error", "Enter Task Title");
             $(".task").focus();
         }
@@ -237,10 +284,14 @@ export class AddTaskAllocateComponent implements OnInit {
             var selectedEmployee: string[] = [];
             selectedEmployee = Object.keys(that.employeeList).map(function (k) { return that.employeeList[k].empid });
 
+            var selectedTag: string[] = [];
+            selectedTag = Object.keys(that.tagList).map(function (k) { return that.tagList[k].tagid });
+
             var saveemp = {
                 "tskid": that.tskid,
-                "enttid": that.enttid,
+                "enttid": that._enttdetails.enttid,
                 "empid": selectedEmployee,
+                "tagid": selectedTag,
                 "tsktitle": that.tsktitle,
                 "tskdesc": that.tskdesc,
                 "frmdt": that.frmdt,
@@ -292,6 +343,10 @@ export class AddTaskAllocateComponent implements OnInit {
         var that = this;
         commonfun.loader();
 
+        var _taskdata = [];
+        var _empdata = [];
+        var _tagdata = [];
+
         that.subscribeParameters = that._routeParams.params.subscribe(params => {
             if (params['id'] !== undefined) {
                 that.tskid = params['id'];
@@ -302,19 +357,21 @@ export class AddTaskAllocateComponent implements OnInit {
                     "wsautoid": that._wsdetails.wsautoid
                 }).subscribe(data => {
                     try {
-                        console.log(data.data);
+                        _taskdata = data.data[0]._taskdata;
 
-                        that.tskid = data.data[0].tskid;
-                        that.enttid = data.data[0].enttid;
-                        that.enttname.value = data.data[0].enttid;
-                        that.enttname.label = data.data[0].enttname;
-                        that.employeeList = data.data[0].empdata;
-                        that.tsktitle = data.data[0].tsktitle;
-                        that.tskdesc = data.data[0].tskdesc;
-                        that.frmdt = data.data[0].frmdt;
-                        that.todt = data.data[0].todt;
-                        that.ntrgrp = data.data[0].ntrgrp;
-                        that.remark = data.data[0].remark;
+                        that.tskid = _taskdata[0].tskid;
+                        that.tsktitle = _taskdata[0].tsktitle;
+                        that.tskdesc = _taskdata[0].tskdesc;
+                        that.frmdt = _taskdata[0].frmdt;
+                        that.todt = _taskdata[0].todt;
+                        that.ntrgrp = _taskdata[0].ntrgrp;
+                        that.remark = _taskdata[0].remark;
+                        
+                        _empdata = data.data[0]._empdata == null ? [] : data.data[0]._empdata;
+                        _tagdata = data.data[0]._tagdata == null ? [] : data.data[0]._tagdata;
+
+                        that.employeeList = _empdata;
+                        that.tagList = _tagdata;
                     }
                     catch (e) {
                         that._msg.Show(messageType.error, "Error", e);
@@ -330,12 +387,6 @@ export class AddTaskAllocateComponent implements OnInit {
                 })
             }
             else {
-                if (Cookie.get('_enttnm_') != null) {
-                    that.enttid = parseInt(Cookie.get('_enttid_'));
-                    that.enttname.value = parseInt(Cookie.get('_enttid_'));
-                    that.enttname = Cookie.get('_enttnm_');
-                }
-
                 that.resetTaskFields();
                 commonfun.loaderhide();
             }

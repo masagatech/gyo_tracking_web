@@ -1,0 +1,47 @@
+<div class="card">
+    <div class="header">
+        <div class="row clearfix">
+            <div class="col-md-2">
+                <h4>Employee Trips</h4>
+            </div>
+            <div class="col-md-1" style="padding-top: 20px;">
+                <div class="form-group">
+                    <button type="button" class="btn btn-theme btn-xs" (click)="getTripReports()">
+                        <span class="material-icons">subdirectory_arrow_right</span>
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-5" style="padding-top: 20px;" align="right">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Export <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a role="button" (click)="exportToCSV()"><i class="fa fa-file-excel-o"></i> CSV</a></li>
+                        <li><a role="button" (click)="exportToPDF()"><i class="fa fa-file-pdf-o"></i> PDF</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="body no-padding">
+        <div #attnatt class="row clearfix">
+            <div class="col-md-12">
+                <p-dataTable [value]="tripData">
+                    <p-column field="chkdate" header="Trip Date" [style]="{'text-align': 'left'}"></p-column>
+                    <p-column field="strlat" header="Start Latitude" [style]="{'width': '130px', 'text-align': 'right'}"></p-column>
+                    <p-column field="endlat" header="End Latitude" [style]="{'width': '130px', 'text-align': 'right'}"></p-column>
+                    <p-column field="strlng" header="Start Longitude" [style]="{'width': '130px', 'text-align': 'right'}"></p-column>
+                    <p-column field="endlng" header="End Longitude" [style]="{'width': '130px', 'text-align': 'right'}"></p-column>
+                    <p-column field="chkin" header="Check In" [style]="{'width': '100px', 'text-align': 'left'}"></p-column>
+                    <p-column field="chkout" header="Check Out" [style]="{'width': '100px', 'text-align': 'left'}"></p-column>
+                    <p-column field="stops" header="Stops" [style]="{'width': '60px', 'text-align': 'right'}"></p-column>
+                    <p-column field="task" header="Task" [style]="{'width': '60px', 'text-align': 'right'}"></p-column>
+                    <p-column field="kilometer" header="Kilometer" [style]="{'width': '130px', 'text-align': 'right'}"></p-column>
+                </p-dataTable>
+            </div>
+        </div>
+    </div>
+</div>

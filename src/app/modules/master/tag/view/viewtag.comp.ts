@@ -12,14 +12,11 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 })
 
 export class ViewTagComponent implements OnInit {
-    tagDT: any = [];
     loginUser: LoginUserModel;
-
     _wsdetails: any = [];
+    _enttdetails: any = [];
 
-    entityDT: any = [];
-    enttid: number = 0;
-    enttname: any = [];
+    tagDT: any = [];
 
     global = new Globals();
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
@@ -28,45 +25,13 @@ export class ViewTagComponent implements OnInit {
         private _tmservice: TagService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
 
         this.getTagDetails();
     }
 
     public ngOnInit() {
 
-    }
-
-    // Auto Completed Entity
-
-    getEntityData(event) {
-        let query = event.query;
-
-        this._autoservice.getAutoData({
-            "flag": "entity",
-            "uid": this.loginUser.uid,
-            "ucode": this.loginUser.ucode,
-            "utype": this.loginUser.utype,
-            "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
-        }).subscribe((data) => {
-            this.entityDT = data.data;
-        }, err => {
-            this._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        });
-    }
-
-    // Selected Entity
-
-    selectEntityData(event) {
-        this.enttid = event.value;
-        
-        Cookie.set("_enttid_", event.value);
-        Cookie.set("_enttnm_", event.label);
-
-        this.getTagDetails();
     }
 
     getTagDetails() {
@@ -77,7 +42,7 @@ export class ViewTagComponent implements OnInit {
 
         params = {
             "flag": "all",
-            "enttid": that.enttid,
+            "enttid": that._enttdetails.enttid,
             "wsautoid": that._wsdetails.wsautoid
         }
 
