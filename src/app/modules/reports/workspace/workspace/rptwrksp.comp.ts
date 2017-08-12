@@ -12,29 +12,25 @@ import jsPDF from 'jspdf'
 })
 
 export class WorkspaceReportsComponent implements OnInit, OnDestroy {
-    wrkspDT: any = [];
     loginUser: LoginUserModel;
-
     _wsdetails: any = [];
 
-    actaddrights: string = "";
-    acteditrights: string = "";
-    actviewrights: string = "";
+    wrkspDT: any = [];
 
     @ViewChild('workspace') workspace: ElementRef;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
         public _menuservice: MenuService, private _loginservice: LoginService, private _wspservice: WorkspaceRepoertsService) {
         this.loginUser = this._loginservice.getUser();
-        this.viewWorkspaceDataRights();
-
         this._wsdetails = Globals.getWSDetails();
+
+        this.getWorkspaceDetails();
     }
 
     public ngOnInit() {
         setTimeout(function () {
             commonfun.navistyle();
-            
+
             $.AdminBSB.islocked = true;
             $.AdminBSB.leftSideBar.Close();
             $.AdminBSB.rightSideBar.activate();
@@ -57,58 +53,30 @@ export class WorkspaceReportsComponent implements OnInit, OnDestroy {
         });
     }
 
-    public viewWorkspaceDataRights() {
-        var that = this;
-        var addRights = [];
-        var editRights = [];
-        var viewRights = [];
-
-        that._menuservice.getMenuDetails({
-         "flag": "actrights", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "mcode": "rptwrksp", "utype": that.loginUser.utype
-
-        }).subscribe(data => {
-            addRights = data.data.filter(a => a.mrights === "add");
-            editRights = data.data.filter(a => a.mrights === "edit");
-            viewRights = data.data.filter(a => a.mrights === "view");
-
-            that.actaddrights = addRights.length !== 0 ? addRights[0].mrights : "";
-            that.acteditrights = editRights.length !== 0 ? editRights[0].mrights : "";
-            that.actviewrights = viewRights.length !== 0 ? viewRights[0].mrights : "";
-
-            that.getWorkspaceDetails();
-        }, err => {
-            that._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        })
-    }
-
     getWorkspaceDetails() {
         var that = this;
 
-        if (that.actviewrights === "view") {
-            commonfun.loader();
+        commonfun.loader();
 
-            that._wspservice.getWorkspaceDetails({
-                "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
-                "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid
-            }).subscribe(data => {
-                try {
-                    that.wrkspDT = data.data;
-                }
-                catch (e) {
-                    that._msg.Show(messageType.error, "Error", e);
-                }
-                
-                commonfun.loaderhide();
-            }, err => {
-                that._msg.Show(messageType.error, "Error", err);
-                console.log(err);
-                commonfun.loaderhide();
-            }, () => {
+        that._wspservice.getWorkspaceDetails({
+            "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
+            "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid
+        }).subscribe(data => {
+            try {
+                that.wrkspDT = data.data;
+            }
+            catch (e) {
+                that._msg.Show(messageType.error, "Error", e);
+            }
 
-            })
-        }
+            commonfun.loaderhide();
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+            commonfun.loaderhide();
+        }, () => {
+
+        })
     }
 
     public ngOnDestroy() {

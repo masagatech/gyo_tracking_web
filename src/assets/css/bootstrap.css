@@ -1472,7 +1472,7 @@ hr {
 }
 
 .hr {
-    margin: 10px!important;
+    margin: 10px 0!important;
     border-top: 0!important;
 }
 

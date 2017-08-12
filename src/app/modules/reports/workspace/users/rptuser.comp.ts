@@ -16,6 +16,15 @@ declare var $: any;
 })
 
 export class UserReportsComponent implements OnInit, OnDestroy {
+    loginUser: LoginUserModel;
+    _wsdetails: any = [];
+    _enttdetails: any = [];
+
+    entityDT: any = [];
+    enttdata: any = [];
+    enttid: number = 0;
+    enttname: string = "";
+
     autoUserDT: any = [];
 
     autouid: number = 0;
@@ -25,13 +34,9 @@ export class UserReportsComponent implements OnInit, OnDestroy {
     srcutype: string = "all";
 
     usersDT: any = [];
-    loginUser: LoginUserModel;
 
-    _wsdetails: any = [];
-
-    actaddrights: string = "";
-    acteditrights: string = "";
-    actviewrights: string = "";
+    isShowGrid: boolean = true;
+    isShowList: boolean = false;
 
     @ViewChild('users') users: ElementRef;
 
@@ -39,6 +44,7 @@ export class UserReportsComponent implements OnInit, OnDestroy {
         private _autoservice: CommonService, private _loginservice: LoginService, private _userservice: UserService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
 
         this.fillUserTypeDropDown();
         this.viewUserDataRights();
@@ -46,6 +52,7 @@ export class UserReportsComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         var that = this;
+        that.refreshButtons();
 
         setTimeout(function () {
             commonfun.navistyle();
@@ -54,6 +61,30 @@ export class UserReportsComponent implements OnInit, OnDestroy {
             $.AdminBSB.leftSideBar.Close();
             $.AdminBSB.rightSideBar.activate();
         }, 100);
+    }
+
+    isshUser(viewtype) {
+        var that = this;
+        commonfun.loader("#divShow");
+
+        if (viewtype == "grid") {
+            that.isShowGrid = true;
+            that.isShowList = false;
+            commonfun.loaderhide("#divShow");
+        }
+        else {
+            that.isShowGrid = false;
+            that.isShowList = true;
+            commonfun.loaderhide("#divShow");
+        }
+
+        that.refreshButtons();
+    }
+
+    refreshButtons() {
+        setTimeout(function () {
+            commonfun.navistyle();
+        }, 0);
     }
 
     // Export
@@ -91,6 +122,41 @@ export class UserReportsComponent implements OnInit, OnDestroy {
         })
     }
 
+    // Auto Completed Entity
+
+    getEntityData(event) {
+        let query = event.query;
+
+        this._autoservice.getAutoData({
+            "flag": "entity",
+            "uid": this.loginUser.uid,
+            "ucode": this.loginUser.ucode,
+            "utype": this.loginUser.utype,
+            "issysadmin": this.loginUser.issysadmin,
+            "enttid": this.enttid,
+            "wsautoid": this._wsdetails.wsautoid,
+            "search": query
+        }).subscribe((data) => {
+            this.entityDT = data.data;
+        }, err => {
+            this._msg.Show(messageType.error, "Error", err);
+        }, () => {
+
+        });
+    }
+
+    // Selected Owners
+
+    selectEntityData(event) {
+        this.enttid = event.value;
+        this.enttname = event.label;
+
+        Cookie.set("_enttid_", event.value);
+        Cookie.set("_enttnm_", event.label);
+
+        this.getUserDetails();
+    }
+
     // Auto Completed User
 
     getAutoUsers(event) {
@@ -124,72 +190,77 @@ export class UserReportsComponent implements OnInit, OnDestroy {
 
     public viewUserDataRights() {
         var that = this;
-        var addRights = [];
-        var editRights = [];
-        var viewRights = [];
 
-        that._menuservice.getMenuDetails({
-            "flag": "actrights", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "mcode": "usr", "utype": that.loginUser.utype
-        }).subscribe(data => {
-            addRights = data.data.filter(a => a.mrights === "add");
-            editRights = data.data.filter(a => a.mrights === "edit");
-            viewRights = data.data.filter(a => a.mrights === "view");
+        if (Cookie.get('_srcutype_') != null) {
+            that.srcutype = Cookie.get('_srcutype_');
+        }
+        else {
+            that.srcutype = "all";
+        }
 
-            that.actaddrights = addRights.length !== 0 ? addRights[0].mrights : "";
-            that.acteditrights = editRights.length !== 0 ? editRights[0].mrights : "";
-            that.actviewrights = viewRights.length !== 0 ? viewRights[0].mrights : "";
+        if (Cookie.get('_enttnm_') != null) {
+            that.enttid = parseInt(Cookie.get('_enttid_'));
+            that.enttname = Cookie.get('_enttnm_');
+        }
+        else {
+            that.enttid = that._enttdetails.enttid;
+            that.enttname = that._enttdetails.enttname;
+        }
+        
+        that.enttdata.value = that.enttid;
+        that.enttdata.label = that.enttname;
 
-            if (Cookie.get('_srcutype_') != null) {
-                that.srcutype = Cookie.get('_srcutype_');
-                that.getUserDetails();
-            }
-        }, err => {
-            that._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        })
+        that.getUserDetails();
     }
 
     getUserDetails() {
         var that = this;
         var uparams = {};
 
-        if (that.actviewrights === "view") {
-            Cookie.set("_srcutype_", that.srcutype);
-            that.srcutype = Cookie.get('_srcutype_');
+        Cookie.set("_srcutype_", that.srcutype);
+        that.srcutype = Cookie.get('_srcutype_');
 
-            commonfun.loader("#users");
+        commonfun.loader("#users");
 
-            uparams = {
-                "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
-                "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid, "srcutype": that.srcutype,
-                "srcuid": that.autouid
-            };
+        uparams = {
+            "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
+            "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid, "srcutype": that.srcutype,
+            "srcuid": that.autouid
+        };
 
-            that._userservice.getUserDetails(uparams).subscribe(data => {
-                try {
-                    that.usersDT = data.data;
-                }
-                catch (e) {
-                    that._msg.Show(messageType.error, "Error", e);
-                }
+        that._userservice.getUserDetails(uparams).subscribe(data => {
+            try {
+                that.usersDT = data.data;
+            }
+            catch (e) {
+                that._msg.Show(messageType.error, "Error", e);
+            }
 
-                commonfun.loaderhide("#users");
-            }, err => {
-                that._msg.Show(messageType.error, "Error", err);
-                console.log(err);
-                commonfun.loaderhide("#users");
-            }, () => {
+            commonfun.loaderhide("#users");
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+            commonfun.loaderhide("#users");
+        }, () => {
 
-            })
-        }
+        })
     }
 
     resetUserDetails() {
+        Cookie.delete('_enttid_');
+        Cookie.delete('_enttnm_');
         Cookie.delete('_srcutype_');
-        this.srcutype = "";
+
+        this.enttid = 0;
+        this.enttname = "";
+        this.enttdata = [];
+        this.srcutype = "all";
+        Cookie.set("_srcutype_", this.srcutype);
+        this.srcutype = Cookie.get('_srcutype_') !== null ? Cookie.get('_srcutype_') : "";
+
         this.autouid = 0;
         this.autouname = [];
+
         this.getUserDetails();
     }
 

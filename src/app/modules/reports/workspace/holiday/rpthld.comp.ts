@@ -15,10 +15,12 @@ import jsPDF from 'jspdf'
 export class HolidayReportsComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
     _wsdetails: any = [];
+    _enttdetails: any = [];
 
     entityDT: any = [];
+    enttdata: any = [];
     enttid: number = 0;
-    enttname: any = [];
+    enttname: string = "";
 
     holidayDT: any = [];
 
@@ -28,6 +30,8 @@ export class HolidayReportsComponent implements OnInit, OnDestroy {
         private _loginservice: LoginService, private _holidayervice: HolidayService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
+
         this.viewHolidayDataRights();
     }
 
@@ -98,10 +102,17 @@ export class HolidayReportsComponent implements OnInit, OnDestroy {
 
         if (Cookie.get('_enttnm_') != null) {
             that.enttid = parseInt(Cookie.get('_enttid_'));
-            that.enttname.value = parseInt(Cookie.get('_enttid_'));
-            that.enttname.label = Cookie.get('_enttnm_');
-            that.getHolidayGrid();
+            that.enttname = Cookie.get('_enttnm_');
         }
+        else {
+            that.enttid = that._enttdetails.enttid;
+            that.enttname = that._enttdetails.enttname;
+        }
+
+        that.enttdata.value = that.enttid;
+        that.enttdata.label = that.enttname;
+
+        that.getHolidayGrid();
     }
 
     getHolidayGrid() {

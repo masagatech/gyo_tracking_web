@@ -18,13 +18,16 @@ export class TaskUpdateComponent implements OnInit {
 
     employeeDT: any = [];
     empid: number = 0;
-    empname: any = [];
+    empname: string = "";
+    empdata: any = [];
 
     frmdt: any = "";
     todt: any = "";
 
     updateTaskDT: any = [];
-    
+
+    totamt: number = 0;
+
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
         private _loginservice: LoginService, private _autoservice: CommonService, private _tnservice: TaskNatureService) {
         this.loginUser = this._loginservice.getUser();
@@ -99,21 +102,30 @@ export class TaskUpdateComponent implements OnInit {
 
     selectEmployeeData(event) {
         this.empid = event.value;
+        this.empname = event.label;
 
-        Cookie.set("_enttid_", event.value);
-        Cookie.set("_enttnm_", event.label);
+        Cookie.set("_enttid_", this.empid.toString());
+        Cookie.set("_enttnm_", this.empname);
     }
-    
+
     getTaskNature() {
         var that = this;
+        let items = null;
+
         commonfun.loader();
 
         that._tnservice.getTaskNature({
-            "flag": "reports", "frmdt": that.frmdt, "todt": that.todt,
-            "empid": that.empid, "tsktitle": ""
+            "flag": "reports", "frmdt": that.frmdt, "todt": that.todt, "empid": that.empid, "tsktitle": "",
+            "enttid": that._enttdetails.enttid, "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {
             try {
                 that.updateTaskDT = data.data;
+
+                // for (let i = 0; i < that.updateTaskDT.length; i++) {
+                //     items = that.updateTaskDT[i];
+                //     that.totamt += parseFloat(items.value);
+                //     console.log(that.totamt);
+                // }
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -131,15 +143,14 @@ export class TaskUpdateComponent implements OnInit {
 
     TotalAmount() {
         let that = this;
-        var totval = 0;
         let items = null;
 
         for (let i = 0; i < this.updateTaskDT.length; i++) {
             items = this.updateTaskDT[i];
-            totval += parseInt(items.value);
+            that.totamt += parseFloat(items.value);
         }
 
-        return totval;
+        // return that.totamt;
     }
 
     public addAllocateTask() {

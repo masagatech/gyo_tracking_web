@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, OnDestroy, ComponentFactoryResolver, forwardRef, ViewChild } from '@angular/core';
 import { TTMapService } from '@services/master';
-import { MessageService, messageType, TrackDashbord } from '@services';
+import { MessageService, messageType, LoginService, TrackDashbord } from '@services';
+import { LoginUserModel, Globals } from '@models';
 import { HOSTComponent } from '@interface';
 import { ADHOST } from '@directives';
 import { PSGComponent } from '../passengers/psg.comp';
@@ -16,6 +17,10 @@ declare var MarkerClusterer: any;
 })
 
 export class HistoryComponent implements OnInit, OnDestroy {
+    loginUser: LoginUserModel;
+    _wsdetails: any = [];
+    _enttdetails: any = [];
+
     @Input() data: any;
 
     tripDT: any = [];
@@ -57,15 +62,16 @@ export class HistoryComponent implements OnInit, OnDestroy {
     isplayerShow: boolean = false;
     taskstopsDT: any = [];
     markerCluster: any;
+
     options = {
         imagePath: './assets/img/cluster/m'
     };
 
-    enttid: number = 0;
-
-    constructor(private _msg: MessageService, private _ttmapservice: TTMapService,
+    constructor(private _msg: MessageService, private _ttmapservice: TTMapService, private _loginservice: LoginService,
         private _trackboard: TrackDashbord, private componentFactoryResolver: ComponentFactoryResolver) {
-
+        this.loginUser = this._loginservice.getUser();
+        this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
     }
 
     ngOnInit() {
@@ -74,7 +80,7 @@ export class HistoryComponent implements OnInit, OnDestroy {
         commonfun.loaderhide("#loaderbody");
         this.map = this.data.map;
 
-        this.viewTripDataRights();
+        this.getTripData();
         this.markerCluster = new MarkerClusterer(this.map, [], this.options);
 
         this.marker = new SlidingMarker({
@@ -100,23 +106,13 @@ export class HistoryComponent implements OnInit, OnDestroy {
         this.addStartStop();
     }
 
-    public viewTripDataRights() {
-        var that = this;
-
-        if (Cookie.get('_enttnm_') != null) {
-            that.enttid = parseInt(Cookie.get('_enttid_'));
-
-            that.getTripData();
-        }
-    }
-
     private getTripData() {
         var that = this;
         commonfun.loader("#loaderbody");
 
         that._trackboard.gettrackboard({
             "flag": "history",
-            "enttid": that.enttid,
+            "enttid": that._enttdetails.enttid,
             "uid": that.data.empid,
             "frmdt": that.dateFromValue,
             "todt": that.dateToValue

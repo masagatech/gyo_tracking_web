@@ -28,7 +28,7 @@ export class TripReportsComponent implements OnInit, OnDestroy {
 
     tripData: any = [];
 
-    @ViewChild('attnatt') attnatt: ElementRef;
+    @ViewChild('emptrips') attnatt: ElementRef;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
         public _menuservice: MenuService, private _loginservice: LoginService, private _rptservice: ReportsService,
@@ -53,7 +53,7 @@ export class TripReportsComponent implements OnInit, OnDestroy {
     // Export
 
     public exportToCSV() {
-        new Angular2Csv(this.tripData, 'Trip Reports', { "showLabels": true });
+        new Angular2Csv(this.tripData, 'EmployeeTrips', { "showLabels": true });
     }
 
     public exportToPDF() {
@@ -62,7 +62,7 @@ export class TripReportsComponent implements OnInit, OnDestroy {
             pagesplit: true
         };
         pdf.addHTML(this.attnatt.nativeElement, 0, 0, options, () => {
-            pdf.save("AttendentAttendance.pdf");
+            pdf.save("EmployeeTrips.pdf");
         });
     }
 
@@ -94,6 +94,8 @@ export class TripReportsComponent implements OnInit, OnDestroy {
     selectEmployeeData(event) {
         this.empid = event.value;
         this.empname = event.label;
+
+        this.getTripReports();
     }
 
     // Get Trip Data
@@ -132,7 +134,7 @@ export class TripReportsComponent implements OnInit, OnDestroy {
         var that = this;
 
         that._rptservice.getTripReports({
-            "enttid": that._enttdetails.enttid, "uid": that.empid
+            "enttid": that._enttdetails.enttid, "uid": that.empid, "vtype": "p"
         }).subscribe(data => {
             try {
                 if (data.data.length !== 0) {

@@ -13,10 +13,12 @@ import { HolidayService } from '@services/master';
 export class ViewHolidayComponent implements OnInit {
     loginUser: LoginUserModel;
     _wsdetails: any = [];
+    _enttdetails: any = [];
 
     entityDT: any = [];
+    enttdata: any = [];
     enttid: number = 0;
-    enttname: any = [];
+    enttname: string = "";
 
     holidayDT: any = [];
 
@@ -116,11 +118,17 @@ export class ViewHolidayComponent implements OnInit {
 
         if (Cookie.get('_enttnm_') != null) {
             that.enttid = parseInt(Cookie.get('_enttid_'));
-            that.enttname.value = parseInt(Cookie.get('_enttid_'));
-            that.enttname.label = Cookie.get('_enttnm_');
-
-            that.getHolidayGrid();
+            that.enttname = Cookie.get('_enttnm_');
         }
+        else {
+            that.enttid = that._enttdetails.enttid;
+            that.enttname = that._enttdetails.enttname;
+        }
+
+        that.enttdata.value = that.enttid;
+        that.enttdata.label = that.enttname;
+
+        that.getHolidayGrid();
     }
 
     getHolidayGrid() {

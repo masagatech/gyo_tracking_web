@@ -20,6 +20,10 @@ export class LoginLogReportsComponent implements OnInit, OnDestroy {
     uid: number = 0;
 
     loginlogDT: any = [];
+    logdetailsDT: any = [];
+
+    ucode: string = "";
+    fullname: string = "";
 
     @ViewChild('loginlog') loginlog: ElementRef;
 
@@ -72,7 +76,7 @@ export class LoginLogReportsComponent implements OnInit, OnDestroy {
         var that = this;
 
         that._userservice.getUserLoginLog({
-            "flag": "maxlog", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that._wsdetails.wsautoid
+            "flag": "maxlog", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that.loginUser.wsautoid
         }).subscribe(data => {
             try {
                 that.loginlogDT = data.data;
@@ -91,10 +95,62 @@ export class LoginLogReportsComponent implements OnInit, OnDestroy {
         })
     }
 
+    // Get Log Details
+
+    getLogDetails(row) {
+        var that = this;
+
+        $("#loginModal").modal('show');
+        commonfun.loader("#loginModal");
+
+        that._userservice.getUserLoginLog({
+            "flag": "userwise", "logtime": row.lastdate, "uid": row.loginid
+        }).subscribe(data => {
+            try {
+                that.logdetailsDT = data.data;
+
+                that.ucode = that.logdetailsDT[0].ucode;
+                that.fullname = that.logdetailsDT[0].fullname;
+            }
+            catch (e) {
+                that._msg.Show(messageType.error, "Error", e);
+            }
+
+            commonfun.loaderhide("#loginModal");
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+            commonfun.loaderhide("#loginModal");
+        }, () => {
+
+        })
+    }
+
     // Export
 
     public exportToCSV() {
-        new Angular2Csv(this.loginlogDT, 'LoginLog', { "showLabels": true });
+        var that = this;
+
+        commonfun.loader("#btnExport");
+
+        that._menuservice.getMenuLog({
+            "flag": "export", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that.loginUser.wsautoid
+        }).subscribe(data => {
+            try {
+                new Angular2Csv(data.data, 'LoginLog', { "showLabels": true });
+            }
+            catch (e) {
+                that._msg.Show(messageType.error, "Error", e);
+            }
+
+            commonfun.loaderhide("#btnExport");
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+            commonfun.loaderhide("#btnExport");
+        }, () => {
+
+        })
     }
 
     public exportToPDF() {

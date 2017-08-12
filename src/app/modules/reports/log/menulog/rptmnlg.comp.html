@@ -27,7 +27,7 @@
                     </button>
                 </div>
             </div>
-            <div class="col-md-1 col-xs-2" align="right">
+            <div id="btnExport" class="col-md-1 col-xs-2" align="right" style="padding-top: 20px;">
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Export <span class="caret"></span>
@@ -43,15 +43,41 @@
     </div>
 
     <div class="body no-padding">
-        <div #holiday class="row clearfix">
+        <div #menulog class="row clearfix">
             <div class="col-md-12">
                 <p-dataTable [value]="menulogDT" [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,30,40]">
                     <p-column field="ucode" header="User Code " [style]="{'width':'100px', 'text-align': 'left'}"></p-column>
                     <p-column field="fullname" header="User Name" [style]="{'width': '130px', 'text-align': 'left'}"></p-column>
                     <p-column field="menutitle" header="Menu Name" [style]="{'width': '130px', 'text-align': 'left'}"></p-column>
                     <p-column field="lastdate" header="Last Date" [style]="{'width': '130px', 'text-align': 'left'}"></p-column>
-                    <p-column field="howmany" header="How Many" [style]="{'width':'130px', 'text-align':'left'}"></p-column>
+                    <p-column header="How Many" [style]="{'width': '50px', 'text-align': 'left'}">
+                        <template let-drow="rowData" pTemplate type="body">
+                            <a role="button" (click)="getLogDetails(drow)">{{drow.howmany}}</a>
+                        </template>
+                    </p-column>
                 </p-dataTable>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="menuModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width: 1200px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="largeModalLabel">
+                    User Name : {{fullname + " (" + ucode + ")"}}
+                </h4>
+            </div>
+            <div class="modal-body" id="logdetails">
+                <div class="row clearfix">
+                    <div class="col-md-3 hr" *ngFor="let row of logdetailsDT">
+                        {{row.logtime}}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

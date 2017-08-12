@@ -16,12 +16,14 @@ declare var $: any;
 export class ViewUserComponent implements OnInit {
     loginUser: LoginUserModel;
     _wsdetails: any = [];
+    _enttdetails: any = [];
 
     global = new Globals();
 
     entityDT: any = [];
+    enttdata: any = [];
     enttid: number = 0;
-    enttname: any = [];
+    enttname: string = "";
 
     utypeDT: any = [];
     srcutype: string = "all";
@@ -40,6 +42,7 @@ export class ViewUserComponent implements OnInit {
         private _autoservice: CommonService, private _loginservice: LoginService, private _userservice: UserService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
 
         this.fillUserTypeDropDown();
         this.viewUserDataRights();
@@ -101,6 +104,7 @@ export class ViewUserComponent implements OnInit {
 
     selectEntityData(event) {
         this.enttid = event.value;
+        this.enttname = event.label;
 
         Cookie.set("_enttid_", event.value);
         Cookie.set("_enttnm_", event.label);
@@ -168,10 +172,15 @@ export class ViewUserComponent implements OnInit {
 
         if (Cookie.get('_enttnm_') != null) {
             that.enttid = parseInt(Cookie.get('_enttid_'));
-
-            that.enttname.value = parseInt(Cookie.get('_enttid_'));
-            that.enttname.label = Cookie.get('_enttnm_');
+            that.enttname = Cookie.get('_enttnm_');
         }
+        else {
+            that.enttid = that._enttdetails.enttid;
+            that.enttname = that._enttdetails.enttname;
+        }
+
+        that.enttdata.value = that.enttid;
+        that.enttdata.label = that.enttname;
 
         that.getUserDetails();
     }
@@ -215,7 +224,8 @@ export class ViewUserComponent implements OnInit {
         Cookie.delete('_srcutype_');
 
         this.enttid = 0;
-        this.enttname = [];
+        this.enttname = "";
+        this.enttdata = [];
         this.srcutype = "all";
         Cookie.set("_srcutype_", this.srcutype);
         this.srcutype = Cookie.get('_srcutype_') !== null ? Cookie.get('_srcutype_') : "";

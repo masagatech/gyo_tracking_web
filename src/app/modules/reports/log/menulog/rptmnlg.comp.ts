@@ -19,6 +19,10 @@ export class MenuLogReportsComponent implements OnInit, OnDestroy {
     uid: number = 0;
 
     menulogDT: any = [];
+    logdetailsDT: any = [];
+
+    ucode: string = "";
+    fullname: string = "";
 
     @ViewChild('menulog') menulog: ElementRef;
 
@@ -73,7 +77,7 @@ export class MenuLogReportsComponent implements OnInit, OnDestroy {
         commonfun.loader();
 
         that._menuservice.getMenuLog({
-            "flag": "maxlog", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that._wsdetails.wsautoid
+            "flag": "maxlog", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that.loginUser.wsautoid
         }).subscribe(data => {
             try {
                 that.menulogDT = data.data;
@@ -92,10 +96,62 @@ export class MenuLogReportsComponent implements OnInit, OnDestroy {
         })
     }
 
+    // Get Log Details
+
+    getLogDetails(row) {
+        var that = this;
+
+        $("#menuModal").modal('show');
+        commonfun.loader("#menuModal");
+
+        that._menuservice.getMenuLog({
+            "flag": "userwise", "logtime": row.lastdate, "uid": row.loginid, "menuid": row.menuid
+        }).subscribe(data => {
+            try {
+                that.logdetailsDT = data.data;
+
+                that.ucode = that.logdetailsDT[0].ucode;
+                that.fullname = that.logdetailsDT[0].fullname;
+            }
+            catch (e) {
+                that._msg.Show(messageType.error, "Error", e);
+            }
+
+            commonfun.loaderhide("#menuModal");
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+            commonfun.loaderhide("#menuModal");
+        }, () => {
+
+        })
+    }
+
     // Export
 
     public exportToCSV() {
-        new Angular2Csv(this.menulogDT, 'MenuLogDetails', { "showLabels": true });
+        var that = this;
+
+        commonfun.loader("#btnExport");
+
+        that._menuservice.getMenuLog({
+            "flag": "export", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that.loginUser.wsautoid
+        }).subscribe(data => {
+            try {
+                new Angular2Csv(data.data, 'MenuLogDetails', { "showLabels": true });
+            }
+            catch (e) {
+                that._msg.Show(messageType.error, "Error", e);
+            }
+
+            commonfun.loaderhide("#btnExport");
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+            commonfun.loaderhide("#btnExport");
+        }, () => {
+
+        })
     }
 
     public exportToPDF() {
