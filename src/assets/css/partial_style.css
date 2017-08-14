@@ -2385,3 +2385,16 @@ li.vehicle {
     left: 1px;
     font-size: 9px;
 }
+
+.label-title {
+    padding: 2px 0;
+    float: left;
+}
+
+.label-remove {
+    float: left;
+}
+
+.label-remove a {
+    font-size: 18px;
+}

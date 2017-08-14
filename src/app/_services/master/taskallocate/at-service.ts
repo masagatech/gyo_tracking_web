@@ -13,4 +13,8 @@ export class TaskAllocateService {
     saveTaskAllocate(req: any) {
         return this._dataserver.post("saveTaskAllocate", req)
     }
+
+    getTaskReports(req: any) {
+        return this._dataserver.post("getTaskReports", req)
+    }
 }

@@ -17,11 +17,7 @@ export const routes = [
                 path: '',
                 children: [
                     { path: 'vehicle', loadChildren: './vehicle#VehicleReportsModule' },
-                    { path: 'stops', loadChildren: './stops#StopsReportsModule' },
                     { path: 'expense', loadChildren: './expense#ExpenseReportsModule' },
-
-                    { path: 'taskallocate', loadChildren: './taskallocate#TaskAllocateReportsModule' },
-                    { path: 'taskupdate', loadChildren: './taskupdate#TaskUpdateReportsModule' },
                 ]
             }
         ]
