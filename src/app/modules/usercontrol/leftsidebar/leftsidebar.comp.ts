@@ -68,8 +68,9 @@ export class LeftSideBarComponent implements OnInit, OnDestroy {
         var that = this;
 
         that._menuservice.getMenuDetails({
-            "flag": "parent", "uid": that.loginUser.uid, "issysadmin": that.loginUser.issysadmin,
-            "utype": that.loginUser.utype
+            "flag": "parent", "loginid": that.loginUser.loginid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
+            "issysadmin": that.loginUser.issysadmin
+
         }).subscribe(data => {
             that.parentMenuDT = data.data;
         }, err => {

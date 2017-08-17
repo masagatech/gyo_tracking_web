@@ -25,10 +25,12 @@ export class AddVoucherComponent implements OnInit {
     empid: number = 0;
     empname: string = "";
 
+    isshemp: boolean = false;
+
     expenseDT: any = [];
     expdata: any = [];
     expid: number = 0;
-    expname: string = "";
+    expnm: string = "";
 
     amount: number = 0;
     noofdoc: string = "";
@@ -47,7 +49,7 @@ export class AddVoucherComponent implements OnInit {
 
     public ngOnInit() {
         setTimeout(function () {
-            $(".frmdt").focus();
+            $(".empname input").focus();
         }, 100);
 
         this.getVoucherDetails();
@@ -107,7 +109,7 @@ export class AddVoucherComponent implements OnInit {
 
     selectExpenseData(event) {
         this.expid = event.value;
-        this.expname = event.label;
+        this.expnm = event.label;
     }
 
     // Add Multi Row
@@ -121,7 +123,7 @@ export class AddVoucherComponent implements OnInit {
         }
         else if (that.expid == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Expense Name");
-            $(".expname input").focus();
+            $(".expnm input").focus();
         }
         else if (that.amount == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Amount");
@@ -134,7 +136,7 @@ export class AddVoucherComponent implements OnInit {
         else {
             that.voucherData.push({
                 "autoid": that.autoid, "enttid": that._enttdetails.enttid, "enttname": that._enttdetails.enttname,
-                "empid": that.empid, "empname": that.empname, "expid": that.expid, "expname": that.expname,
+                "empid": that.empid, "empname": that.empname, "expid": that.expid, "expnm": that.expnm,
                 "amount": that.amount, "noofdoc": that.noofdoc, "remark": that.remark,
                 "cuid": that.loginUser.ucode, "wsautoid": that._wsdetails.wsautoid, "isactive": true
             })
@@ -147,7 +149,7 @@ export class AddVoucherComponent implements OnInit {
 
     resetVoucherFields() {
         this.expid = 0;
-        this.expname = "";
+        this.expnm = "";
         this.expdata = [];
         this.amount = 0;
         this.noofdoc = "";
@@ -224,17 +226,20 @@ export class AddVoucherComponent implements OnInit {
 
                 that._vchservice.getVoucherDetails(params).subscribe(data => {
                     try {
+                        that.isshemp = true;
                         that.empid = data.data[0].empid;
                         that.empname = data.data[0].empname;
                         that.empdata.value = that.empid;
                         that.empdata.label = that.empname;
 
-                        that.expid = data.data[0].expid;
-                        that.expname = data.data[0].expname;
-                        that.expdata.expid = that.expid;
-                        that.expdata.expname = that.expname;
-                        that.amount = data.data[0].amount;
-                        that.noofdoc = data.data[0].noofdoc;
+                        that.voucherData = data.data;
+
+                        // that.expid = data.data[0].expid;
+                        // that.expnm = data.data[0].expnm;
+                        // that.expdata.expid = that.expid;
+                        // that.expdata.expnm = that.expnm;
+                        // that.amount = data.data[0].amount;
+                        // that.noofdoc = data.data[0].noofdoc;
                     }
                     catch (e) {
                         that._msg.Show(messageType.error, "Error", e);

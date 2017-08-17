@@ -2,18 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { LeaveEmployeeService } from '@services/master';
+import { EmployeeLeaveService } from '@services/master';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 declare var $: any;
 declare var commonfun: any;
 
 @Component({
-    templateUrl: 'addlvemp.comp.html',
+    templateUrl: 'addemplv.comp.html',
     providers: [CommonService]
 })
 
-export class AddLeaveEmployeeComponent implements OnInit {
+export class AddEmployeeLeaveComponent implements OnInit {
     loginUser: LoginUserModel;
     _wsdetails: any = [];
     _enttdetails: any = [];
@@ -36,7 +36,7 @@ export class AddLeaveEmployeeComponent implements OnInit {
     private subscribeParameters: any;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
-        private _lvservice: LeaveEmployeeService, private _autoservice: CommonService) {
+        private _emplvservice: EmployeeLeaveService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
@@ -49,7 +49,7 @@ export class AddLeaveEmployeeComponent implements OnInit {
             $(".frmdt").focus();
         }, 100);
 
-        this.getLeaveEmployee();
+        this.getEmployeeLeave();
     }
 
     getEmployeeData(event) {
@@ -85,7 +85,7 @@ export class AddLeaveEmployeeComponent implements OnInit {
         var that = this;
         commonfun.loader();
 
-        that._lvservice.getLeaveEmployee({ "flag": "dropdown" }).subscribe(data => {
+        that._emplvservice.getEmployeeLeave({ "flag": "dropdown" }).subscribe(data => {
             that.leavetypeDT = data.data;
             // setTimeout(function () { $.AdminBSB.select.refresh('restype'); }, 100);
             commonfun.loaderhide();
@@ -99,7 +99,7 @@ export class AddLeaveEmployeeComponent implements OnInit {
     }
   // Clear Fields
 
-    resetLeaveEmployeeFields() {
+    resetEmployeeLeaveFields() {
         this.elid = 0;
         this.empname = [];
         this.restype = "";
@@ -110,7 +110,7 @@ export class AddLeaveEmployeeComponent implements OnInit {
 
     // Save Data
 
-    saveLeaveEmployee() {
+    saveEmployeeLeave() {
         var that = this;
 
         if (that.empid == 0) {
@@ -128,7 +128,7 @@ export class AddLeaveEmployeeComponent implements OnInit {
         else {
             commonfun.loader();
 
-            var saveLeaveEmployee = {
+            var saveEmployeeLeave = {
                 "elid": that.elid,
                 "enttid": that._enttdetails.enttid,
                 "empid": that.empid,
@@ -142,7 +142,7 @@ export class AddLeaveEmployeeComponent implements OnInit {
                 "mode": ""
             }
 
-            that._lvservice.saveLeaveEmployee(saveLeaveEmployee).subscribe(data => {
+            that._emplvservice.saveEmployeeLeave(saveEmployeeLeave).subscribe(data => {
                 try {
                     var dataResult = data.data[0].funsave_employeeleave;
                     var msg = dataResult.msg;
@@ -152,7 +152,7 @@ export class AddLeaveEmployeeComponent implements OnInit {
                         that._msg.Show(messageType.success, "Success", msg);
 
                         if (msgid == "1") {
-                            that.resetLeaveEmployeeFields();
+                            that.resetEmployeeLeaveFields();
                         }
                         else {
                             that.backViewData();
@@ -179,7 +179,7 @@ export class AddLeaveEmployeeComponent implements OnInit {
 
     // Get Tag Data
 
-    getLeaveEmployee() {
+    getEmployeeLeave() {
         var that = this;
         var params = {};
 
@@ -195,7 +195,7 @@ export class AddLeaveEmployeeComponent implements OnInit {
                     "wsautoid": that._wsdetails.wsautoid
                 }
 
-                that._lvservice.getLeaveEmployee(params).subscribe(data => {
+                that._emplvservice.getEmployeeLeave(params).subscribe(data => {
                     try {
                         that.elid = data.data[0].elid;
                         that.empid = data.data[0].empid;
@@ -220,7 +220,7 @@ export class AddLeaveEmployeeComponent implements OnInit {
                 })
             }
             else {
-                that.resetLeaveEmployeeFields();
+                that.resetEmployeeLeaveFields();
                 commonfun.loaderhide();
             }
         });
@@ -229,6 +229,6 @@ export class AddLeaveEmployeeComponent implements OnInit {
     // Back For View Data
 
     backViewData() {
-        this._router.navigate(['/master/leaveemployee']);
+        this._router.navigate(['/master/employeeleave']);
     }
 }

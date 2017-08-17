@@ -49,6 +49,11 @@ export class ModuleComponent implements OnDestroy {
             this.wslogo = this.global.uploadurl + this._enttdetails.schlogo;
             this.enttname = this._wsdetails.wsname;
         }
+        else {
+            this.wsname = this.loginUser.enttname;
+            this.wslogo = this.global.uploadurl + this.loginUser.schlogo;
+            this.enttname = this.loginUser.wsname;
+        }
     }
 
     ngOnDestroy() {

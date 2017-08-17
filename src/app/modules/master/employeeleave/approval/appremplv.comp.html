@@ -1,0 +1,42 @@
+<div class="card">
+    <div class="header">
+        <h4>Employee Leave Approval > {{empname}}</h4>
+        <ul class="header-dropdown m-r--5">
+            <li>
+                <a role="button" class="btn btn-theme btn-xs" (click)="saveEmployeeLeaveApproval()">
+                    <i class="material-icons">save</i></a>
+            </li>
+            <li>
+                <a role="button" class="btn btn-theme btn-xs" (click)="backViewData()">
+                    <i class="material-icons">arrow_back</i></a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="body">
+        <p-dataTable [value]="pendEmpLeaveDT">
+            <p-column field="frmdt" header="From Date" [style]="{'vertical-align':'top', 'width':'150px','text-align':'left'}"></p-column>
+            <p-column field="todt" header="To Date" [style]="{'vertical-align':'top', 'width':'150px','text-align':'left'}"></p-column>
+            <p-column field="lvtype" header="Leave Type" [style]="{'vertical-align':'top', 'width':'200px','text-align':'left'}"></p-column>
+            <p-column field="remark" header="Remark" [style]="{'vertical-align':'top', 'width':'300px', 'text-align':'left'}"></p-column>
+            <p-column field="apprremark" header="Remark" [style]="{'vertical-align':'top', 'text-align':'left'}">
+                <template let-row="rowData" pTemplate type="body">
+                    <textarea class="form-control" rows="4" [(ngModel)]="row.apprremark" tabindex="1"></textarea>
+                </template>
+            </p-column>
+            <p-column field="status" header="Status" [style]="{'vertical-align':'top', 'width':'150px', 'text-align':'left'}">
+                <template let-row="rowData" pTemplate type="body">
+                    <div class="form-group">
+                        <div class="form-line">
+                            <select id="status" [(ngModel)]="row.status" class="form-control status" tabindex="2">
+                                <option [value]="0">Select Status</option>
+                                <option [value]="1">Accept</option>
+                                <option [value]="2">Reject</option>
+                            </select>
+                        </div>
+                    </div>
+                </template>
+            </p-column>
+        </p-dataTable>
+    </div>
+</div>

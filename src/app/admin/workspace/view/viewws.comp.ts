@@ -38,6 +38,9 @@ export class ViewWorkspaceComponent implements OnInit {
     global = new Globals();
     uploadconfig = { uploadurl: "" };
 
+    isShowGrid: boolean = true;
+    isShowList: boolean = false;
+    
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
         private _wsservice: WorkspaceService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
@@ -58,6 +61,28 @@ export class ViewWorkspaceComponent implements OnInit {
     }
 
     public ngOnInit() {
+        this.refreshButtons();
+    }
+
+    isshWorkspace(viewtype) {
+        var that = this;
+        commonfun.loader("#divShow");
+
+        if (viewtype == "grid") {
+            that.isShowGrid = true;
+            that.isShowList = false;
+            commonfun.loaderhide("#divShow");
+        }
+        else {
+            that.isShowGrid = false;
+            that.isShowList = true;
+            commonfun.loaderhide("#divShow");
+        }
+
+        that.refreshButtons();
+    }
+
+    refreshButtons() {
         setTimeout(function () {
             commonfun.navistyle();
         }, 0);
@@ -174,7 +199,7 @@ export class ViewWorkspaceComponent implements OnInit {
         this._router.navigate(['/workspace/entity']);
     }
 
-    public getMainForm(row) {
+    public openEntityForm(row) {
         Cookie.delete("_wsdetails_");
         Cookie.set("_wsdetails_", JSON.stringify(row));
 

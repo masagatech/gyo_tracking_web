@@ -15,7 +15,7 @@ export const routes = [
     path: '', children: [
       {
         path: '', component: TeamWiseEmployeeComponent, canActivate: [AuthGuard],
-        data: { "module": "rpt", "submodule": "tmwiseemp", "rights": "view", "urlname": "/teamwiseemployee" }
+        data: { "module": "rpt", "submodule": "rpttmwiseemp", "rights": "view", "urlname": "/teamwiseemployee" }
       }
     ]
   },

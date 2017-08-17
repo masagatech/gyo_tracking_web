@@ -15,27 +15,35 @@
 
     <div class="body">
         <div class="row clearfix">
-            <div class="col-md-10 border">
-                <p-dataTable [value]="pendVoucherDT">
-                    <p-column field="expnm" header="Expense Head" [style]="{'vertical-align':'top', 'width':'200px','text-align':'left'}"></p-column>
-                    <p-column field="remark1" header="Remark" [style]="{'vertical-align':'top', 'width':'150px', 'text-align':'left'}"></p-column>
-                    <p-column field="noofdoc" header="No. of Doc" [style]="{'vertical-align':'top', 'width':'100px', 'text-align':'left'}"></p-column>
-                    <p-column header="Amount" [style]="{'vertical-align':'top', 'width':'150px', 'text-align':'left'}">
-                        <template let-row="rowData" pTemplate type="body">
-							{{row.amount | _currency:loginUser.globsettings[0]}}
-						</template>
-                    </p-column>
-                    <p-column header="Approval Amount" [style]="{'vertical-align':'top', 'width':'150px', 'text-align':'left'}">
-                        <template let-row="rowData" pTemplate type="body">
-							<input type="text" [(ngModel)]="row.appramt" class="form-control" OnlyNumber="true" min="0" tabindex="1">
-						</template>
-                    </p-column>
-                    <p-column field="remark" header="Remark" [style]="{'vertical-align':'top', 'text-align':'left'}">
-                        <template let-row="rowData" pTemplate type="body">
-                            <textarea class="form-control" rows="4" [(ngModel)]="row.remark" tabindex="2"></textarea>
-						</template>
-                    </p-column>
-                </p-dataTable>
+            <div class="col-md-10">
+                <div class="card" *ngIf="pendVoucherDT.length">
+                    <div class="header">
+                        <b>{{headertitle}}</b>
+                    </div>
+                    <div class="body">
+                        <p-dataTable [value]="pendVoucherDT">
+                            <p-column field="dispdate" header="Date" [style]="{'vertical-align':'top', 'width':'150px','text-align':'left'}"></p-column>
+                            <p-column field="expnm" header="Expense Head" [style]="{'vertical-align':'top', 'width':'200px','text-align':'left'}"></p-column>
+                            <p-column field="vcrtypename" header="Source" [style]="{'vertical-align':'top', 'width':'100px', 'text-align':'left'}"></p-column>
+                            <p-column field="remark" header="Remark" [style]="{'vertical-align':'top', 'width':'200px', 'text-align':'left'}"></p-column>
+                            <p-column header="Amount" [style]="{'vertical-align':'top', 'width':'120px', 'text-align':'right'}">
+                                <template let-row="rowData" pTemplate type="body">
+                                    {{row.sendamt | _currency:loginUser.globsettings[0]}}
+                                </template>
+                            </p-column>
+                            <p-column header="Approval Amount" [style]="{'vertical-align':'top', 'width':'140px', 'text-align':'right'}">
+                                <template let-row="rowData" pTemplate type="body">
+                                    <input type="text" [(ngModel)]="row.appramt" class="form-control text-right" OnlyNumber="true" min="0" tabindex="1">
+                                </template>
+                            </p-column>
+                            <p-column field="apprremark" header="Remark" [style]="{'vertical-align':'top', 'text-align':'left'}">
+                                <template let-row="rowData" pTemplate type="body">
+                                    <textarea class="form-control" rows="4" [(ngModel)]="row.apprremark" tabindex="2"></textarea>
+                                </template>
+                            </p-column>
+                        </p-dataTable>
+                    </div>
+                </div>
             </div>
             <div class="col-md-2">
                 <div class="card">
@@ -45,7 +53,8 @@
                     <div class="body">
                         <div *ngFor="let row of voucherNoDT" style="padding: 10px;">
                             <a role="button" (click)="getVoucherDetails(row);">
-                                Voucher No : {{row.expid + " (" + row.countvcr + ")"}}</a>
+                                Voucher No : {{row.expid + " (" + row.countvcr + ")"}}
+                            </a>
                         </div>
                     </div>
                 </div>

@@ -14,7 +14,7 @@ import { LazyLoadEvent, DataTableModule, AutoCompleteModule, FileUploadModule } 
 export const routes = [
   {
     path: '', children: [
-      { path: '', component: ViewTaskAllocateComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "atsk", "rights": "view", "urlname": "/AllocateTask" } },
+      { path: '', component: ViewTaskAllocateComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "atsk", "rights": "view", "urlname": "/taskallocate" } },
       { path: 'add', component: AddTaskAllocateComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "atsk", "rights": "add", "urlname": "/add" } },
       { path: 'details/:id', component: AddTaskAllocateComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "atsk", "rights": "edit", "urlname": "/edit" } },
       { path: 'edit/:id', component: AddTaskAllocateComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "atsk", "rights": "edit", "urlname": "/edit" } }

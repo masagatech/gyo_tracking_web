@@ -44,9 +44,8 @@ export class PendingVoucherComponent implements OnInit {
         commonfun.loader();
 
         params = {
-            "flag": "pending",
-            "enttid": that._enttdetails.enttid,
-            "wsautoid": that._wsdetails.wsautoid
+            "flag": "pending", "uid": that.loginUser.uid, "utype": that.loginUser.utype,
+            "enttid": that._enttdetails.enttid, "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
         }
 
         that._vcrservice.getVoucherDetails(params).subscribe(data => {

@@ -17,7 +17,6 @@ export const routes = [
                 path: '',
                 children: [
                     { path: 'vehicle', loadChildren: './vehicle#VehicleReportsModule' },
-                    { path: 'expense', loadChildren: './expense#ExpenseReportsModule' },
                 ]
             }
         ]

@@ -150,7 +150,7 @@ export class AddTeamEmployeeMapComponent implements OnInit {
     // Delete Employee
 
     deleteEmployee(row) {
-        this.employeeList.splice(this.employeeList.indexOf(row), 1);
+        // this.employeeList.splice(this.employeeList.indexOf(row), 1);
         row.isactive = false;
     }
 

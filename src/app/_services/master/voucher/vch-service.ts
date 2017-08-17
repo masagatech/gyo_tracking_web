@@ -13,4 +13,8 @@ export class VoucherService {
     saveVoucherInfo(req: any) {
         return this._dataserver.post("saveVoucherInfo", req)
     }
+
+    saveVoucherApproval(req: any) {
+        return this._dataserver.post("saveVoucherApproval", req)
+    }
 }

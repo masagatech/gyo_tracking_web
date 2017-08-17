@@ -21,7 +21,8 @@ export const routes = [
                     { path: 'dailyattendance', loadChildren: './dailyattendance#DailyAttendanceModule' },
 
                     { path: 'taskallocate', loadChildren: './taskallocate#TaskAllocateReportsModule' },
-                    { path: 'taskupdate', loadChildren: './taskupdate#TaskUpdateReportsModule' },
+                    { path: 'expense', loadChildren: './expense#ExpenseReportsModule' },
+                    { path: 'leave', loadChildren: './leave#LeaveReportsModule' },
                     
                     { path: 'tag', loadChildren: './employeetag#EmployeeTagReportsModule' },
                     { path: 'trips', loadChildren: './employeetrips#EmployeeTripReportsModule' },

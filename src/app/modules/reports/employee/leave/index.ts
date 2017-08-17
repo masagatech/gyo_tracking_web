@@ -4,8 +4,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthGuard, SharedComponentModule } from '@services';
 
-import { AddTeamEmployeeMapComponent } from './addtem.comp';
-import { TeamEmployeeMapService } from '@services/master';
+import { EmployeeLeaveReportsComponent } from './rptemplv.comp';
+
+import { EmployeeLeaveService } from '@services/master';
 
 import { LazyLoadEvent, DataTableModule, AutoCompleteModule, FileUploadModule } from 'primeng/primeng';
 
@@ -13,25 +14,25 @@ export const routes = [
   {
     path: '', children: [
       {
-        path: '', component: AddTeamEmployeeMapComponent, canActivate: [AuthGuard],
-        data: { "module": "pentt", "submodule": "tem", "rights": "view", "urlname": "/teamemployeepmap" }
-      }
+        path: '', component: EmployeeLeaveReportsComponent, canActivate: [AuthGuard],
+        data: { "module": "rpt", "submodule": "rptemplv", "rights": "view", "urlname": "/leave" }
+      },
     ]
   },
 ];
 
 @NgModule({
   declarations: [
-    AddTeamEmployeeMapComponent
+    EmployeeLeaveReportsComponent
   ],
 
   imports: [
     CommonModule, FormsModule, RouterModule.forChild(routes), SharedComponentModule, DataTableModule, AutoCompleteModule, FileUploadModule
   ],
 
-  providers: [AuthGuard, TeamEmployeeMapService]
+  providers: [AuthGuard, EmployeeLeaveService]
 })
 
-export class TeamEmployeeMapModule {
+export class LeaveReportsModule {
   public static routes = routes;
 }

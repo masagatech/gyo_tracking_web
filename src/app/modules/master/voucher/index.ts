@@ -2,8 +2,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { SharedComponentModule } from '@services';
-import { AuthGuard } from '@services';
+import { AuthGuard, SharedComponentModule } from '@services';
 
 import { AddVoucherComponent } from './aded/addvcr.comp';
 import { ViewVoucherComponent } from './view/viewvcr.comp';
@@ -31,11 +30,11 @@ export const routes = [
       },
       {
         path: 'pending', component: PendingVoucherComponent, canActivate: [AuthGuard],
-        data: { "module": "pentt", "submodule": "vcrpend", "rights": "view", "urlname": "/pending" }
+        data: { "module": "pentt", "submodule": "vcrappr", "rights": "view", "urlname": "/pending" }
       },
       {
         path: 'approval/:empid', component: ApprovalVoucherComponent, canActivate: [AuthGuard],
-        data: { "module": "pentt", "submodule": "vcrpend", "rights": "view", "urlname": "/approval" }
+        data: { "module": "pentt", "submodule": "vcrappr", "rights": "view", "urlname": "/approval" }
       },
     ]
   },

@@ -1,0 +1,173 @@
+<div class="card">
+    <div class="header">
+        <h4>Allocate Expense</h4>
+        <div class="row clearfix">
+            <div class="col-md-2 col-xs-4">
+                <div class="form-group">
+                    <div class="form-line">
+                        <label class="control-label">From Date</label>
+                        <input type="date" [(ngModel)]="frmdt" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 col-xs-4">
+                <div class="form-group">
+                    <div class="form-line">
+                        <label class="control-label">To Date</label>
+                        <input type="date" [(ngModel)]="todt" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-6">
+                <div class="form-group" id="divEmployee">
+                    <div class="form-line">
+                        <label class="control-label">Employee <strong>*</strong></label>
+                        <p-autoComplete id="empname" name="empname" [(ngModel)]="empdata" [tabindex]="1" (onSelect)="selectEmployeeData($event)" [suggestions]="employeeDT" (completeMethod)="getEmployeeData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete empname"></p-autoComplete>
+                        <span class="material-icons inputserachico">search</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-6">
+                <div class="form-group" id="divTag">
+                    <div class="form-line">
+                        <label class="control-label">Tag</label>
+                        <p-autoComplete id="tagname" name="tagname" [(ngModel)]="tagdata" [tabindex]="1" (onSelect)="selectTagData($event)" [suggestions]="tagDT" (completeMethod)="getTagData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete tagname"></p-autoComplete>
+                        <span class="material-icons inputserachico">search</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-md-4 col-xs-2">
+            </div>
+            <div class="col-md-6 col-xs-6">
+                <div class="row clearfix">
+                    <span *ngFor="let item of taglist">
+                    <span class="label-title">{{item.tagname}}</span>
+                    <span class="label-remove">
+                        <a role="button" (click)="deleteTag(item)" class="material-icons">cancel</a>
+                    </span>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-1 col-xs-2" style="text-align:right;">
+                <div class="form-group">
+                    <button type="button" class="btn btn-theme btn-xs" (click)="resetExpenseReports()">
+                        <span class="material-icons">restore</span>
+                    </button>
+                    <button type="button" class="btn btn-theme btn-xs" (click)="getExpenseReports()">
+                        <span class="material-icons">subdirectory_arrow_right</span>
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-1 col-xs-2" style="text-align:right;">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Export <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a role="button" (click)="exportToCSV()"><i class="fa fa-file-excel-o"></i> CSV</a></li>
+                        <li><a role="button" (click)="exportToPDF()"><i class="fa fa-file-pdf-o"></i> PDF</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="body no-padding table-responsinve">
+        <table id="tblpsngrtrprpt" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th width="50px"></th>
+                    <th width="150px">Expense Date</th>
+                    <th align="left">Employee</th>
+                    <th width="130px" align="right">Send Amount</th>
+                    <th width="150px" align="right">Approval Amount</th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let row of allocateExpenseDT">
+                <tr style="font-weight:bold;">
+                    <td>
+                        <a role="button" (click)="expandExpenseDetails(row)" [style.display]="row.isdetails == 0?'none':''">
+                            <i class="{{row.issh == 0 ? 'fa fa-plus-square' : 'fa fa-minus-square'}}"></i>
+                        </a>
+                    </td>
+                    <td>
+                        {{row.dispdate}}
+                    </td>
+                    <td>
+                        {{row.empname}}
+                    </td>
+                    <td align="right">
+                        {{row.sendamt | _currency:loginUser.globsettings[0]}}
+                    </td>
+                    <td align="right">
+                        {{row.appramt == null ? 'Pending' : row.appramt | _currency:loginUser.globsettings[0]}}
+                    </td>
+                </tr>
+                <tr [style.display]="row.issh == 0?'none':''">
+                    <td colspan="6">
+                        <table id="tblpsngrtrprpt" class="table table-bordered nested-table">
+                            <thead>
+                                <tr>
+                                    <th width="50px">#</th>
+                                    <th width="150px">Expense Head</th>
+                                    <th width="100px">Source</th>
+                                    <th align="left">Tag</th>
+                                    <th width="250px">Remark</th>
+                                    <th width="250px">Approval Remark</th>
+                                    <th width="130px" align="right">Send Amount</th>
+                                    <th width="140px" align="right">Approval Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody *ngFor="let drow of row.details let i=index;">
+                                <tr>
+                                    <td>
+                                        {{i+1}}
+                                    </td>
+                                    <td>
+                                        {{drow.expnm}}
+                                    </td>
+                                    <td>
+                                        {{drow.vcrtypename}}
+                                    </td>
+                                    <td>
+                                        {{drow.tag}}
+                                    </td>
+                                    <td>
+                                        {{drow.remark}}
+                                    </td>
+                                    <td>
+                                        {{drow.apprremark}}
+                                    </td>
+                                    <td align="right">
+                                        {{drow.sendamt | _currency:loginUser.globsettings[0]}}
+                                    </td>
+                                    <td align="right">
+                                        {{drow.appramt == null ? 'Pending' : drow.appramt | _currency:loginUser.globsettings[0]}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- <div class="body no-padding">
+        <div class="row clearfix">
+            <div class="col-md-12">
+                <p-dataTable [value]="allocateExpenseDT" [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,30,40]">
+                    <p-column field="frmdt" header="From Time" [style]="{'width':'100px', 'text-align':'left'}"></p-column>
+                    <p-column field="todt" header="To Time" [style]="{'width':'100px', 'text-align':'left'}"></p-column>
+                    <p-column field="expnm" header="Expense Title" [style]="{'width':'300px', 'text-align':'left'}"></p-column>
+                    <p-column field="empname" header="Assigned By" [style]="{'width':'150px', 'text-align':'left'}"></p-column>
+                    <p-column field="asstoname" header="Assigned To" [style]="{'width':'300px', 'text-align':'left'}"></p-column>
+                    <p-column field="tagname" header="Tag" [style]="{'text-align': 'left'}"></p-column>
+                </p-dataTable>
+            </div>
+        </div>
+    </div> -->
+</div>

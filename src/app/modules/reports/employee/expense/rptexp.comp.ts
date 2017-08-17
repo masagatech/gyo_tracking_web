@@ -2,16 +2,16 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { TaskAllocateService } from '@services/master';
+import { ExpenseService } from '@services/master';
 import { LazyLoadEvent } from 'primeng/primeng';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 @Component({
-    templateUrl: 'rptat.comp.html',
+    templateUrl: 'rptexp.comp.html',
     providers: [MenuService, CommonService]
 })
 
-export class TaskAllocateComponent implements OnInit, OnDestroy {
+export class ExpenseReportsComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
     _wsdetails: any = [];
     _enttdetails: any = [];
@@ -19,16 +19,11 @@ export class TaskAllocateComponent implements OnInit, OnDestroy {
     frmdt: any = "";
     todt: any = "";
 
-    assignedbyDT: any = [];
-    assbydata: any = [];
-    assbyid: number = 0;
-    assbyname: string = "";
-    assbytype: string = "";
-
-    assignedtoDT: any = [];
-    asstodata: any = [];
-    asstoid: number = 0;
-    asstoname: string = "";
+    employeeDT: any = [];
+    empdata: any = [];
+    empid: number = 0;
+    empname: string = "";
+    emptype: string = "";
 
     tagDT: any = [];
     tagdata: any = [];
@@ -36,18 +31,18 @@ export class TaskAllocateComponent implements OnInit, OnDestroy {
     tagname: string = "";
     taglist: any = [];
 
-    @ViewChild('task') stops: ElementRef;
+    @ViewChild('Expense') stops: ElementRef;
 
-    allocateTaskDT: any = [];
+    allocateExpenseDT: any = [];
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
-        private _loginservice: LoginService, private _autoservice: CommonService, private _atservice: TaskAllocateService) {
+        private _loginservice: LoginService, private _autoservice: CommonService, private _expservice: ExpenseService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.setFromDateAndToDate();
-        this.getTaskReports();
+        this.getExpenseReports();
     }
 
     public ngOnInit() {
@@ -87,40 +82,7 @@ export class TaskAllocateComponent implements OnInit, OnDestroy {
 
     // Auto Completed Assigned By
 
-    getAssignedByData(event) {
-        var that = this;
-        let query = event.query;
-
-        that._autoservice.getAutoData({
-            "flag": "users",
-            "uid": that.loginUser.uid,
-            "ucode": that.loginUser.ucode,
-            "utype": that.loginUser.utype,
-            "issysadmin": that.loginUser.issysadmin,
-            // "wsautoid": that._wsdetails.wsautoid,
-            "search": query
-        }).subscribe(data => {
-            that.assignedbyDT = data.data;
-        }, err => {
-            that._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        });
-    }
-
-    // Selected Assigned By
-
-    selectAssignedByData(event, arg) {
-        var that = this;
-
-        that.assbyid = event.uid;
-        that.assbyname = event.uname;
-        that.assbytype = event.utype;
-    }
-
-    // Auto Completed Assigned To
-
-    getAssignedToData(event) {
+    getEmployeeData(event) {
         let query = event.query;
 
         this._autoservice.getAutoData({
@@ -133,7 +95,7 @@ export class TaskAllocateComponent implements OnInit, OnDestroy {
             "wsautoid": this._wsdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
-            this.assignedtoDT = data.data;
+            this.employeeDT = data.data;
         }, err => {
             this._msg.Show(messageType.error, "Error", err);
         }, () => {
@@ -141,11 +103,13 @@ export class TaskAllocateComponent implements OnInit, OnDestroy {
         });
     }
 
-    // Selected Assigned To
+    // Selected Assigned By
 
-    selectAssignedToData(event) {
-        this.asstoid = event.value;
-        this.asstoname = event.label;
+    selectEmployeeData(event, arg) {
+        var that = this;
+
+        that.empid = event.value;
+        that.empname = event.label;
     }
 
     // Auto Completed Tag
@@ -185,19 +149,19 @@ export class TaskAllocateComponent implements OnInit, OnDestroy {
         this.tagdata = [];
     }
 
-    getTaskReports() {
+    getExpenseReports() {
         var that = this;
         commonfun.loader();
 
-        var tagids = that.taglist.length !== 0 ? that.taglist.map(function (val) { return val.tagid; }).join(',') : "0";
+        var tags = that.taglist.length !== 0 ? that.taglist.map(function (val) { return val.tagname; }).join(',') : "";
 
-        that._atservice.getTaskReports({
-            "flag": "reports", "frmdt": that.frmdt, "todt": that.todt, "assbyid": that.assbyid, "assbytype": that.assbytype, "asstoid": that.asstoid,
-            "uid": that.loginUser.uid, "utype": that.loginUser.utype, "tagid": tagids, "tsktitle": "", "enttid": that._enttdetails.enttid,
+        that._expservice.getExpenseReports({
+            "flag": "reports", "frmdt": that.frmdt, "todt": that.todt, "empid": that.empid, "tag": tags,
+            "uid": that.loginUser.uid, "utype": that.loginUser.utype, "enttid": that._enttdetails.enttid,
             "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
         }).subscribe(data => {
             try {
-                that.allocateTaskDT = data.data;
+                that.allocateExpenseDT = data.data;
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -213,28 +177,29 @@ export class TaskAllocateComponent implements OnInit, OnDestroy {
         })
     }
 
-    // Expand Employee Task Updated
+    // Expand Employee Expense Updated
 
-    expandTaskNature(row) {
+    expandExpenseDetails(row) {
         let that = this;
 
         if (row.issh == 0) {
             row.issh = 1;
 
-            if (row.tskupdate.length === 0) {
+            if (row.details.length === 0) {
                 var params = {
-                    "flag": "details", "tskid": row.tskid
+                    "flag": "details", "expdate": row.dispdate, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
+                    "enttid": that._enttdetails.enttid, "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
                 }
 
-                that._atservice.getTaskReports(params).subscribe(data => {
-                    row.tskupdate = data.data;
+                that._expservice.getExpenseReports(params).subscribe(data => {
+                    row.details = data.data;
 
-                    for (var i = 0; i < row.tskupdate.length; i++) {
-                        if (row.tskupdate[i].issh == 0) {
-                            row.tskupdate[i].issh = false;
+                    for (var i = 0; i < row.details.length; i++) {
+                        if (row.details[i].issh == 0) {
+                            row.details[i].issh = false;
                         }
                         else {
-                            row.tskupdate[i].issh = true;
+                            row.details[i].issh = true;
                         }
                     }
                 }, err => {
@@ -247,6 +212,19 @@ export class TaskAllocateComponent implements OnInit, OnDestroy {
         } else {
             row.issh = 0;
         }
+    }
+
+    resetExpenseReports() {
+        this.setFromDateAndToDate();
+        this.empid = 0;
+        this.empname = "";
+        this.empdata = [];
+        this.tagid = 0;
+        this.tagname = "";
+        this.tagdata = [];
+        this.taglist = [];
+
+        this.getExpenseReports();
     }
 
     public ngOnDestroy() {

@@ -2,33 +2,33 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { VoucherService } from '@services/master';
+import { EmployeeLeaveService } from '@services/master';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 declare var $: any;
 declare var commonfun: any;
 
 @Component({
-    templateUrl: 'viewvcr.comp.html',
+    templateUrl: 'pendemplv.comp.html',
     providers: [CommonService]
 })
 
-export class ViewVoucherComponent implements OnInit {
+export class PendingEmployeeLeaveComponent implements OnInit {
     loginUser: LoginUserModel;
     _wsdetails: any = [];
     _enttdetails: any = [];
 
-    voucherDT: any = [];
+    pendEmpLeaveDT: any = [];
 
     private subscribeParameters: any;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
-        private _vcrservice: VoucherService, private _autoservice: CommonService) {
+        private _emplvservice: EmployeeLeaveService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
-        this.getVoucherDetails();
+        this.getEmployeeLeave();
     }
 
     public ngOnInit() {
@@ -37,21 +37,20 @@ export class ViewVoucherComponent implements OnInit {
 
     // View Data Rights
 
-    getVoucherDetails() {
+    getEmployeeLeave() {
         var that = this;
         var params = {};
 
         commonfun.loader();
 
         params = {
-            "flag": "all",
-            "enttid": that._enttdetails.enttid,
-            "wsautoid": that._wsdetails.wsautoid
+            "flag": "pending", "uid": that.loginUser.uid, "utype": that.loginUser.utype,
+            "enttid": that._enttdetails.enttid, "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
         }
 
-        that._vcrservice.getVoucherDetails(params).subscribe(data => {
+        that._emplvservice.getEmployeeLeave(params).subscribe(data => {
             try {
-                that.voucherDT = data.data;
+                that.pendEmpLeaveDT = data.data;
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -67,11 +66,7 @@ export class ViewVoucherComponent implements OnInit {
         })
     }
 
-    public addVoucherForm() {
-        this._router.navigate(['/master/voucher/add']);
-    }
-
-    public editVoucherForm(row) {
-        this._router.navigate(['/master/voucher/edit', row.empid]);
+    public openApprovalForm(row) {
+        this._router.navigate(['/master/employeeleave/approval/' + row.empid]);
     }
 }

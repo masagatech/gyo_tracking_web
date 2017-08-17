@@ -23,7 +23,7 @@ export const routes = [
 
                     { path: 'team', loadChildren: './team#TeamModule' },
                     { path: 'employee', loadChildren: './employee#EmployeeModule' },
-                    { path: 'leaveemployee', loadChildren: './employeeleave#LeaveEmployeeModule' },
+                    { path: 'employeeleave', loadChildren: './employeeleave#EmployeeLeaveModule' },
                     { path: 'teamemployeemap', loadChildren: './teamempmap#TeamEmployeeMapModule' },
                     { path: 'teamownershipmap', loadChildren: './teamownermap#TeamOwnershipMapModule' },
                     { path: 'expenseemployeemap', loadChildren: './expempmap#ExpenseEmployeeMapModule' },

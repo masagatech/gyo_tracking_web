@@ -28,14 +28,17 @@ export class ViewTaskAllocateComponent implements OnInit {
     }
 
     public ngOnInit() {
-        
+
     }
 
     getTaskAllocate() {
         var that = this;
         commonfun.loader();
 
-        that._atservice.getTaskAllocate({ "flag": "all", "enttid": that._enttdetails.enttid }).subscribe(data => {
+        that._atservice.getTaskAllocate({
+            "flag": "all", "enttid": that._enttdetails.enttid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
+            "wsautoid": that.loginUser.wsautoid, "issysadmin": that.loginUser.issysadmin
+        }).subscribe(data => {
             try {
                 that.allocateTaskDT = data.data;
             }

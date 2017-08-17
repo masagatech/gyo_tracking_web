@@ -28,7 +28,7 @@ export class TripReportsComponent implements OnInit, OnDestroy {
 
     tripData: any = [];
 
-    @ViewChild('emptrips') attnatt: ElementRef;
+    @ViewChild('emptrips') emptrips: ElementRef;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
         public _menuservice: MenuService, private _loginservice: LoginService, private _rptservice: ReportsService,
@@ -61,7 +61,7 @@ export class TripReportsComponent implements OnInit, OnDestroy {
         let options = {
             pagesplit: true
         };
-        pdf.addHTML(this.attnatt.nativeElement, 0, 0, options, () => {
+        pdf.addHTML(this.emptrips.nativeElement, 0, 0, options, () => {
             pdf.save("EmployeeTrips.pdf");
         });
     }
@@ -134,7 +134,8 @@ export class TripReportsComponent implements OnInit, OnDestroy {
         var that = this;
 
         that._rptservice.getTripReports({
-            "enttid": that._enttdetails.enttid, "uid": that.empid, "vtype": "p"
+            "enttid": that._enttdetails.enttid, "empid": that.empid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
+            "wsautoid": that.loginUser.wsautoid, "issysadmin": that.loginUser.issysadmin, "vtype": "p"
         }).subscribe(data => {
             try {
                 if (data.data.length !== 0) {

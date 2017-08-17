@@ -15,7 +15,7 @@ export class WorkspaceReportsComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
     _wsdetails: any = [];
 
-    wrkspDT: any = [];
+    workspaceDT: any = [];
 
     @ViewChild('workspace') workspace: ElementRef;
 
@@ -40,7 +40,7 @@ export class WorkspaceReportsComponent implements OnInit, OnDestroy {
     // Export
 
     public exportToCSV() {
-        new Angular2Csv(this.wrkspDT, 'workspaceDetails', { "showLabels": true });
+        new Angular2Csv(this.workspaceDT, 'workspaceDetails', { "showLabels": true });
     }
 
     public exportToPDF() {
@@ -63,7 +63,7 @@ export class WorkspaceReportsComponent implements OnInit, OnDestroy {
             "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {
             try {
-                that.wrkspDT = data.data;
+                that.workspaceDT = data.data;
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);

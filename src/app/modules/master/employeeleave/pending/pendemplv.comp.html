@@ -2,7 +2,7 @@
     <div class="header">
         <div class="row clearfix">
             <div class="col-md-2">
-                <h4>Voucher</h4>
+                <h4>Leave Employee</h4>
             </div>
             <div class="col-md-10">
             </div>
@@ -11,7 +11,7 @@
 
     <div class="body no-padding">
         <div class="row clearfix">
-            <div class="col-md-4" *ngFor="let row of pendVoucherDT">
+            <div class="col-md-4" *ngFor="let row of pendEmpLeaveDT">
                 <div class="info-box bg-blue hover-expand-effect">
                     <div class="icon">
                         <a role="button" (click)="openApprovalForm(row)">
@@ -20,10 +20,10 @@
                     </div>
                     <div class="content">
                         <div class="number count-to">
-                            {{row.empname + " (" + row.countvcr + ")" }}
+                            {{row.empname + " (" + row.countlv + ")"}}
                         </div>
                         <div class="text">
-                            Rs. {{row.sendamt | _currency:loginUser.globsettings[0]}}
+                            Days : {{row.totaldays}}
                         </div>
                     </div>
                 </div>

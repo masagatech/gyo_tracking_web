@@ -29,7 +29,7 @@
 
                 <div *ngIf="employeeList.length">
                     <ul class="list-group">
-                        <li class="list-group-item" *ngFor="let row of employeeList">
+                        <li class="list-group-item" *ngFor="let row of employeeList | filterBy: {'isactive': true}">
                             {{row.empname}}
                             <button type="button" class="btn btn-danger btn-xs pull-right" (click)="deleteEmployee(row)">
                                 <i class="material-icons">delete</i></button>

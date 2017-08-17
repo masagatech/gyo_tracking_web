@@ -1,10 +1,10 @@
 <div class="card">
     <div class="header">
         <div class="row clearfix">
-            <div class="col-md-3 col-xs-3">
+            <div class="col-md-9 col-xs-9">
                 <h4>Team Wise Employee</h4>
             </div>
-            <div class="col-md-9 col-xs-9" style="padding-top: 20px;">
+            <div class="col-md-3 col-xs-3" align="right">
                 <div id="exportemp" class="btn-group" role="group">
                     <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Export <span class="caret"></span>
@@ -39,21 +39,13 @@
                 </ul>
             </div>
             <div class="body">
-                <div class="row clearfix">
-                    <div class="col-md-12">
-                        <b>Owner</b>
-                        <div class="bar"></div>
-                        <div *ngFor="let drow of row.owner">
-                            {{drow.onrnm}}
-                            <div class="line-bar"></div>
-                        </div>
-                    </div>
+                <b>Owner</b>
+                <div class="hr"></div>
+                <div *ngFor="let drow of row.owner">
+                    {{drow.onrnm}}
                 </div>
-                <div class="row clearfix">
-                    <div class="col-md-12">
-                        <b>Employee</b> ({{row.countemp}})
-                    </div>
-                </div>
+                <div class="hr"></div>
+                <b>Employee</b> ({{row.countemp}})
             </div>
         </div>
     </div>

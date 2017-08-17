@@ -13,4 +13,8 @@ export class ExpenseService {
     saveExpenseInfo(req: any) {
         return this._dataserver.post("saveExpenseInfo", req)
     }
+
+    getExpenseReports(req: any) {
+        return this._dataserver.post("getExpenseReports", req)
+    }
 }

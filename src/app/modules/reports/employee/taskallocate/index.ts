@@ -15,7 +15,7 @@ export const routes = [
     path: '', children: [
       {
         path: '', component: TaskAllocateComponent, canActivate: [AuthGuard],
-        data: { "module": "rpt", "submodule": "rptat", "rights": "view", "urlname": "/taskallocate" }
+        data: { "module": "rpt", "submodule": "rptemptskal", "rights": "view", "urlname": "/taskallocate" }
       },
     ]
   },
