@@ -6,8 +6,8 @@ import { Router } from '@angular/router';
 export class ReportsService {
     constructor(private _dataserver: DataService, private _router: Router) { }
 
-    getAttendanceReports(req: any) {
-        return this._dataserver.post("getAttendanceReports", req)
+    getEmployeeAttendance(req: any) {
+        return this._dataserver.post("getEmployeeAttendance", req)
     }
 
     getTeamWiseEmployeeReports(req: any) {

@@ -14,7 +14,7 @@ export const routes = [
     path: '', children: [
       {
         path: '', component: AddTeamEmployeeMapComponent, canActivate: [AuthGuard],
-        data: { "module": "pentt", "submodule": "tem", "rights": "view", "urlname": "/teamemployeepmap" }
+        data: { "module": "pentt", "submodule": "tmemp", "rights": "view", "urlname": "/teamemployeepmap" }
       }
     ]
   },

@@ -1,0 +1,74 @@
+<div class="card">
+    <div class="header">
+        <div class="row clearfix">
+            <div class="col-md-2">
+                <h4>Tag Employee Map</h4>
+            </div>
+            <div class="col-md-9 col-xs-9">
+            </div>
+            <div class="col-md-1 col-xs-1" align="right">
+                <button type="button" class="btn btn-theme btn-xs" (click)="addTagEmployeeMap()">
+                    <i class="material-icons">add</i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="row clearfix">
+            <div class="col-md-12" align="center">
+                <div id="msttag" class="info-box demo">
+                    <a role="button" (click)="getTagEmployeeMap(0)">
+                        <div class="content">
+                            <div class="text">Master</div>
+                            <div class="number count-to" data-from="0" data-to="totCountTags" data-speed="15" data-fresh-interval="20">
+                                ({{totCountTags}})
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-md-2" *ngFor="let etrow of emptagDT">
+                <div id="etrow.msttag" class="info-box demo">
+                    <a role="button" (click)="getTagEmployeeMap(etrow.empid)">
+                        <div class="content">
+                            <div class="text">{{etrow.empname}}</div>
+                            <div class="number count-to" data-from="0" data-to="etrow.counttag" data-speed="15" data-fresh-interval="20">
+                                ({{etrow.counttag}})
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="header">
+            <h4>{{headertitle}}</h4>
+        </div>
+
+        <div class="row clearfix" *ngIf="tagempDT.length">
+            <div class="col-md-12 table-responsive">
+                <p-dataTable [value]="tagempDT">
+                    <p-column [style]="{'width':'50px', 'text-align':'left'}">
+                        <template let-row="rowData" pTemplate type="body">
+                            <span class="material-icons">{{row.tagtype == "p" ? 'desktop_windows' : 'settings_cell' }}</span>
+                        </template>
+                    </p-column>
+                    <p-column field="tagnm" header="Tag Name" [style]="{'text-align':'left'}"></p-column>
+                    <p-column field="remark1" header="Remark 1" [style]="{'width':'240px', 'text-align':'left'}"></p-column>
+                    <p-column field="remark2" header="Remark 2" [style]="{'width':'240px', 'text-align':'left'}"></p-column>
+                    <p-column field="remark3" header="Remark 3" [style]="{'width':'240px', 'text-align':'left'}"></p-column>
+                    <p-column field="countemp" header="Employee" [style]="{'width':'80px', 'text-align':'center'}"></p-column>
+                    <p-column [style]="{'width': '50px', 'align': 'left'}">
+                        <template let-row="rowData" pTemplate type="body">
+                            <button type="button" class="btn btn-theme btn-xs" (click)="editTagEmployeeMap(row)">
+                                <i class="material-icons">edit</i>
+                            </button>
+                        </template>
+                    </p-column>
+                </p-dataTable>
+            </div>
+        </div>
+    </div>
+</div>

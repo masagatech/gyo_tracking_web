@@ -17,6 +17,9 @@ export class EntityReportsComponent implements OnInit, OnDestroy {
 
     entityDT: any = [];
 
+    global = new Globals();
+    uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
+
     @ViewChild('entity') entity: ElementRef;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,

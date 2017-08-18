@@ -1,0 +1,76 @@
+<div class="card">
+    <div class="header">
+        <h4>Tag Employee Map</h4>
+        <ul class="header-dropdown m-r--5">
+            <li>
+                <a role="button" class="btn btn-theme btn-xs" (click)="saveTagEmployeeMap()">
+                    <i class="material-icons">save</i></a>
+            </li>
+            <li>
+                <a role="button" class="btn btn-theme btn-xs" (click)="backViewData()">
+                    <i class="material-icons">arrow_back</i></a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="body">
+        <div class="row clearfix">
+            <div class="col-md-6 border">
+                <div class="form-group" id="divTeam">
+                    <div class="form-line">
+                        <label class="control-label">Tag Name <strong>*</strong></label>
+                        <p-autoComplete id="tagnm" name="tagnm" [(ngModel)]="tagnm" [tabindex]="1" (onSelect)="selectTagData($event)" [suggestions]="tagDT" (completeMethod)="getTagData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete tagnm"
+                            [disabled]="disabletag"></p-autoComplete>
+                        <span class="material-icons inputserachico">search</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="ui-g">
+                        <div class="ui-g-3">
+                            <p-radioButton name="ptype" value="team" label="Team" [(ngModel)]="selectedPType" (ngModelChange)="hidewhenTeamOrEmployee()"></p-radioButton>
+                        </div>
+                        <div class="ui-g-3">
+                            <p-radioButton name="ptype" value="employee" label="Employee" [(ngModel)]="selectedPType" (ngModelChange)="hidewhenTeamOrEmployee()"></p-radioButton>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" id="divTeam" *ngIf="isteam">
+                    <div class="form-line">
+                        <label class="control-label">Team Name <strong>*</strong></label>
+                        <p-autoComplete id="tmnm" name="tmnm" [(ngModel)]="tmnm" [tabindex]="1" (onSelect)="selectTeamData($event)" [suggestions]="teamDT" (completeMethod)="getTeamData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete tmnm"></p-autoComplete>
+                        <span class="material-icons inputserachico">search</span>
+                    </div>
+                </div>
+                <div class="form-group" id="divEmployee" *ngIf="isemployee">
+                    <div class="form-line">
+                        <label class="control-label">Employee Name <strong>*</strong></label>
+                        <p-autoComplete id="empname" name="empname" [(ngModel)]="empname" [tabindex]="1" (onSelect)="selectEmployeeData($event)" [suggestions]="employeeDT" (completeMethod)="getEmployeeData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete empname"></p-autoComplete>
+                        <span class="material-icons inputserachico">search</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-line">
+                        <label class="control-label">Remark <strong>*</strong></label>
+                        <textarea [(ngModel)]="remark" rows="5" class="form-control no-resize auto-growth remark" maxlength="500" tabindex="3"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div *ngIf="employeeList.length">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <input type="checkbox" id="selectall" checked name="selectall" (change)="selectAndDeselectAllCheckboxes()" class="filled-in selectall">
+                            <label for="selectall">Select All</label>
+                        </li>
+                        <li class="list-group-item allcheckboxes" *ngFor="let row of employeeList">
+                            <span id="emp{{row.empid}}">
+                                <input type="checkbox"checked id="{{row.empid}}" value="{{row.empid}}" name="{{row.empname}}" data-menuid="row.empid" data-right="row.empid" class="actrights filled-in" />
+                                <label for="{{row.empid}}">{{row.empname}}</label>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

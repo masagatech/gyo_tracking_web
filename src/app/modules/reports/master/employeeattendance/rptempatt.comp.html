@@ -1,0 +1,118 @@
+<div class="card">
+    <div class="header">
+        <div class="row clearfix" id="fltrpsngr">
+            <div class="col-md-4 col-xs-12">
+                <h4>Employee Attendance</h4>
+            </div>
+            <div class="col-md-2 col-xs-4">
+                <div class="form-group">
+                    <div class="form-line">
+                        <label class="control-label">Month</label>
+                        <select id="monthname" name="monthname" [(ngModel)]="monthname" class="form-control" (ngModelChange)="getEmployeeAttendanceData()">
+                            <option [value]="''">Select Month</option>
+                            <option *ngFor="let row of monthDT" [value]="row.key">
+                                {{row.val}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1 col-xs-2" style="padding-top: 20px;">
+                <div class="form-group">
+                    <button type="button" class="btn btn-theme btn-xs" (click)="getEmployeeAttendanceData()">
+                        <span class="material-icons">subdirectory_arrow_right</span>
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-1 col-xs-2" style="padding-top: 20px;" align="right">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Export <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a role="button" (click)="exportToCSV()"><i class="fa fa-file-excel-o"></i> CSV</a></li>
+                        <li><a role="button" (click)="exportToPDF()"><i class="fa fa-file-pdf-o"></i> PDF</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="body no-padding">
+        <div #psngrattnd class="row clearfix">
+            <div class="col-md-12 reports">
+                <p-dataTable [value]="attData">
+                    <p-column field="empname" header="Employee Name" [style]="{'width': '200px', 'text-align': 'left'}"></p-column>
+                    <p-column *ngFor="let atcol of attColumn" header="{{atcol.day}}" [style]="{'width': '30px', 'text-align':'center'}">
+                        <template let-drow="rowData" pTemplate type="body">
+                            <span class="material-icons {{drow[atcol.day] == null ? 'cancel' : drow[atcol.day]}}">
+                                {{drow[atcol.day] == null ? 'cancel' : drow[atcol.day]}}
+                            </span>
+                        </template>
+                    </p-column>
+                    <p-column field="done" header="C" [styleClass]="'P'" [style]="{'width': '30px', 'text-align': 'left'}"></p-column>
+                    <p-column field="H" header="H" [styleClass]="'H'" [style]="{'width': '30px', 'text-align': 'center'}"></p-column>
+                    <p-column field="L" header="L" [styleClass]="'L'" [style]="{'width': '30px', 'text-align': 'center'}"></p-column>
+                    <p-column field="A" header="A" [styleClass]="'A'" [style]="{'width': '30px', 'text-align': 'center'}"></p-column>
+                </p-dataTable>
+            </div>
+        </div>
+    </div>
+
+    <div class="header">
+        <div class="row clearfix">
+            <div class="col-md-6">
+            </div>
+            <div class="col-md-6" align="right">
+                <div class="small-box">
+                    <div class="header">
+                        Legends
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <div class="col-md-4">
+                        <div class="small-box">
+                            <div class="apsent">A</div>
+                            <div class="content">
+                                Absent
+                            </div>
+                        </div>
+                        <div class="small-box">
+                            <div class="holiday">H</div>
+                            <div class="content">
+                                Holiday
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="small-box">
+                            <div class="complete">
+                                <span class="material-icons">done</span>
+                            </div>
+                            <div class="content">
+                                Completed
+                            </div>
+                        </div>
+                        <div class="small-box">
+                            <div class="start">
+                                <span class="material-icons">star</span>
+                            </div>
+                            <div class="content">
+                                Started
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="small-box">
+                            <div class="leave">L</div>
+                            <div class="content">
+                                Leave
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

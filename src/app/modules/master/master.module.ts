@@ -15,23 +15,17 @@ export const routes = [
             {
                 path: '',
                 children: [
-                    { path: 'vehicle', loadChildren: './vehicle#VehicleModule' },
-                    { path: 'status', loadChildren: './status#StatusModule' },
-
-                    { path: 'tag', loadChildren: './tag#TagModule' },
-                    { path: 'pushtag', loadChildren: './tagpush#TagPushModule' },
-
-                    { path: 'team', loadChildren: './team#TeamModule' },
                     { path: 'employee', loadChildren: './employee#EmployeeModule' },
-                    { path: 'employeeleave', loadChildren: './employeeleave#EmployeeLeaveModule' },
+                    { path: 'team', loadChildren: './team#TeamModule' },
+                    { path: 'tag', loadChildren: './tag#TagModule' },
                     { path: 'teamemployeemap', loadChildren: './teamempmap#TeamEmployeeMapModule' },
                     { path: 'teamownershipmap', loadChildren: './teamownermap#TeamOwnershipMapModule' },
-                    { path: 'expenseemployeemap', loadChildren: './expempmap#ExpenseEmployeeMapModule' },
+                    { path: 'tagempmap', loadChildren: './tagempmap#TagEmployeeMapModule' },
+                    { path: 'employeeleave', loadChildren: './employeeleave#EmployeeLeaveModule' },
                     
-                    { path: 'taskallocate', loadChildren: './taskallocate#TaskAllocateModule' },
-                    { path: 'notification', loadChildren: './notification#NotificationModule' },
-                    { path: 'expense', loadChildren: './expense#ExpenseModule' },
-                    { path: 'voucher', loadChildren: './voucher#VoucherModule' },
+                    { path: 'vehicle', loadChildren: './vehicle#VehicleModule' },
+                    { path: 'holiday', loadChildren: './holiday#HolidayModule' },
+                    { path: 'status', loadChildren: './status#StatusModule' },
                 ]
             }
         ]

@@ -15,6 +15,9 @@ export class WorkspaceReportsComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
     _wsdetails: any = [];
 
+    global = new Globals();
+    uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
+
     workspaceDT: any = [];
 
     @ViewChild('workspace') workspace: ElementRef;

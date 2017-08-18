@@ -14,7 +14,7 @@ export const routes = [
     path: '', children: [
       {
         path: '', component: AddTeamOwnershipComponent, canActivate: [AuthGuard],
-        data: { "module": "pentt", "submodule": "tom", "rights": "view", "urlname": "/teamownershipmap" }
+        data: { "module": "pentt", "submodule": "tmonr", "rights": "view", "urlname": "/teamownershipmap" }
       }
     ]
   },

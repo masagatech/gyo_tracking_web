@@ -18,7 +18,7 @@ export const routes = [
                 children: [
                     { path: 'workspace', loadChildren: './workspace#WorkspaceModule' },
                     { path: 'master', loadChildren: './master#MasterModule' },
-                    { path: 'employee', loadChildren: './employee#EmployeeModule' },
+                    { path: 'transaction', loadChildren: './transaction#TransactionModule' },
                     { path: 'log', loadChildren: './log#LogModule' },
                 ]
             }

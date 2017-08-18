@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Cookie } from 'ng2-cookies/ng2-cookies';
 import { MessageService, messageType, MenuService, LoginService, AuthenticationService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
 
@@ -37,8 +38,10 @@ export class LeftSideBarComponent implements OnInit, OnDestroy {
         this.uphoto = this.global.uploadurl + this.loginUser.uphoto;
         this.wsname = this.loginUser.wsname;
 
-        this.getMainMenuList();
-        this.getParentMenuList();
+        if (Cookie.get("_enttdetails_") !== null && Cookie.get("_enttdetails_") !== undefined) {
+            this.getMainMenuList();
+            this.getParentMenuList();
+        }
     }
 
     ngOnInit() {

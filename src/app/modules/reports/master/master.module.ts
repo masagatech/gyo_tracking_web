@@ -16,7 +16,15 @@ export const routes = [
             {
                 path: '',
                 children: [
+                    { path: 'employee', loadChildren: './employee#EmployeeReportsModule' },
                     { path: 'vehicle', loadChildren: './vehicle#VehicleReportsModule' },
+                    { path: 'tag', loadChildren: './tag#TagReportsModule' },
+                    { path: 'employeeleave', loadChildren: './employeeleave#EmployeeLeaveReportsModule' },
+                    { path: 'teamwiseemployee', loadChildren: './teamwiseemployee#TeamWiseEmployeeModule' },
+                    { path: 'holiday', loadChildren: './holiday#HolidayReportsModule' },
+                    
+                    { path: 'employeeattendance', loadChildren: './employeeattendance#EmployeeAttendanceModule' },
+                    { path: 'dailyattendance', loadChildren: './dailyattendance#DailyAttendanceModule' },
                 ]
             }
         ]

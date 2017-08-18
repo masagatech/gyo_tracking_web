@@ -16,7 +16,6 @@ export const routes = [
                 path: '',
                 children: [
                     { path: 'entity', loadChildren: './entity#EntityModule' },
-                    { path: 'holiday', loadChildren: './holiday#HolidayModule' },
                     { path: 'location', loadChildren: './location#LocationModule' },
                     { path: 'user', loadChildren: './users#UserModule' },
                 ]
