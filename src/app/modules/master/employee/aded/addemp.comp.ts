@@ -48,6 +48,7 @@ export class AddEmployeeComponent implements OnInit {
     uploadPhotoDT: any = [];
     global = new Globals();
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
+    chooseLabel: string = "";
 
     private subscribeParameters: any;
 
@@ -248,7 +249,7 @@ export class AddEmployeeComponent implements OnInit {
         return bytes;
     }
 
-    removeFileUpload() {
+    removePhotoUpload() {
         this.uploadPhotoDT.splice(0, 1);
     }
 
@@ -272,6 +273,7 @@ export class AddEmployeeComponent implements OnInit {
         that.city = 0;
         that.area = 0;
         that.pincode = 0;
+        that.chooseLabel = "Upload Employee Photo";
     }
 
     // Save Data
@@ -382,6 +384,7 @@ export class AddEmployeeComponent implements OnInit {
                 }).subscribe(data => {
                     try {
                         var _empdata = data.data;
+                        
                         that.empid = _empdata[0].empid;
                         that.loginid = _empdata[0].loginid;
                         that.empcode = _empdata[0].empcode;
@@ -390,6 +393,10 @@ export class AddEmployeeComponent implements OnInit {
 
                         if (data.data[0].FilePath !== "") {
                             that.uploadPhotoDT.push({ "athurl": data.data[0].FilePath });
+                            that.chooseLabel = "Change Employee Photo";
+                        }
+                        else {
+                            that.chooseLabel = "Upload Employee Photo";
                         }
 
                         that.aadharno = _empdata[0].aadharno;
@@ -408,7 +415,7 @@ export class AddEmployeeComponent implements OnInit {
                         that.pincode = _empdata[0].pincode;
                         that.remark1 = _empdata[0].remark1;
                         that.isactive = _empdata[0].isactive;
-                        that.mode = _empdata[0].mode;;
+                        that.mode = _empdata[0].mode;
                     }
                     catch (e) {
                         that._msg.Show(messageType.error, "Error", e);

@@ -142,7 +142,7 @@ export class StopsReportsComponent implements OnInit, OnDestroy {
 
         that._stopservice.getTripStops({
             "flag": "reports", "frmdt": that.frmdt, "todt": that.todt, "empid": that.empid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
-            "tag": "", "enttid": that._enttdetails.enttid, "wsautoid": that.loginUser.wsautoid, "issysadmin": that.loginUser.issysadmin
+            "tag": "", "enttid": that._enttdetails.enttid, "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
         }).subscribe(data => {
             try {
                 that.stopsDT = data.data;

@@ -42,7 +42,8 @@ export class ViewTagEmployeeMapComponent implements OnInit {
         that.totCountTags = 0;
 
         that._ptservice.getTagEmployeeMap({
-            "flag": "empwisetag", "enttid": that._enttdetails.enttid, "wsautoid": that._wsdetails.wsautoid
+            "flag": "empwisetag", "uid": that.loginUser.uid, "utype": that.loginUser.utype, "enttid": that._enttdetails.enttid,
+            "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
         }).subscribe(data => {
             try {
                 that.emptagDT = data.data;
@@ -70,14 +71,15 @@ export class ViewTagEmployeeMapComponent implements OnInit {
         commonfun.loader("#msttag");
 
         that._ptservice.getTagEmployeeMap({
-            "flag": "tagwiseemp", "enttid": that._enttdetails.enttid, "wsautoid": that._wsdetails.wsautoid, "empid": _empid
+            "flag": "tagwiseemp", "uid": that.loginUser.uid, "utype": that.loginUser.utype, "enttid": that._enttdetails.enttid,
+            "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin, "empid": _empid
         }).subscribe(data => {
             try {
                 if (data.data.length > 0) {
                     that.tagempDT = data.data;
                     that.headertitle = data.data[0].empname;
                 }
-                else{
+                else {
                     that.tagempDT = [];
                     that.headertitle = "";
                 }

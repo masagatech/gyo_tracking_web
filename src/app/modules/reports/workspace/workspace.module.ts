@@ -38,6 +38,6 @@ export const routes = [
     providers: [AuthGuard]
 })
 
-export class WorkspaceModule {
+export class WorkspaceReportsModule {
 
 }

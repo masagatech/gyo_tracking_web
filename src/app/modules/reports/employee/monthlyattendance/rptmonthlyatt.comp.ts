@@ -8,11 +8,11 @@ import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import jsPDF from 'jspdf'
 
 @Component({
-    templateUrl: 'rptempatt.comp.html',
+    templateUrl: 'rptmonthlyatt.comp.html',
     providers: [CommonService, MenuService, ReportsService]
 })
 
-export class EmployeeAttendancesComponent implements OnInit, OnDestroy {
+export class MonthlyAttendanceComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
     _wsdetails: any = [];
     _enttdetails: any = [];
@@ -24,7 +24,6 @@ export class EmployeeAttendancesComponent implements OnInit, OnDestroy {
     attData: any = [];
 
     monthname: string = "";
-    standard: string = "";
 
     @ViewChild('psngrattnd') psngrattnd: ElementRef;
 
@@ -37,7 +36,7 @@ export class EmployeeAttendancesComponent implements OnInit, OnDestroy {
 
         this.fillDropDownList();
         this.getDefaultMonth();
-        this.getEmployeeAttendanceData();
+        this.getMonthlyAttendanceData();
     }
 
     public ngOnInit() {
@@ -109,7 +108,7 @@ export class EmployeeAttendancesComponent implements OnInit, OnDestroy {
 
     // Get Attendent Data
 
-    getEmployeeAttendanceData() {
+    getMonthlyAttendanceData() {
         var that = this;
 
         that._rptservice.getEmployeeAttendance({
@@ -135,7 +134,9 @@ export class EmployeeAttendancesComponent implements OnInit, OnDestroy {
             commonfun.loader("#fltrpsngr");
 
             that._rptservice.getEmployeeAttendance({
-                "flag": "employee", "monthname": that.monthname, "standard": that.standard, "enttid": that._enttdetails.enttid
+                "flag": "monthly", "monthname": that.monthname, "enttid": that._enttdetails.enttid,
+                "uid": that.loginUser.uid, "utype": that.loginUser.utype,
+                "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
             }).subscribe(data => {
                 try {
                     if (data.data.length !== 0) {

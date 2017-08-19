@@ -76,7 +76,7 @@ export class LoginLogReportsComponent implements OnInit, OnDestroy {
         var that = this;
 
         that._userservice.getUserLoginLog({
-            "flag": "maxlog", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that.loginUser.wsautoid
+            "flag": "maxlog", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {
             try {
                 that.loginlogDT = data.data;
@@ -134,7 +134,7 @@ export class LoginLogReportsComponent implements OnInit, OnDestroy {
         commonfun.loader("#btnExport");
 
         that._menuservice.getMenuLog({
-            "flag": "export", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that.loginUser.wsautoid
+            "flag": "export", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {
             try {
                 new Angular2Csv(data.data, 'LoginLog', { "showLabels": true });

@@ -60,7 +60,7 @@ export class AddEntityComponent implements OnInit {
     weekDT: any = [];
     entttypeDT: any = [];
 
-    uploadPhotoDT: any = [];
+    uploadLogoDT: any = [];
     global = new Globals();
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
 
@@ -331,14 +331,14 @@ export class AddEntityComponent implements OnInit {
     onUpload(event) {
         var that = this;
         var imgfile = [];
-        that.uploadPhotoDT = [];
+        that.uploadLogoDT = [];
 
         imgfile = JSON.parse(event.xhr.response);
 
         console.log(imgfile);
 
         for (var i = 0; i < imgfile.length; i++) {
-            that.uploadPhotoDT.push({ "athurl": imgfile[i].path.replace(that.uploadconfig.filepath, "") })
+            that.uploadLogoDT.push({ "athurl": imgfile[i].path.replace(that.uploadconfig.filepath, "") })
         }
     }
 
@@ -367,8 +367,8 @@ export class AddEntityComponent implements OnInit {
         return bytes;
     }
 
-    removeFileUpload() {
-        this.uploadPhotoDT.splice(0, 1);
+    removeLogoUpload() {
+        this.uploadLogoDT.splice(0, 1);
     }
 
     // Clear Fields
@@ -496,7 +496,7 @@ export class AddEntityComponent implements OnInit {
                     "entttype": that.entttype,
                     "schcd": that.schcd,
                     "schnm": that.schnm,
-                    "schlogo": that.uploadPhotoDT.length == 0 ? "" : that.uploadPhotoDT[0].athurl,
+                    "schlogo": that.uploadLogoDT.length == 0 ? "" : that.uploadLogoDT[0].athurl,
                     "schgeoloc": that.lat + "," + that.lon,
                     "schvehs": that.schvehs.toString() == "" ? 0 : that.schvehs,
                     "oprvehs": that.oprvehs.toString() == "" ? 0 : that.oprvehs,
@@ -579,7 +579,7 @@ export class AddEntityComponent implements OnInit {
                         that.schnm = data.data[0].schoolname;
 
                         that.getUploadConfig();
-                        data.data[0].schlogo !== "" ? that.uploadPhotoDT.push({ "athurl": that.uploadconfig.uploadurl + data.data[0].schlogo }) : "";
+                        data.data[0].schlogo !== "" ? that.uploadLogoDT.push({ "athurl": that.uploadconfig.uploadurl + data.data[0].schlogo }) : "";
                         that.lat = data.data[0].lat;
                         that.lon = data.data[0].lon;
                         that.schvehs = data.data[0].ownbuses;

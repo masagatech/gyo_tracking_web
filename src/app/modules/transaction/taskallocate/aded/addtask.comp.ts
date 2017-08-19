@@ -352,9 +352,8 @@ export class AddTaskAllocateComponent implements OnInit {
                 that.tskid = params['id'];
 
                 that._atservice.getTaskAllocate({
-                    "flag": "edit",
-                    "tskid": that.tskid,
-                    "wsautoid": that._wsdetails.wsautoid
+                    "flag": "edit", "tskid": that.tskid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
+                    "enttid": that._enttdetails.enttid, "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
                 }).subscribe(data => {
                     try {
                         _taskdata = data.data[0]._taskdata;
@@ -366,7 +365,7 @@ export class AddTaskAllocateComponent implements OnInit {
                         that.todt = _taskdata[0].todt;
                         that.ntrgrp = _taskdata[0].ntrgrp;
                         that.remark = _taskdata[0].remark;
-                        
+
                         _empdata = data.data[0]._empdata == null ? [] : data.data[0]._empdata;
                         _tagdata = data.data[0]._tagdata == null ? [] : data.data[0]._tagdata;
 

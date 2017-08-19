@@ -135,7 +135,7 @@ export class TripReportsComponent implements OnInit, OnDestroy {
 
         that._rptservice.getTripReports({
             "enttid": that._enttdetails.enttid, "empid": that.empid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
-            "wsautoid": that.loginUser.wsautoid, "issysadmin": that.loginUser.issysadmin, "vtype": "p"
+            "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin, "vtype": "p"
         }).subscribe(data => {
             try {
                 if (data.data.length !== 0) {

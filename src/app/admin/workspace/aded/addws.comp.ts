@@ -54,6 +54,7 @@ export class AddWorkspaceComponent implements OnInit {
     uploadPhotoDT: any = [];
     global = new Globals();
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
+    chooseLabel: string = "";
 
     private subscribeParameters: any;
 
@@ -247,7 +248,7 @@ export class AddWorkspaceComponent implements OnInit {
         return bytes;
     }
 
-    removeFileUpload() {
+    removeLogoUpload() {
         this.uploadPhotoDT.splice(0, 1);
     }
 
@@ -286,6 +287,7 @@ export class AddWorkspaceComponent implements OnInit {
         that.schenttmaxno = 0;
 
         that.uploadPhotoDT = [];
+        that.chooseLabel = "Upload Employee Photo";
     }
 
     // Active / Deactive Data
@@ -543,6 +545,10 @@ export class AddWorkspaceComponent implements OnInit {
 
                             if (data.data[0].wslogo !== "") {
                                 that.uploadPhotoDT.push({ "athurl": data.data[0].wslogo });
+                                that.chooseLabel = "Change Employee Photo";
+                            }
+                            else {
+                                that.chooseLabel = "Upload Employee Photo";
                             }
 
                             that.wsdesc = data.data[0].wsdesc;

@@ -22,9 +22,6 @@ export const routes = [
                     { path: 'employeeleave', loadChildren: './employeeleave#EmployeeLeaveReportsModule' },
                     { path: 'teamwiseemployee', loadChildren: './teamwiseemployee#TeamWiseEmployeeModule' },
                     { path: 'holiday', loadChildren: './holiday#HolidayReportsModule' },
-                    
-                    { path: 'employeeattendance', loadChildren: './employeeattendance#EmployeeAttendanceModule' },
-                    { path: 'dailyattendance', loadChildren: './dailyattendance#DailyAttendanceModule' },
                 ]
             }
         ]
@@ -43,6 +40,6 @@ export const routes = [
     providers: [AuthGuard]
 })
 
-export class MasterModule {
+export class MasterReportsModule {
 
 }

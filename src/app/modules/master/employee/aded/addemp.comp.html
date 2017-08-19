@@ -61,17 +61,25 @@
                 </div>
 
                 <div class="row clearfix">
-                    <div class="col-md-12">
-                        <p-fileUpload name="fileUploaded" url="{{uploadconfig.server}}" (onUpload)="onUpload($event)" accept="{{uploadconfig.acceptedFiles}}" maxFileSize="{{uploadconfig.maxFilesize}}" auto="auto">
-                            <template pTemplate type="content">
-                                <div *ngIf="uploadPhotoDT.length">
-                                    <div *ngFor="let file of uploadPhotoDT" class="box">
-                                        <img src="{{uploadconfig.uploadurl + file.athurl}}" onerror="this.src='assets/img/default.gif';" height="40px" />
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <p-fileUpload mode="basic" name="fileUploaded" url="{{uploadconfig.server}}" chooseLabel="{{chooseLabel}}" (onUpload)="onUpload($event)" accept="{{uploadconfig.acceptedFiles}}" maxFileSize="{{uploadconfig.maxFilesize}}" auto="true"></p-fileUpload>
+
+                            <div *ngIf="uploadPhotoDT.length">
+                                <div *ngFor="let file of uploadPhotoDT" class="box">
+                                    <div class="row clearfix">
+                                        <div class="col-md-9">
+                                            <img src="{{uploadconfig.uploadurl + file.athurl}}" onerror="this.src='assets/img/nologo.gif';" height="40px" />
+                                        </div>
+                                        <div class="col-md-3" align="right">
+                                            <button type="button" class="btn btn-danger btn-xs" (click)="removePhotoUpload()">
+                                                <i class="material-icons">delete</i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                                <span *ngIf="!uploadPhotoDT.length">Upload Employee Photo....</span>
-                            </template>
-                        </p-fileUpload>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

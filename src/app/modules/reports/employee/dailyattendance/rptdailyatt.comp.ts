@@ -29,7 +29,7 @@ export class DailyAttendanceComponent implements OnInit, OnDestroy {
         this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
-        this.getAttendanceReports();
+        this.getDailyAttendanceData();
     }
 
     public ngOnInit() {
@@ -67,30 +67,37 @@ export class DailyAttendanceComponent implements OnInit, OnDestroy {
         });
     }
 
-    getAttendanceReports() {
+    getDailyAttendanceData() {
         var that = this;
         var monthname = that.getDefaultMonth();
 
-        commonfun.loader();
+        if (monthname === "") {
+            that._msg.Show(messageType.warn, "Warning", "Select Month");
+        }
+        else {
+            commonfun.loader();
 
-        that._rptservice.getAttendanceReports({
-            "flag": "daily", "monthname": monthname, "schoolid": that._enttdetails.enttid
-        }).subscribe(data => {
-            try {
-                that.attData = data.data;
-            }
-            catch (e) {
-                that._msg.Show(messageType.error, "Error", e);
-            }
+            that._rptservice.getEmployeeAttendance({
+                "flag": "daily", "monthname": monthname, "enttid": that._enttdetails.enttid,
+                "uid": that.loginUser.uid, "utype": that.loginUser.utype,
+                "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
+            }).subscribe(data => {
+                try {
+                    that.attData = data.data;
+                }
+                catch (e) {
+                    that._msg.Show(messageType.error, "Error", e);
+                }
 
-            commonfun.loaderhide();
-        }, err => {
-            that._msg.Show(messageType.error, "Error", err);
-            console.log(err);
-            commonfun.loaderhide();
-        }, () => {
+                commonfun.loaderhide();
+            }, err => {
+                that._msg.Show(messageType.error, "Error", err);
+                console.log(err);
+                commonfun.loaderhide();
+            }, () => {
 
-        })
+            })
+        }
     }
 
     public ngOnDestroy() {

@@ -263,16 +263,27 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <p-fileUpload name="fileUploaded" url="{{uploadconfig.server}}" (onUpload)="onUpload($event)" accept="{{uploadconfig.acceptedFiles}}" maxFileSize="{{uploadconfig.maxFilesize}}" auto="auto">
-                    <template pTemplate type="content">
-                        <div *ngIf="uploadPhotoDT.length">
-                            <div *ngFor="let file of uploadPhotoDT" class="box">
-                                <img src="{{uploadconfig.uploadurl + file.athurl}}" onerror="this.src='assets/img/nologo.gif';" height="40px" />
+                <p-fileUpload mode="basic" name="fileUploaded" url="{{uploadconfig.server}}" chooseLabel="{{chooseLabel}}" (onUpload)="onUpload($event)" accept="{{uploadconfig.acceptedFiles}}" maxFileSize="{{uploadconfig.maxFilesize}}" auto="true"></p-fileUpload>
+
+                <div class="row clearfix">
+                    <div class="col-md-12">
+                        <div *ngIf="uploadLogoDT.length">
+                            <div *ngFor="let file of uploadLogoDT" class="box">
+                                <div class="row clearfix">
+                                    <div class="col-md-9">
+                                        <img src="{{uploadconfig.uploadurl + file.athurl}}" onerror="this.src='assets/img/nologo.gif';" height="40px" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button type="button" class="btn btn-danger btn-xs" (click)="removeLogoUpload()">
+                                            <i class="material-icons">delete</i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <span *ngIf="!uploadPhotoDT.length">Upload {{entttype}} Logo Here....</span>
-                    </template>
-                </p-fileUpload>
+                        <span *ngIf="!uploadLogoDT.length">Upload {{entttype}} Logo Here....</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

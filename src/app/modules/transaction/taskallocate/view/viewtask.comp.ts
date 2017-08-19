@@ -37,7 +37,7 @@ export class ViewTaskAllocateComponent implements OnInit {
 
         that._atservice.getTaskAllocate({
             "flag": "all", "enttid": that._enttdetails.enttid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
-            "wsautoid": that.loginUser.wsautoid, "issysadmin": that.loginUser.issysadmin
+            "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
         }).subscribe(data => {
             try {
                 that.allocateTaskDT = data.data;

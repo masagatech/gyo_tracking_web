@@ -36,6 +36,6 @@ export const routes = [
     providers: [AuthGuard]
 })
 
-export class LogModule {
+export class LogReportsModule {
 
 }

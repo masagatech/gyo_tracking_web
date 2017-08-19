@@ -2,13 +2,13 @@
     <div class="header">
         <div class="row clearfix" id="fltrpsngr">
             <div class="col-md-4 col-xs-12">
-                <h4>Employee Attendance</h4>
+                <h4>Monthly Attendance</h4>
             </div>
             <div class="col-md-2 col-xs-4">
                 <div class="form-group">
                     <div class="form-line">
                         <label class="control-label">Month</label>
-                        <select id="monthname" name="monthname" [(ngModel)]="monthname" class="form-control" (ngModelChange)="getEmployeeAttendanceData()">
+                        <select id="monthname" name="monthname" [(ngModel)]="monthname" class="form-control" (ngModelChange)="getMonthlyAttendanceData()">
                             <option [value]="''">Select Month</option>
                             <option *ngFor="let row of monthDT" [value]="row.key">
                                 {{row.val}}
@@ -19,7 +19,7 @@
             </div>
             <div class="col-md-1 col-xs-2" style="padding-top: 20px;">
                 <div class="form-group">
-                    <button type="button" class="btn btn-theme btn-xs" (click)="getEmployeeAttendanceData()">
+                    <button type="button" class="btn btn-theme btn-xs" (click)="getMonthlyAttendanceData()">
                         <span class="material-icons">subdirectory_arrow_right</span>
                     </button>
                 </div>

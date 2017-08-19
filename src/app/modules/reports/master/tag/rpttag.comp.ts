@@ -100,7 +100,8 @@ export class TagReportsComponent implements OnInit, OnDestroy {
         commonfun.loader();
 
         that._tagservice.getTagDetails({
-            "flag": "reports", "empid": that.empid, "enttid": that._enttdetails.enttid, "wsautoid": that._wsdetails.wsautoid
+            "flag": "reports", "empid": that.empid, "uid": that.loginUser.uid, "utype": that.loginUser.utype, "enttid": that._enttdetails.enttid,
+            "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
         }).subscribe(data => {
             try {
                 that.emptagDT = data.data;

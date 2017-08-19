@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { TransactionComponent } from '../transaction/transaction.comp';
+import { EmployeeComponent } from '../employee/employee.comp';
 import { AuthGuard } from '@services';
 import { SharedComponentModule } from '@services';
 
@@ -10,16 +10,14 @@ import { CommonModule } from '@angular/common';
 export const routes = [
     {
         path: '',
-        component: TransactionComponent,
+        component: EmployeeComponent,
         canActivate: [AuthGuard],
         children: [
             {
                 path: '',
                 children: [
-                    { path: 'taskallocate', loadChildren: './taskallocate#TaskAllocateReportsModule' },
-                    { path: 'expense', loadChildren: './expense#ExpenseReportsModule' },
-                    { path: 'trips', loadChildren: './trips#TripReportsModule' },
-                    { path: 'stops', loadChildren: './stops#StopsReportsModule' },
+                    { path: 'monthlyattendance', loadChildren: './monthlyattendance#MonthlyAttendanceModule' },
+                    { path: 'dailyattendance', loadChildren: './dailyattendance#DailyAttendanceModule' },
                 ]
             }
         ]
@@ -33,11 +31,11 @@ export const routes = [
         CommonModule,
     ],
     declarations: [
-        TransactionComponent
+        EmployeeComponent
     ],
     providers: [AuthGuard]
 })
 
-export class TransactionReportsModule {
+export class EmployeeReportsModule {
 
 }

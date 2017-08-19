@@ -77,7 +77,7 @@ export class MenuLogReportsComponent implements OnInit, OnDestroy {
         commonfun.loader();
 
         that._menuservice.getMenuLog({
-            "flag": "maxlog", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that.loginUser.wsautoid
+            "flag": "maxlog", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {
             try {
                 that.menulogDT = data.data;
@@ -135,7 +135,7 @@ export class MenuLogReportsComponent implements OnInit, OnDestroy {
         commonfun.loader("#btnExport");
 
         that._menuservice.getMenuLog({
-            "flag": "export", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that.loginUser.wsautoid
+            "flag": "export", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {
             try {
                 new Angular2Csv(data.data, 'MenuLogDetails', { "showLabels": true });
