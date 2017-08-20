@@ -51,18 +51,24 @@
                     <div class="block-header">
                         <h4>{{mrow.key}}</h4>
                     </div>
-                    <div class="row clearfix allcheckboxes" *ngFor="let actrow of mrow.value">
-                        <div class="col-md-3">
-                            <input id="{{actrow.mid}}" name="menu{{i + 1}}" type="checkbox" value="{{actrow.mid}}" (change)="selectAndDeselectMenuWiseCheckboxes(actrow)" class="filled-in" />
-                            <label for="{{actrow.mid}}">{{actrow.mname}}</label>
+                    <div class="allcheckboxes" *ngFor="let drow of mrow.value | groupBy:'mpname';">
+                        <div class="block-header">
+                            <h5>{{drow.key}}</h5>
                         </div>
-                        <div class="col-md-9" id="M{{actrow.mid}}">
-                            <span style="margin-right:5px;" *ngFor="let item of getMenuRights(actrow.maction) let i = index">
-                                <input type="checkbox" id="{{actrow.mid}}{{item}}" value="{{item}}" name="menuitem{{i + 1}}" data-menuid="actrow.mid" data-right="item"
-                                    class="actrights filled-in" />
-                                <label for="{{actrow.mid}}{{item}}">{{item}}</label>
-                            </span>
+                        <div class="row clearfix" *ngFor="let actrow of drow.value">
+                            <div class="col-md-3">
+                                <input id="{{actrow.mid}}" name="menu{{i + 1}}" type="checkbox" value="{{actrow.mid}}" (change)="selectAndDeselectMenuWiseCheckboxes(actrow)" class="filled-in" />
+                                <label for="{{actrow.mid}}">{{actrow.mname}}</label>
+                            </div>
+                            <div class="col-md-9" id="M{{actrow.mid}}">
+                                <span style="margin-right:5px;" *ngFor="let item of getMenuRights(actrow.maction) let i = index">
+                                    <input type="checkbox" id="{{actrow.mid}}{{item}}" value="{{item}}" name="menuitem{{i + 1}}" data-menuid="actrow.mid" data-right="item"
+                                        class="actrights filled-in" />
+                                    <label for="{{actrow.mid}}{{item}}">{{item}}</label>
+                                </span>
+                            </div>
                         </div>
+                        <hr />
                     </div>
                 </div>
             </div>
