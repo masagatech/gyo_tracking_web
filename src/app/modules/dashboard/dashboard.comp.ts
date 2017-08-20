@@ -45,7 +45,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
         var dbparams = {
             "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
-            "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid,
+            "issysadmin": that.loginUser.issysadmin, "wsautoid": that._enttdetails.wsautoid,
             "enttid": that._enttdetails.enttid, "dbview": "entt"
         }
 

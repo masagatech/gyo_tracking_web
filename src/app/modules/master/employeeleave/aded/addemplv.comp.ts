@@ -15,7 +15,6 @@ declare var commonfun: any;
 
 export class AddEmployeeLeaveComponent implements OnInit {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     elid: number = 0;
@@ -38,7 +37,6 @@ export class AddEmployeeLeaveComponent implements OnInit {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
         private _emplvservice: EmployeeLeaveService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.fillLeaveTypeDropDown();
@@ -62,7 +60,7 @@ export class AddEmployeeLeaveComponent implements OnInit {
             "utype": this.loginUser.utype,
             "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.employeeDT = data.data;
@@ -137,7 +135,7 @@ export class AddEmployeeLeaveComponent implements OnInit {
                 "restype": that.restype,
                 "reason": that.reason,
                 "cuid": that.loginUser.ucode,
-                "wsautoid": that._wsdetails.wsautoid,
+                "wsautoid": that._enttdetails.wsautoid,
                 "isactive": that.isactive,
                 "mode": ""
             }
@@ -192,7 +190,7 @@ export class AddEmployeeLeaveComponent implements OnInit {
                 params = {
                     "flag": "edit",
                     "id": that.elid,
-                    "wsautoid": that._wsdetails.wsautoid
+                    "wsautoid": that._enttdetails.wsautoid
                 }
 
                 that._emplvservice.getEmployeeLeave(params).subscribe(data => {

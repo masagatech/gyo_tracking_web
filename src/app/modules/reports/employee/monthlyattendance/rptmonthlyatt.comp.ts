@@ -14,7 +14,6 @@ import jsPDF from 'jspdf'
 
 export class MonthlyAttendanceComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     monthDT: any = [];
@@ -136,7 +135,7 @@ export class MonthlyAttendanceComponent implements OnInit, OnDestroy {
             that._rptservice.getEmployeeAttendance({
                 "flag": "monthly", "monthname": that.monthname, "enttid": that._enttdetails.enttid,
                 "uid": that.loginUser.uid, "utype": that.loginUser.utype,
-                "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
+                "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
             }).subscribe(data => {
                 try {
                     if (data.data.length !== 0) {

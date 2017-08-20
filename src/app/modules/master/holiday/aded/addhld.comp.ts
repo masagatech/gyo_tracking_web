@@ -15,7 +15,6 @@ declare var commonfun: any;
 
 export class AddHolidayComponent implements OnInit {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     hldid: number = 0;
@@ -43,7 +42,6 @@ export class AddHolidayComponent implements OnInit {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
         private _hldservice: HolidayService, private _temservice: TeamEmployeeMapService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
     }
 
@@ -66,7 +64,7 @@ export class AddHolidayComponent implements OnInit {
             "ucode": this.loginUser.ucode,
             "utype": this.loginUser.utype,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.teamDT = data.data;
@@ -187,7 +185,7 @@ export class AddHolidayComponent implements OnInit {
                 "frmdt": that.frmdt,
                 "todt": that.todt,
                 "enttid": that._enttdetails.enttid,
-                "wsautoid": that._wsdetails.wsautoid,
+                "wsautoid": that._enttdetails.wsautoid,
                 "cuid": that.loginUser.ucode,
                 "isactive": that.isactive,
                 "mode": ""
@@ -241,7 +239,7 @@ export class AddHolidayComponent implements OnInit {
                 that._hldservice.getHoliday({
                     "flag": "edit",
                     "id": that.hldid,
-                    "wsautoid": that._wsdetails.wsautoid
+                    "wsautoid": that._enttdetails.wsautoid
                 }).subscribe(data => {
                     try {
                         that.hldid = data.data[0].hldid;

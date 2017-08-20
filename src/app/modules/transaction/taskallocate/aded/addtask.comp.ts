@@ -14,7 +14,6 @@ declare var google: any;
 
 export class AddTaskAllocateComponent implements OnInit {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     tskid: number = 0;
@@ -46,7 +45,6 @@ export class AddTaskAllocateComponent implements OnInit {
     constructor(private _atservice: TaskAllocateService, private _routeParams: ActivatedRoute, private _router: Router,
         private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.fillNatureOfGroupDDL();
@@ -68,7 +66,7 @@ export class AddTaskAllocateComponent implements OnInit {
             "utype": this.loginUser.utype,
             "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.employeeDT = data.data;
@@ -144,7 +142,7 @@ export class AddTaskAllocateComponent implements OnInit {
             "utype": this.loginUser.utype,
             "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.employeeDT = data.data;
@@ -289,7 +287,6 @@ export class AddTaskAllocateComponent implements OnInit {
 
             var saveemp = {
                 "tskid": that.tskid,
-                "enttid": that._enttdetails.enttid,
                 "empid": selectedEmployee,
                 "tagid": selectedTag,
                 "tsktitle": that.tsktitle,
@@ -299,7 +296,8 @@ export class AddTaskAllocateComponent implements OnInit {
                 "ntrgrp": that.ntrgrp,
                 "remark": that.remark,
                 "cuid": that.loginUser.ucode,
-                "wsautoid": that._wsdetails.wsautoid
+                "enttid": that._enttdetails.enttid,
+                "wsautoid": that._enttdetails.wsautoid
             }
 
             this._atservice.saveTaskAllocate(saveemp).subscribe(data => {
@@ -353,7 +351,7 @@ export class AddTaskAllocateComponent implements OnInit {
 
                 that._atservice.getTaskAllocate({
                     "flag": "edit", "tskid": that.tskid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
-                    "enttid": that._enttdetails.enttid, "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
+                    "enttid": that._enttdetails.enttid, "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
                 }).subscribe(data => {
                     try {
                         _taskdata = data.data[0]._taskdata;

@@ -13,7 +13,6 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 export class ViewTagComponent implements OnInit {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     tagDT: any = [];
@@ -24,7 +23,6 @@ export class ViewTagComponent implements OnInit {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
         private _tmservice: TagService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.getTagDetails();
@@ -43,7 +41,7 @@ export class ViewTagComponent implements OnInit {
         params = {
             "flag": "all",
             "enttid": that._enttdetails.enttid,
-            "wsautoid": that._wsdetails.wsautoid
+            "wsautoid": that._enttdetails.wsautoid
         }
 
         that._tmservice.getTagDetails(params).subscribe(data => {

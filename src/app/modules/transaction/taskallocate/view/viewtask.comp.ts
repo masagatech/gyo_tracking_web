@@ -13,7 +13,6 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 export class ViewTaskAllocateComponent implements OnInit {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     allocateTaskDT: any = [];
@@ -21,7 +20,6 @@ export class ViewTaskAllocateComponent implements OnInit {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
         private _loginservice: LoginService, private _autoservice: CommonService, private _atservice: TaskAllocateService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.getTaskAllocate();
@@ -37,7 +35,7 @@ export class ViewTaskAllocateComponent implements OnInit {
 
         that._atservice.getTaskAllocate({
             "flag": "all", "enttid": that._enttdetails.enttid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
-            "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
+            "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
         }).subscribe(data => {
             try {
                 that.allocateTaskDT = data.data;

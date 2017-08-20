@@ -14,6 +14,7 @@ declare var google: any;
 
 export class AddEntityComponent implements OnInit {
     loginUser: LoginUserModel;
+    _wsdetails: any = [];
 
     marker: any;
     @ViewChild("gmap")
@@ -63,8 +64,8 @@ export class AddEntityComponent implements OnInit {
     uploadLogoDT: any = [];
     global = new Globals();
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
+    chooseLabel: string = "";
 
-    _wsdetails: any = [];
     private subscribeParameters: any;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _entityservice: EntityService,
@@ -137,10 +138,12 @@ export class AddEntityComponent implements OnInit {
 
                 if (that.entttypeDT.length == 1) {
                     that.entttype = that.entttypeDT[0].key;
+                    that.chooseLabel = "Upload " + that.entttype + " Logo";
                 }
                 else {
                     that.entttypeDT.splice(0, 0, { "key": "", "val": "Select Entity Type" });
                     that.entttype = "";
+                    that.chooseLabel = "Upload Logo";
                 }
 
                 that.weekDT = data.data.filter(a => a.group === "week");
@@ -169,7 +172,7 @@ export class AddEntityComponent implements OnInit {
         that._autoservice.getDropDownData({ "flag": "state" }).subscribe(data => {
             try {
                 that.stateDT = data.data;
-            // setTimeout(function () { $.AdminBSB.select.refresh('state'); }, 100);
+                // setTimeout(function () { $.AdminBSB.select.refresh('state'); }, 100);
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -200,7 +203,7 @@ export class AddEntityComponent implements OnInit {
         that._autoservice.getDropDownData({ "flag": "city", "sid": that.state }).subscribe(data => {
             try {
                 that.cityDT = data.data;
-            // setTimeout(function () { $.AdminBSB.select.refresh('city'); }, 100);
+                // setTimeout(function () { $.AdminBSB.select.refresh('city'); }, 100);
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -229,7 +232,7 @@ export class AddEntityComponent implements OnInit {
         that._autoservice.getDropDownData({ "flag": "area", "ctid": that.city, "sid": that.state }).subscribe(data => {
             try {
                 that.areaDT = data.data;
-            // setTimeout(function () { $.AdminBSB.select.refresh('area'); }, 100);
+                // setTimeout(function () { $.AdminBSB.select.refresh('area'); }, 100);
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -335,11 +338,11 @@ export class AddEntityComponent implements OnInit {
 
         imgfile = JSON.parse(event.xhr.response);
 
-        console.log(imgfile);
-
-        for (var i = 0; i < imgfile.length; i++) {
-            that.uploadLogoDT.push({ "athurl": imgfile[i].path.replace(that.uploadconfig.filepath, "") })
-        }
+        setTimeout(function () {
+            for (var i = 0; i < imgfile.length; i++) {
+                that.uploadLogoDT.push({ "athurl": imgfile[i].path.replace(that.uploadconfig.filepath, "") })
+            }
+        }, 1000);
     }
 
     // Get File Size
@@ -377,7 +380,6 @@ export class AddEntityComponent implements OnInit {
         var that = this;
 
         that.schid = 0;
-        that.entttype = "";
         that.schcd = "";
         that.schnm = "";
         that.schvehs = 0;
@@ -578,8 +580,14 @@ export class AddEntityComponent implements OnInit {
                         that.schcd = data.data[0].schoolcode;
                         that.schnm = data.data[0].schoolname;
 
-                        that.getUploadConfig();
-                        data.data[0].schlogo !== "" ? that.uploadLogoDT.push({ "athurl": that.uploadconfig.uploadurl + data.data[0].schlogo }) : "";
+                        if (data.data[0].schlogo !== "") {
+                            that.uploadLogoDT.push({ "athurl": data.data[0].schlogo });
+                            that.chooseLabel = "Change " + that.entttype + " Logo";
+                        }
+                        else {
+                            that.chooseLabel = "Upload " + that.entttype + " Logo";
+                        }
+
                         that.lat = data.data[0].lat;
                         that.lon = data.data[0].lon;
                         that.schvehs = data.data[0].ownbuses;

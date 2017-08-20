@@ -15,7 +15,6 @@ declare var commonfun: any;
 
 export class AddTeamComponent implements OnInit {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     tmid: number = 0;
@@ -31,7 +30,6 @@ export class AddTeamComponent implements OnInit {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
         private _tmservice: TeamService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
     }
 
@@ -74,7 +72,7 @@ export class AddTeamComponent implements OnInit {
                 "purpose": that.purpose,
                 "cuid": that.loginUser.ucode,
                 "enttid": that._enttdetails.enttid,
-                "wsautoid": that._wsdetails.wsautoid,
+                "wsautoid": that._enttdetails.wsautoid,
                 "isactive": that.isactive,
                 "mode": ""
             }
@@ -129,7 +127,7 @@ export class AddTeamComponent implements OnInit {
                 params = {
                     "flag": "edit",
                     "tmid": that.tmid,
-                    "wsautoid": that._wsdetails.wsautoid
+                    "wsautoid": that._enttdetails.wsautoid
                 }
 
                 that._tmservice.getTeamDetails(params).subscribe(data => {

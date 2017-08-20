@@ -14,7 +14,6 @@ declare var google: any;
 
 export class AddTagEmployeeMapComponent implements OnInit {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     disableentt: boolean = false;
@@ -47,7 +46,6 @@ export class AddTagEmployeeMapComponent implements OnInit {
     constructor(private _temservice: TeamEmployeeMapService, private _ptservice: TagService, private _routeParams: ActivatedRoute,
         private _router: Router, private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.hidewhenTeamOrEmployee();
@@ -81,7 +79,7 @@ export class AddTagEmployeeMapComponent implements OnInit {
         this._autoservice.getAutoData({
             "flag": "tag",
             "enttid": this._enttdetails.enttid,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.tagDT = data.data;
@@ -126,7 +124,7 @@ export class AddTagEmployeeMapComponent implements OnInit {
             "utype": this.loginUser.utype,
             "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.teamDT = data.data;
@@ -154,7 +152,7 @@ export class AddTagEmployeeMapComponent implements OnInit {
             "flag": "employee",
             "enttid": that._enttdetails.enttid,
             "tmid": that.tmid,
-            "wsautoid": that._wsdetails.wsautoid
+            "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
                 if (data.data.length > 0) {
@@ -194,7 +192,7 @@ export class AddTagEmployeeMapComponent implements OnInit {
             "utype": this.loginUser.utype,
             "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.employeeDT = data.data;
@@ -353,7 +351,7 @@ export class AddTagEmployeeMapComponent implements OnInit {
                     "tmid": that.tmid,
                     "remark": that.remark,
                     "cuid": that.loginUser.ucode,
-                    "wsautoid": that._wsdetails.wsautoid
+                    "wsautoid": that._enttdetails.wsautoid
                 }
 
                 this._ptservice.saveTagEmployeeMap(saveemp).subscribe(data => {
@@ -404,7 +402,7 @@ export class AddTagEmployeeMapComponent implements OnInit {
         that._ptservice.getTagEmployeeMap({
             "flag": "edit",
             "tagid": ptagid,
-            "wsautoid": that._wsdetails.wsautoid
+            "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
                 that.temid = data.data[0].temid;

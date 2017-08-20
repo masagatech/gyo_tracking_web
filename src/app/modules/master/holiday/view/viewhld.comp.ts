@@ -12,7 +12,6 @@ import { HolidayService } from '@services/master';
 
 export class ViewHolidayComponent implements OnInit {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     entityDT: any = [];
@@ -92,7 +91,7 @@ export class ViewHolidayComponent implements OnInit {
             "ucode": this.loginUser.ucode,
             "utype": this.loginUser.utype,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.entityDT = data.data;
@@ -139,7 +138,7 @@ export class ViewHolidayComponent implements OnInit {
 
         that._holidayervice.getHoliday({
             "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
-            "issysadmin": that.loginUser.issysadmin, "enttid": that._enttdetails.enttid, "wsautoid": that._wsdetails.wsautoid
+            "issysadmin": that.loginUser.issysadmin, "enttid": that._enttdetails.enttid, "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
                 that.holidayDT = data.data;

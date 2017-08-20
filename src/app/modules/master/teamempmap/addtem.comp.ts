@@ -14,7 +14,6 @@ declare var google: any;
 
 export class AddTeamEmployeeMapComponent implements OnInit {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     temid: number = 0;
@@ -35,7 +34,6 @@ export class AddTeamEmployeeMapComponent implements OnInit {
     constructor(private _temservice: TeamEmployeeMapService, private _routeParams: ActivatedRoute, private _router: Router,
         private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
     }
 
@@ -55,7 +53,7 @@ export class AddTeamEmployeeMapComponent implements OnInit {
             "utype": this.loginUser.utype,
             "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.teamDT = data.data;
@@ -85,7 +83,7 @@ export class AddTeamEmployeeMapComponent implements OnInit {
             "utype": this.loginUser.utype,
             "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.employeeDT = data.data;
@@ -134,9 +132,8 @@ export class AddTeamEmployeeMapComponent implements OnInit {
             that.employeeList.push({
                 "temid": that.temid,
                 "enttid": that._enttdetails.enttid, "enttname": that._enttdetails.enttname,
-                "tmid": that.tmid, "tmnm": that.tmnm,
-                "empid": that.empid, "empname": that.empname,
-                "wsautoid": that._wsdetails.wsautoid, "isactive": true
+                "tmid": that.tmid, "tmnm": that.tmnm, "empid": that.empid, "empname": that.empname,
+                "wsautoid": that._enttdetails.wsautoid, "isactive": true
             });
         }
 
@@ -225,9 +222,9 @@ export class AddTeamEmployeeMapComponent implements OnInit {
 
         that._temservice.getTeamEmployeeMap({
             "flag": "edit",
-            "enttid": that._enttdetails.enttid,
             "tmid": that.tmid,
-            "wsautoid": that._wsdetails.wsautoid
+            "enttid": that._enttdetails.enttid,
+            "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
                 that.employeeList = data.data;

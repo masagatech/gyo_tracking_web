@@ -15,7 +15,6 @@ declare var commonfun: any;
 
 export class AddExpenseComponent implements OnInit {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     expid: number = 0;
@@ -34,7 +33,6 @@ export class AddExpenseComponent implements OnInit {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
         private _expservice: ExpenseService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.fillExpenseTypeDDL();
@@ -120,7 +118,7 @@ export class AddExpenseComponent implements OnInit {
                 "expamt": that.expamt,
                 "enttid": that._enttdetails.enttid,
                 "cuid": that.loginUser.ucode,
-                "wsautoid": that._wsdetails.wsautoid,
+                "wsautoid": that._enttdetails.wsautoid,
                 "mode": ""
             }
 
@@ -174,7 +172,7 @@ export class AddExpenseComponent implements OnInit {
                 params = {
                     "flag": "edit",
                     "expid": that.expid,
-                    "wsautoid": that._wsdetails.wsautoid
+                    "wsautoid": that._enttdetails.wsautoid
                 }
 
                 that._expservice.getExpenseDetails(params).subscribe(data => {

@@ -11,7 +11,6 @@ import { EmployeeService } from '@services/master';
 
 export class AddExpenseEmployeeMapComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     employeeDT: any = [];
@@ -26,7 +25,6 @@ export class AddExpenseEmployeeMapComponent implements OnInit, OnDestroy {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _autoservice: CommonService,
         private _empservice: EmployeeService, private _loginservice: LoginService, private _msg: MessageService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
     }
 
@@ -54,7 +52,7 @@ export class AddExpenseEmployeeMapComponent implements OnInit, OnDestroy {
             "utype": this.loginUser.utype,
             "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.employeeDT = data.data;
@@ -80,7 +78,7 @@ export class AddExpenseEmployeeMapComponent implements OnInit, OnDestroy {
         this._autoservice.getAutoData({
             "flag": "expense",
             "enttid": this._enttdetails.enttid,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.expenseDT = data.data;
@@ -160,7 +158,7 @@ export class AddExpenseEmployeeMapComponent implements OnInit, OnDestroy {
         that._empservice.getEmployeeDetails({
             "flag": "expense",
             "id": that.empid,
-            "wsautoid": that._wsdetails.wsautoid
+            "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
                 that.expenseList = data.data[0].expense !== null ? data.data[0].expense : [];

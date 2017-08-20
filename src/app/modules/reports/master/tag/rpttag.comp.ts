@@ -14,7 +14,6 @@ import jsPDF from 'jspdf'
 
 export class TagReportsComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     emptagDT: any = [];
@@ -29,7 +28,6 @@ export class TagReportsComponent implements OnInit, OnDestroy {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, public _menuservice: MenuService,
         private _loginservice: LoginService, private _tagservice: TagService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.getTagEmployeeMap();
@@ -76,7 +74,7 @@ export class TagReportsComponent implements OnInit, OnDestroy {
             "utype": this.loginUser.utype,
             "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.employeeDT = data.data;
@@ -101,7 +99,7 @@ export class TagReportsComponent implements OnInit, OnDestroy {
 
         that._tagservice.getTagDetails({
             "flag": "reports", "empid": that.empid, "uid": that.loginUser.uid, "utype": that.loginUser.utype, "enttid": that._enttdetails.enttid,
-            "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
+            "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
         }).subscribe(data => {
             try {
                 that.emptagDT = data.data;

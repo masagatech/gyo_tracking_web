@@ -52,8 +52,14 @@ export class LoginComponent implements OnInit, OnDestroy {
                                 that._router.navigate(['/admin/workspace']);
                             }
                             else {
-                                Cookie.set("_wsdetails_", JSON.stringify(userDetails));
-                                that._router.navigate(['/workspace/entity']);
+                                if (userDetails.isemp) {
+                                    Cookie.set("_enttdetails_", JSON.stringify(userDetails));
+                                    that._router.navigate(['/']);
+                                }
+                                else {
+                                    Cookie.set("_wsdetails_", JSON.stringify(userDetails));
+                                    that._router.navigate(['/workspace/entity']);
+                                }
                             }
                         } else {
                             that._msg.Show(messageType.error, "Error", userDetails.errmsg);
@@ -64,7 +70,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
             }
-            
+
             commonfun.loaderhide("#loginloader");
         }, err => {
             that._msg.Show(messageType.error, "Error", err);
@@ -78,8 +84,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         $('body').addClass('backgroundImg');
     }
 
-    ngOnDestroy(){
-         $('body').removeClass('backgroundImg');
+    ngOnDestroy() {
+        $('body').removeClass('backgroundImg');
     }
 
 }

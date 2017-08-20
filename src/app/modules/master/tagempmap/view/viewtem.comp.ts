@@ -13,7 +13,6 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 export class ViewTagEmployeeMapComponent implements OnInit {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     headertitle: string = "";
@@ -25,7 +24,6 @@ export class ViewTagEmployeeMapComponent implements OnInit {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
         private _loginservice: LoginService, private _autoservice: CommonService, private _ptservice: TagService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.getCountEmpTags();
@@ -43,7 +41,7 @@ export class ViewTagEmployeeMapComponent implements OnInit {
 
         that._ptservice.getTagEmployeeMap({
             "flag": "empwisetag", "uid": that.loginUser.uid, "utype": that.loginUser.utype, "enttid": that._enttdetails.enttid,
-            "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
+            "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
         }).subscribe(data => {
             try {
                 that.emptagDT = data.data;
@@ -72,7 +70,7 @@ export class ViewTagEmployeeMapComponent implements OnInit {
 
         that._ptservice.getTagEmployeeMap({
             "flag": "tagwiseemp", "uid": that.loginUser.uid, "utype": that.loginUser.utype, "enttid": that._enttdetails.enttid,
-            "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin, "empid": _empid
+            "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin, "empid": _empid
         }).subscribe(data => {
             try {
                 if (data.data.length > 0) {

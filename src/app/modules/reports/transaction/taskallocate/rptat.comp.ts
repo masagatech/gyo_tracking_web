@@ -13,7 +13,6 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 export class TaskAllocateComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     frmdt: any = "";
@@ -43,7 +42,6 @@ export class TaskAllocateComponent implements OnInit, OnDestroy {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
         private _loginservice: LoginService, private _autoservice: CommonService, private _atservice: TaskAllocateService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.setFromDateAndToDate();
@@ -97,7 +95,7 @@ export class TaskAllocateComponent implements OnInit, OnDestroy {
             "ucode": that.loginUser.ucode,
             "utype": that.loginUser.utype,
             "issysadmin": that.loginUser.issysadmin,
-            // "wsautoid": that._wsdetails.wsautoid,
+            "wsautoid": that._enttdetails.wsautoid,
             "search": query
         }).subscribe(data => {
             that.assignedbyDT = data.data;
@@ -130,7 +128,7 @@ export class TaskAllocateComponent implements OnInit, OnDestroy {
             "utype": this.loginUser.utype,
             "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.assignedtoDT = data.data;
@@ -156,7 +154,7 @@ export class TaskAllocateComponent implements OnInit, OnDestroy {
         this._autoservice.getAutoData({
             "flag": "tag",
             "enttid": this._enttdetails.enttid,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.tagDT = data.data;
@@ -194,7 +192,7 @@ export class TaskAllocateComponent implements OnInit, OnDestroy {
         that._atservice.getTaskReports({
             "flag": "reports", "frmdt": that.frmdt, "todt": that.todt, "assbyid": that.assbyid, "assbytype": that.assbytype, "asstoid": that.asstoid,
             "uid": that.loginUser.uid, "utype": that.loginUser.utype, "tagid": tagids, "tsktitle": "", "enttid": that._enttdetails.enttid,
-            "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
+            "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
         }).subscribe(data => {
             try {
                 that.allocateTaskDT = data.data;

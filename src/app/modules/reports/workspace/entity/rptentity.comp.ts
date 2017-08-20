@@ -52,7 +52,7 @@ export class EntityReportsComponent implements OnInit, OnDestroy {
             pagesplit: true
         };
         pdf.addHTML(this.entity.nativeElement, 0, 0, options, () => {
-            pdf.save("EntityDetials.pdf");
+            pdf.save("EntityDetails.pdf");
         });
     }
 

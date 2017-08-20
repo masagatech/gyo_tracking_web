@@ -15,7 +15,6 @@ import jsPDF from 'jspdf'
 
 export class EmployeeReportsComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     employeeDT: any = [];
@@ -27,7 +26,6 @@ export class EmployeeReportsComponent implements OnInit, OnDestroy {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, public _menuservice: MenuService,
         private _loginservice: LoginService, private _autoservice: CommonService, private _Employeeservice: EmployeeService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.getEmployeeDetails();
@@ -67,7 +65,7 @@ export class EmployeeReportsComponent implements OnInit, OnDestroy {
 
         that._Employeeservice.getEmployeeDetails({
             "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
-            "enttid": that._enttdetails.enttid, "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid
+            "enttid": that._enttdetails.enttid, "issysadmin": that.loginUser.issysadmin, "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
                 that.employeeDT = data.data;

@@ -15,7 +15,6 @@ declare var commonfun: any;
 
 export class ApprovalVoucherComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     empid: number = 0;
@@ -30,7 +29,6 @@ export class ApprovalVoucherComponent implements OnInit, OnDestroy {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
         private _vcrservice: VoucherService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.getVoucherNo();
@@ -61,9 +59,9 @@ export class ApprovalVoucherComponent implements OnInit, OnDestroy {
 
                 params = {
                     "flag": "voucherno",
-                    "enttid": that._enttdetails.enttid,
                     "empid": that.empid,
-                    "wsautoid": that._wsdetails.wsautoid
+                    "enttid": that._enttdetails.enttid,
+                    "wsautoid": that._enttdetails.wsautoid
                 }
 
                 that._vcrservice.getVoucherDetails(params).subscribe(data => {
@@ -105,7 +103,7 @@ export class ApprovalVoucherComponent implements OnInit, OnDestroy {
             "expid": row.expid,
             "empid": row.empid,
             "enttid": row.enttid,
-            "wsautoid": that._wsdetails.wsautoid
+            "wsautoid": that._enttdetails.wsautoid
         }
 
         that._vcrservice.getVoucherDetails(params).subscribe(data => {
@@ -139,7 +137,6 @@ export class ApprovalVoucherComponent implements OnInit, OnDestroy {
 
             vcrapprdata.push({
                 "vcraid": "0",
-                "enttid": that._enttdetails.enttid,
                 "empid": that.empid,
                 "expid": vcrrow.expid,
                 "vcrid": vcrrow.vcrid,
@@ -147,7 +144,8 @@ export class ApprovalVoucherComponent implements OnInit, OnDestroy {
                 "appramt": vcrrow.appramt,
                 "apprremark": vcrrow.apprremark,
                 "cuid": that.loginUser.ucode,
-                "wsautoid": that._wsdetails.wsautoid,
+                "enttid": that._enttdetails.enttid,
+                "wsautoid": that._enttdetails.wsautoid,
                 "isactive": true
             })
         }

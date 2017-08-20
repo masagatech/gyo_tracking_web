@@ -15,7 +15,6 @@ declare var commonfun: any;
 
 export class ApprovalEmployeeLeaveComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     empid: number = 0;
@@ -29,7 +28,6 @@ export class ApprovalEmployeeLeaveComponent implements OnInit, OnDestroy {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
         private _emplvservice: EmployeeLeaveService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.getEmployeeLeaveDetails();
@@ -58,7 +56,8 @@ export class ApprovalEmployeeLeaveComponent implements OnInit, OnDestroy {
 
                 params = {
                     "flag": "byemp", "empid": that.empid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
-                    "issysadmin": that.loginUser.issysadmin, "enttid": that._enttdetails.enttid, "wsautoid": that._wsdetails.wsautoid
+                    "issysadmin": that.loginUser.issysadmin, "enttid": that._enttdetails.enttid,
+                    "wsautoid": that._enttdetails.wsautoid
                 }
 
                 that._emplvservice.getEmployeeLeave(params).subscribe(data => {
@@ -106,7 +105,7 @@ export class ApprovalEmployeeLeaveComponent implements OnInit, OnDestroy {
                     "apprremark": lvrow.apprremark,
                     "status": lvrow.status,
                     "cuid": that.loginUser.ucode,
-                    "wsautoid": that._wsdetails.wsautoid,
+                    "wsautoid": that._enttdetails.wsautoid,
                     "isactive": true
                 })
             }

@@ -11,30 +11,33 @@ import { UserService } from '@services/master';
 
 export class AddUserMenuMapComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
+    _enttdetails: any = [];
 
     usersDT: any = [];
     menuname: string = "";
 
+    userdata: any = [];
     uid: number = 0;
-    uname: any = [];
+    uname: string = "";
     utype: string = "";
-    ufullname: string = "";
+    isempuser: boolean = false;
 
+    refuserdata: any = [];
     refuid: number = 0;
-    refuname: any = [];
+    refuname: string = "";
     refutype: string = "";
+    isemprefuser: boolean = false;
 
     menudetails: any = [];
     selectedMenus: string[] = [];
 
-    _wsdetails: any = [];
     private subscribeParameters: any;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _autoservice: CommonService, private _userservice: UserService,
         private _loginservice: LoginService, public _menuservice: MenuService, private _msg: MessageService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
-        this.getMenuDetails();
+        this._enttdetails = Globals.getEntityDetails();
+        // this.getMenuDetails();
     }
 
     ngOnInit() {
@@ -45,10 +48,14 @@ export class AddUserMenuMapComponent implements OnInit, OnDestroy {
 
     resetUserRights() {
         $("#uname input").focus();
+
         this.uid = 0;
-        this.uname = [];
+        this.uname = "";
+        this.userdata = [];
+
         this.refuid = 0;
-        this.refuname = [];
+        this.refuname = "";
+        this.refuserdata = [];
     }
 
     // Auto Completed User
@@ -63,7 +70,7 @@ export class AddUserMenuMapComponent implements OnInit, OnDestroy {
             "ucode": that.loginUser.ucode,
             "utype": that.loginUser.utype,
             "issysadmin": that.loginUser.issysadmin,
-            "wsautoid": that._wsdetails.wsautoid,
+            "wsautoid": that._enttdetails.wsautoid,
             "search": query
         }).subscribe(data => {
             that.usersDT = data.data;
@@ -80,11 +87,21 @@ export class AddUserMenuMapComponent implements OnInit, OnDestroy {
         var that = this;
 
         that.uid = event.uid;
+        that.uname = event.uname;
         that.utype = event.utype;
+        that.isempuser = event.isemp;
 
         that.refuid = event.uid;
+        that.refuname = event.uname;
         that.refutype = event.utype;
+        that.isemprefuser = event.isemp;
 
+        that.refuserdata.uid = that.refuid;
+        that.refuserdata.uname = that.refuname;
+        that.refuserdata.utype = that.refutype;
+        that.refuserdata.isemp = that.isemprefuser;
+
+        that.getMenuDetails();
         that.getUserRightsById(that.refuid, that.refutype);
     }
 
@@ -94,13 +111,18 @@ export class AddUserMenuMapComponent implements OnInit, OnDestroy {
         var that = this;
 
         that.refuid = event.uid;
+        that.refuname = event.uname;
         that.refutype = event.utype;
+        that.isemprefuser = event.isemp;
+
+        that.getMenuDetails();
+        that.getUserRightsById(that.refuid, that.refutype);
     }
 
     getMenuDetails() {
         var that = this;
 
-        this._menuservice.getMenuDetails({ "flag": "all" }).subscribe(data => {
+        this._menuservice.getMenuDetails({ "flag": "all", "isemp": that.isemprefuser }).subscribe(data => {
             this.menudetails = data.data;
             $("#menus").prop('checked', false);
         }, err => {

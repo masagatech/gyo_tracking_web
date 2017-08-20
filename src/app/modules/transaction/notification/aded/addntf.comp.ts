@@ -14,7 +14,6 @@ declare var google: any;
 
 export class AddNotificationComponent implements OnInit {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     ntfid: number = 0;
@@ -38,7 +37,6 @@ export class AddNotificationComponent implements OnInit {
     constructor(private _temservice: TeamEmployeeMapService, private _ntfservice: NotificationService, private _routeParams: ActivatedRoute,
         private _router: Router, private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
     }
 
@@ -58,7 +56,7 @@ export class AddNotificationComponent implements OnInit {
             "utype": this.loginUser.utype,
             "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.teamDT = data.data;
@@ -85,9 +83,9 @@ export class AddNotificationComponent implements OnInit {
 
         that._temservice.getTeamEmployeeMap({
             "flag": "edit",
-            "enttid": that._enttdetails.enttid,
             "tmid": that.tmid,
-            "wsautoid": that._wsdetails.wsautoid
+            "enttid": that._enttdetails.enttid,
+            "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
                 if (data.data.length > 0) {
@@ -195,13 +193,13 @@ export class AddNotificationComponent implements OnInit {
 
                 var saveemp = {
                     "ntfid": that.ntfid,
-                    "enttid": that._enttdetails.enttid,
                     "tmid": that.tmid,
                     "empid": selemplist,
                     "title": that.title,
                     "msg": that.msg,
                     "cuid": that.loginUser.ucode,
-                    "wsautoid": that._wsdetails.wsautoid
+                    "enttid": that._enttdetails.enttid,
+                    "wsautoid": that._enttdetails.wsautoid
                 }
 
                 this._ntfservice.saveNotification(saveemp).subscribe(data => {
@@ -253,7 +251,7 @@ export class AddNotificationComponent implements OnInit {
                 that._ntfservice.getNotification({
                     "flag": "edit",
                     "ntfid": that.ntfid,
-                    "wsautoid": that._wsdetails.wsautoid
+                    "wsautoid": that._enttdetails.wsautoid
                 }).subscribe(data => {
                     try {
                         that.ntfid = data.data[0].ntfid;

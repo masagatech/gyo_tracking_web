@@ -15,7 +15,6 @@ declare var commonfun: any;
 
 export class AddVoucherComponent implements OnInit {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     autoid: number = 0;
@@ -43,7 +42,6 @@ export class AddVoucherComponent implements OnInit {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
         private _vchservice: VoucherService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
     }
 
@@ -66,8 +64,8 @@ export class AddVoucherComponent implements OnInit {
             "ucode": this.loginUser.ucode,
             "utype": this.loginUser.utype,
             "enttid": this._enttdetails.enttid,
+            "wsautoid": this._enttdetails.wsautoid,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.employeeDT = data.data;
@@ -92,9 +90,9 @@ export class AddVoucherComponent implements OnInit {
 
         this._autoservice.getAutoData({
             "flag": "exmpwiseexp",
-            "enttid": this._enttdetails.enttid,
             "empid": this.empid,
-            "wsautoid": this._wsdetails.wsautoid,
+            "enttid": this._enttdetails.enttid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.expenseDT = data.data;
@@ -138,7 +136,7 @@ export class AddVoucherComponent implements OnInit {
                 "autoid": that.autoid, "enttid": that._enttdetails.enttid, "enttname": that._enttdetails.enttname,
                 "empid": that.empid, "empname": that.empname, "expid": that.expid, "expnm": that.expnm,
                 "amount": that.amount, "noofdoc": that.noofdoc, "remark": that.remark,
-                "cuid": that.loginUser.ucode, "wsautoid": that._wsdetails.wsautoid, "isactive": true
+                "cuid": that.loginUser.ucode, "wsautoid": that._enttdetails.wsautoid, "isactive": true
             })
 
             that.resetVoucherFields();
@@ -221,7 +219,7 @@ export class AddVoucherComponent implements OnInit {
                 params = {
                     "flag": "edit",
                     "empid": that.empid,
-                    "wsautoid": that._wsdetails.wsautoid
+                    "wsautoid": that._enttdetails.wsautoid
                 }
 
                 that._vchservice.getVoucherDetails(params).subscribe(data => {

@@ -13,7 +13,6 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 export class ViewTeamComponent implements OnInit {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     teamDT: any = [];
@@ -24,7 +23,6 @@ export class ViewTeamComponent implements OnInit {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
         private _loginservice: LoginService, private _tmservice: TeamService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.getTeamDetails();
@@ -42,7 +40,7 @@ export class ViewTeamComponent implements OnInit {
 
         params = {
             "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
-            "enttid": that._enttdetails.enttid, "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid,
+            "enttid": that._enttdetails.enttid, "issysadmin": that.loginUser.issysadmin, "wsautoid": that._enttdetails.wsautoid,
         }
 
         that._tmservice.getTeamDetails(params).subscribe(data => {

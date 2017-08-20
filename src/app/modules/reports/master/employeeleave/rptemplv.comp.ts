@@ -15,7 +15,6 @@ import jsPDF from 'jspdf'
 
 export class EmployeeLeaveReportsComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     frmdt: any = "";
@@ -35,7 +34,6 @@ export class EmployeeLeaveReportsComponent implements OnInit, OnDestroy {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
         private _loginservice: LoginService, private _autoservice: CommonService, private _emplvservice: EmployeeLeaveService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.setFromDateAndToDate();
@@ -89,7 +87,7 @@ export class EmployeeLeaveReportsComponent implements OnInit, OnDestroy {
             "utype": this.loginUser.utype,
             "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.employeeDT = data.data;
@@ -132,7 +130,7 @@ export class EmployeeLeaveReportsComponent implements OnInit, OnDestroy {
         that._emplvservice.getEmployeeLeaveReports({
             "flag": "reports", "frmdt": that.frmdt, "todt": that.todt, "empid": that.empid,
             "uid": that.loginUser.uid, "utype": that.loginUser.utype, "issysadmin": that.loginUser.issysadmin,
-            "status": that.status, "enttid": that._enttdetails.enttid, "wsautoid": that._wsdetails.wsautoid,
+            "status": that.status, "enttid": that._enttdetails.enttid, "wsautoid": that._enttdetails.wsautoid,
         }).subscribe(data => {
             try {
                 that.empleaveDT = data.data;

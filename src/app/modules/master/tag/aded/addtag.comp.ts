@@ -15,7 +15,6 @@ declare var commonfun: any;
 
 export class AddTagComponent implements OnInit {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     tagid: number = 0;
@@ -32,7 +31,6 @@ export class AddTagComponent implements OnInit {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
         private _tagservice: TagService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
     }
 
@@ -79,7 +77,7 @@ export class AddTagComponent implements OnInit {
                 "remark2": that.remark2,
                 "remark3": that.remark3,
                 "cuid": that.loginUser.ucode,
-                "wsautoid": that._wsdetails.wsautoid,
+                "wsautoid": that._enttdetails.wsautoid,
                 "isactive": that.isactive,
                 "mode": ""
             }
@@ -134,7 +132,7 @@ export class AddTagComponent implements OnInit {
                 params = {
                     "flag": "edit",
                     "tagid": that.tagid,
-                    "wsautoid": that._wsdetails.wsautoid
+                    "wsautoid": that._enttdetails.wsautoid
                 }
 
                 that._tagservice.getTagDetails(params).subscribe(data => {

@@ -14,7 +14,6 @@ import jsPDF from 'jspdf'
 
 export class HolidayReportsComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     frmdt: any = "";
@@ -32,7 +31,6 @@ export class HolidayReportsComponent implements OnInit, OnDestroy {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, public _menuservice: MenuService,
         private _loginservice: LoginService, private _holidayervice: HolidayService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.setFromDateAndToDate();
@@ -105,7 +103,7 @@ export class HolidayReportsComponent implements OnInit, OnDestroy {
             "utype": this.loginUser.utype,
             "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.employeeDT = data.data;
@@ -135,7 +133,7 @@ export class HolidayReportsComponent implements OnInit, OnDestroy {
         that._holidayervice.getHoliday({
             "flag": "reports", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
             "frmdt": that.frmdt, "todt": that.todt, "empid": that.empid, "enttid": that._enttdetails.enttid,
-            "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
+            "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
         }).subscribe(data => {
             try {
                 that.holidayDT = data.data;

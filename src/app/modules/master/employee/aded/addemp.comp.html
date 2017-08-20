@@ -69,7 +69,7 @@
                                 <div *ngFor="let file of uploadPhotoDT" class="box">
                                     <div class="row clearfix">
                                         <div class="col-md-9">
-                                            <img src="{{uploadconfig.uploadurl + file.athurl}}" onerror="this.src='assets/img/nologo.gif';" height="40px" />
+                                            <img src="{{uploadconfig.uploadurl + file.athurl}}" height="40px" />
                                         </div>
                                         <div class="col-md-3" align="right">
                                             <button type="button" class="btn btn-danger btn-xs" (click)="removePhotoUpload()">

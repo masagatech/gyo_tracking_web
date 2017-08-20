@@ -51,7 +51,7 @@ export class AddWorkspaceComponent implements OnInit {
 
     mode: string = "";
 
-    uploadPhotoDT: any = [];
+    uploadLogoDT: any = [];
     global = new Globals();
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
     chooseLabel: string = "";
@@ -69,7 +69,7 @@ export class AddWorkspaceComponent implements OnInit {
         this.fillAreaDropDown();
 
         if (!this.loginUser.issysadmin && this.loginUser.utype !== "admin") {
-            this._router.navigate(['/']);
+            this._router.navigate(['/workspace/entity']);
         }
     }
 
@@ -212,15 +212,15 @@ export class AddWorkspaceComponent implements OnInit {
     onUpload(event) {
         var that = this;
         var imgfile = [];
-        that.uploadPhotoDT = [];
+        that.uploadLogoDT = [];
 
         imgfile = JSON.parse(event.xhr.response);
 
-        console.log(imgfile);
-
-        for (var i = 0; i < imgfile.length; i++) {
-            that.uploadPhotoDT.push({ "athurl": imgfile[i].path.replace(that.uploadconfig.filepath, "") })
-        }
+        setTimeout(function () {
+            for (var i = 0; i < imgfile.length; i++) {
+                that.uploadLogoDT.push({ "athurl": imgfile[i].path.replace(that.uploadconfig.filepath, "") })
+            }
+        }, 1000);
     }
 
     // Get File Size
@@ -249,7 +249,7 @@ export class AddWorkspaceComponent implements OnInit {
     }
 
     removeLogoUpload() {
-        this.uploadPhotoDT.splice(0, 1);
+        this.uploadLogoDT.splice(0, 1);
     }
 
     // Clear Fields
@@ -286,8 +286,8 @@ export class AddWorkspaceComponent implements OnInit {
         that.schpsngrrate = "0";
         that.schenttmaxno = 0;
 
-        that.uploadPhotoDT = [];
-        that.chooseLabel = "Upload Employee Photo";
+        that.uploadLogoDT = [];
+        that.chooseLabel = "Upload Logo";
     }
 
     // Active / Deactive Data
@@ -460,7 +460,7 @@ export class AddWorkspaceComponent implements OnInit {
                 "loginid": that.loginid,
                 "wsname": that.wsname,
                 "wsdesc": that.wsdesc,
-                "wslogo": that.uploadPhotoDT.length > 0 ? that.uploadPhotoDT[0].athurl : "",
+                "wslogo": that.uploadLogoDT.length > 0 ? that.uploadLogoDT[0].athurl : "",
                 "wstype": _wstype,
                 "cmppsngrrate": that.cmppsngrrate,
                 "cmpenttmaxno": that.cmpenttmaxno,
@@ -525,7 +525,7 @@ export class AddWorkspaceComponent implements OnInit {
 
     getWorkspaceDetails() {
         var that = this;
-        that.uploadPhotoDT = [];
+        that.uploadLogoDT = [];
 
         commonfun.loader();
 
@@ -544,11 +544,11 @@ export class AddWorkspaceComponent implements OnInit {
                             that.wsname = data.data[0].wsname;
 
                             if (data.data[0].wslogo !== "") {
-                                that.uploadPhotoDT.push({ "athurl": data.data[0].wslogo });
-                                that.chooseLabel = "Change Employee Photo";
+                                that.uploadLogoDT.push({ "athurl": data.data[0].wslogo });
+                                that.chooseLabel = "Change Logo";
                             }
                             else {
-                                that.chooseLabel = "Upload Employee Photo";
+                                that.chooseLabel = "Upload Logo";
                             }
 
                             that.wsdesc = data.data[0].wsdesc;

@@ -13,7 +13,7 @@ import jsPDF from 'jspdf'
 
 export class LoginLogReportsComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
+    _enttdetails: any = [];
 
     frmdt: any = "";
     todt: any = "";
@@ -30,7 +30,7 @@ export class LoginLogReportsComponent implements OnInit, OnDestroy {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
         public _menuservice: MenuService, private _loginservice: LoginService, private _userservice: UserService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
 
         this.setFromDateAndToDate();
         this.getLoginLog();
@@ -76,7 +76,7 @@ export class LoginLogReportsComponent implements OnInit, OnDestroy {
         var that = this;
 
         that._userservice.getUserLoginLog({
-            "flag": "maxlog", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that._wsdetails.wsautoid
+            "flag": "maxlog", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
                 that.loginlogDT = data.data;
@@ -134,7 +134,7 @@ export class LoginLogReportsComponent implements OnInit, OnDestroy {
         commonfun.loader("#btnExport");
 
         that._menuservice.getMenuLog({
-            "flag": "export", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that._wsdetails.wsautoid
+            "flag": "export", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
                 new Angular2Csv(data.data, 'LoginLog', { "showLabels": true });

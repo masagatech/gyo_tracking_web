@@ -14,7 +14,6 @@ declare var google: any;
 
 export class AddEmployeeComponent implements OnInit {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     stateDT: any = [];
@@ -55,7 +54,6 @@ export class AddEmployeeComponent implements OnInit {
     constructor(private _empservice: EmployeeService, private _routeParams: ActivatedRoute, private _router: Router,
         private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.getUploadConfig();
@@ -217,11 +215,11 @@ export class AddEmployeeComponent implements OnInit {
 
         imgfile = JSON.parse(event.xhr.response);
 
-        console.log(imgfile);
-
-        for (var i = 0; i < imgfile.length; i++) {
-            that.uploadPhotoDT.push({ "athurl": imgfile[i].path.replace(that.uploadconfig.filepath, "") })
-        }
+        setTimeout(function () {
+            for (var i = 0; i < imgfile.length; i++) {
+                that.uploadPhotoDT.push({ "athurl": imgfile[i].path.replace(that.uploadconfig.filepath, "") })
+            }
+        }, 1000);
     }
 
     // Get File Size
@@ -327,7 +325,7 @@ export class AddEmployeeComponent implements OnInit {
                 "attachdocs": that.attachDocsDT,
                 "remark1": that.remark1,
                 "cuid": that.loginUser.ucode,
-                "wsautoid": that._wsdetails.wsautoid,
+                "wsautoid": that._enttdetails.wsautoid,
                 "isactive": that.isactive,
                 "mode": ""
             }
@@ -380,11 +378,11 @@ export class AddEmployeeComponent implements OnInit {
                 that._empservice.getEmployeeDetails({
                     "flag": "edit",
                     "id": that.empid,
-                    "wsautoid": that._wsdetails.wsautoid
+                    "wsautoid": that._enttdetails.wsautoid
                 }).subscribe(data => {
                     try {
                         var _empdata = data.data;
-                        
+
                         that.empid = _empdata[0].empid;
                         that.loginid = _empdata[0].loginid;
                         that.empcode = _empdata[0].empcode;

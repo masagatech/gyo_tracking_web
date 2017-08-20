@@ -10,7 +10,6 @@ import { LoginUserModel, Globals } from '@models';
 
 export class ModuleComponent implements OnDestroy {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     wsname: string = "";
@@ -21,16 +20,15 @@ export class ModuleComponent implements OnDestroy {
 
     constructor(private _router: Router, private _loginservice: LoginService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         if (Cookie.get('_session_') == null && Cookie.get('_session_') == undefined) {
             this._router.navigate(['/login']);
         }
 
-        if (Cookie.get("_wsdetails_") == null && Cookie.get("_wsdetails_") == undefined) {
-            this._router.navigate(['/admin/workspace']);
-        }
+        // if (Cookie.get("_wsdetails_") == null && Cookie.get("_wsdetails_") == undefined) {
+        //     this._router.navigate(['/admin/workspace']);
+        // }
 
         if (Cookie.get("_enttdetails_") == null && Cookie.get("_enttdetails_") == undefined) {
             this._router.navigate(['/workspace/entity']);
@@ -47,7 +45,7 @@ export class ModuleComponent implements OnDestroy {
         if (Cookie.get('_enttdetails_') != null) {
             this.wsname = this._enttdetails.enttname;
             this.wslogo = this.global.uploadurl + this._enttdetails.schlogo;
-            this.enttname = this._wsdetails.wsname;
+            this.enttname = this._enttdetails.wsname;
         }
         else {
             this.wsname = this.loginUser.enttname;

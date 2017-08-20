@@ -14,7 +14,6 @@ import jsPDF from 'jspdf'
 
 export class DailyAttendanceComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     attColumn: any = [];
@@ -26,7 +25,6 @@ export class DailyAttendanceComponent implements OnInit, OnDestroy {
         public _menuservice: MenuService, private _loginservice: LoginService, private _rptservice: ReportsService,
         private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.getDailyAttendanceData();
@@ -80,7 +78,7 @@ export class DailyAttendanceComponent implements OnInit, OnDestroy {
             that._rptservice.getEmployeeAttendance({
                 "flag": "daily", "monthname": monthname, "enttid": that._enttdetails.enttid,
                 "uid": that.loginUser.uid, "utype": that.loginUser.utype,
-                "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
+                "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
             }).subscribe(data => {
                 try {
                     that.attData = data.data;

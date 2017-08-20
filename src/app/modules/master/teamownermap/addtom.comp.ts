@@ -14,7 +14,6 @@ declare var google: any;
 
 export class AddTeamOwnershipComponent implements OnInit {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     tomid: number = 0;
@@ -35,7 +34,6 @@ export class AddTeamOwnershipComponent implements OnInit {
     constructor(private _temservice: TeamEmployeeMapService, private _tomservice: TeamOwnershipMapService, private _routeParams: ActivatedRoute,
         private _router: Router, private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
     }
 
@@ -55,7 +53,7 @@ export class AddTeamOwnershipComponent implements OnInit {
             "utype": this.loginUser.utype,
             "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.teamDT = data.data;
@@ -83,9 +81,9 @@ export class AddTeamOwnershipComponent implements OnInit {
 
         that._temservice.getTeamEmployeeMap({
             "flag": "edit",
-            "enttid": that._enttdetails.enttid,
             "tmid": that.tmid,
-            "wsautoid": that._wsdetails.wsautoid
+            "enttid": that._enttdetails.enttid,
+            "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
                 if (data.data.length > 0) {
@@ -124,8 +122,8 @@ export class AddTeamOwnershipComponent implements OnInit {
             "ucode": this.loginUser.ucode,
             "utype": this.loginUser.utype,
             "enttid": this._enttdetails.enttid,
+            "wsautoid": this._enttdetails.wsautoid,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.ownershipDT = data.data;
@@ -174,7 +172,7 @@ export class AddTeamOwnershipComponent implements OnInit {
                 "enttid": that._enttdetails.enttid, "enttname": that._enttdetails.enttname,
                 "tmid": that.tmnm.value, "tmnm": that.tmnm.label,
                 "onrid": that.onrname.value, "onrname": that.onrname.label,
-                "wsautoid": that._wsdetails.wsautoid, "isactive": true
+                "wsautoid": that._enttdetails.wsautoid, "isactive": true
             });
         }
 
@@ -261,9 +259,9 @@ export class AddTeamOwnershipComponent implements OnInit {
 
         that._tomservice.getTeamOwnershipMap({
             "flag": "edit",
-            "enttid": that._enttdetails.enttid,
             "tmid": that.tmid,
-            "wsautoid": that._wsdetails.wsautoid
+            "enttid": that._enttdetails.enttid,
+            "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
                 that.ownershipList = data.data;

@@ -14,7 +14,6 @@ import jsPDF from 'jspdf'
 
 export class TeamWiseEmployeeComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     batchDT: any = [];
@@ -32,7 +31,6 @@ export class TeamWiseEmployeeComponent implements OnInit, OnDestroy {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, public _menuservice: MenuService,
         private _loginservice: LoginService, private _rptservice: ReportsService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.getEntityWiseTeam();
@@ -56,7 +54,7 @@ export class TeamWiseEmployeeComponent implements OnInit, OnDestroy {
         commonfun.loader();
 
         that._rptservice.getTeamWiseEmployeeReports({
-            "flag": "team", "enttid": that._enttdetails.enttid, "wsautoid": that._wsdetails.wsautoid
+            "flag": "team", "enttid": that._enttdetails.enttid, "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
                 that.teamDT = data.data;
@@ -83,7 +81,7 @@ export class TeamWiseEmployeeComponent implements OnInit, OnDestroy {
         commonfun.loader("#ddlemp");
 
         that._rptservice.getTeamWiseEmployeeReports({
-            "flag": "employee", "enttid": that._enttdetails.enttid, "tmid": row.tmid, "wsautoid": that._wsdetails.wsautoid
+            "flag": "employee", "enttid": that._enttdetails.enttid, "tmid": row.tmid, "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
                 row.empDT = data.data;
@@ -114,7 +112,7 @@ export class TeamWiseEmployeeComponent implements OnInit, OnDestroy {
 
         that._rptservice.getTeamWiseEmployeeReports({
             "flag": "rtwise", "stpid": row.stpid, "enttid": row.schoolid, "rtid": row.rtid,
-            "batchid": row.batchid, "wsautoid": that._wsdetails.wsautoid
+            "batchid": row.batchid, "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
                 if (data.data.length > 0) {
@@ -149,7 +147,7 @@ export class TeamWiseEmployeeComponent implements OnInit, OnDestroy {
         commonfun.loader("#exportemp");
 
         that._rptservice.getTeamWiseEmployeeReports({
-            "flag": "export", "enttid": that._enttdetails.enttid, "wsautoid": that._wsdetails.wsautoid
+            "flag": "export", "enttid": that._enttdetails.enttid, "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
                 that.exportData = data.data;

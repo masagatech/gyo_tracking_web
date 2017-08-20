@@ -14,7 +14,6 @@ import jsPDF from 'jspdf'
 
 export class TripReportsComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     employeeDT: any = [];
@@ -34,7 +33,6 @@ export class TripReportsComponent implements OnInit, OnDestroy {
         public _menuservice: MenuService, private _loginservice: LoginService, private _rptservice: ReportsService,
         private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.getTripReports();
@@ -78,7 +76,7 @@ export class TripReportsComponent implements OnInit, OnDestroy {
             "utype": this.loginUser.utype,
             "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.employeeDT = data.data;
@@ -135,7 +133,7 @@ export class TripReportsComponent implements OnInit, OnDestroy {
 
         that._rptservice.getTripReports({
             "enttid": that._enttdetails.enttid, "empid": that.empid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
-            "wsautoid": that._wsdetails.wsautoid, "issysadmin": that.loginUser.issysadmin, "vtype": "p"
+            "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin, "vtype": "p"
         }).subscribe(data => {
             try {
                 if (data.data.length !== 0) {

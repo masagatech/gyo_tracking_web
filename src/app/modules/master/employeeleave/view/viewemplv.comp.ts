@@ -24,7 +24,6 @@ export class ViewEmployeeLeaveComponent implements OnInit {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
         private _emplvservice: EmployeeLeaveService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.getEmployeeLeave();
@@ -42,7 +41,7 @@ export class ViewEmployeeLeaveComponent implements OnInit {
 
         params = {
             "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
-            "issysadmin": that.loginUser.issysadmin, "enttid": that._enttdetails.enttid, "wsautoid": that._wsdetails.wsautoid
+            "issysadmin": that.loginUser.issysadmin, "enttid": that._enttdetails.enttid, "wsautoid": that._enttdetails.wsautoid
         }
 
         that._emplvservice.getEmployeeLeave(params).subscribe(data => {

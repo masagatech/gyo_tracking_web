@@ -13,7 +13,6 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 export class ViewNotificationComponent implements OnInit {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     employeeDT: any = [];
@@ -25,7 +24,6 @@ export class ViewNotificationComponent implements OnInit {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
         private _loginservice: LoginService, private _autoservice: CommonService, private _ntfservice: NotificationService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.viewNotificationRights();
@@ -47,7 +45,7 @@ export class ViewNotificationComponent implements OnInit {
             "utype": this.loginUser.utype,
             "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.employeeDT = data.data;
@@ -88,7 +86,7 @@ export class ViewNotificationComponent implements OnInit {
         commonfun.loader();
 
         that._ntfservice.getNotification({
-            "flag": "all", "wsautoid": that._wsdetails.wsautoid, "enttid": that._enttdetails.enttid, "empid": that.empid
+            "flag": "all", "wsautoid": that._enttdetails.wsautoid, "enttid": that._enttdetails.enttid, "empid": that.empid
         }).subscribe(data => {
             try {
                 that.notificationDT = data.data;
