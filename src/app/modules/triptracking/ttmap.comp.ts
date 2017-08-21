@@ -21,7 +21,6 @@ declare var google: any;
 
 export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     global = new Globals();
@@ -79,7 +78,6 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
         private _loginservice: LoginService, private _socketservice: SocketService,
         private _trackDashbord: TrackDashbord, private componentFactoryResolver: ComponentFactoryResolver) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.getMessage();
@@ -142,11 +140,11 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
             "ucode": that.loginUser.ucode,
             "utype": that.loginUser.utype,
             "issysadmin": that.loginUser.issysadmin,
-            "wsautoid": that._wsdetails.wsautoid
+            "wsautoid": that._enttdetails.wsautoid
         }).subscribe((data) => {
             try {
                 that.employeeDT = data.data;
-                console.log(that.employeeDT)
+                
                 for (var k = 0; k < that.employeeDT.length; k++) {
                     var el = that.employeeDT[k];
                     el.uid = el.empid;
@@ -154,7 +152,6 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
                     el.sel = false;
                     that.empIds.push(el.empid);
                 }
-                console.log(that.empIds);
 
                 that.getLastUpdateAndSubscribe(null);
                 that.setLiveBeatsOn();
@@ -189,7 +186,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this._socketservice.getMessage().subscribe(data => {
             var _d = data;
-            console.log(_d);
+            
             if (_d["evt"] == "regreq") {
                 if (that.empIds.length > 0) {
                     that._socketservice.sendMessage("reg_v", that.empIds.join(','));
@@ -286,7 +283,6 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
         this._trackDashbord.getvahicleupdates({
             "empids": data == null ? this.empIds : data
         }).subscribe(_d => {
-
             this.refreshdata(_d.data);
         }, err => {
             this._msg.Show(messageType.error, "Error", err);
@@ -341,37 +337,15 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
     //select for map show
 
     private onchange(e, emp) {
-        // if (emp.isshow === undefined || emp.isshow === false) {
-        //     this._msg.Show(messageType.warn, "Hey", "No Updates found"); e.target.checked = false; return
-        // }
-        // else {
-        //     if (e.target.checked) {
-        //         this.selectedEmp.push(emp.empid);
-        //         this.addmarker(emp);
-        //         this.map.setCenter(new google.maps.LatLng(emp.loc[1], emp.loc[0]))
-        //     } else {
-        //         let i = this.selectedEmp.indexOf(emp.empid);
-
-        //         if (i > -1) {
-        //             this.selectedEmp.splice(i, 1);
-        //         }
-
-        //         this.removemarker(emp.empid);
-        //     }
-        // }
-
-        // e.preventDefault();
-
         if (emp.isshow === undefined || emp.isshow === false) {
             this._msg.Show(messageType.warn, "Hey", "No Updates found"); e.target.checked = false; return
-        } else {
+        }
+        else {
             if (e.target.checked) {
 
                 this.selectedEmp.push(emp.uid);
                 this.addmarker(emp);
-                //this.map.setCenter(new google.maps.LatLng(vh.loc[1], vh.loc[0]))
                 this.boundtomap()
-                //console.log(vh);
             } else {
                 let i = this.selectedEmp.indexOf(emp.uid);
                 if (i > -1) {
@@ -387,16 +361,19 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.removemarker(emp.uid);
             }
         }
-        // this.selectedVeh.push(vh);
+        
         e.preventDefault();
     }
 
     //get bound
+    
     private boundtomap() {
         if (this.selectedEmp.length <= 0) {
             return;
         }
+        
         var bounds = new google.maps.LatLngBounds();
+
         for (let i = 0; i < this.selectedEmp.length; i++) {
             let el = this.selectedEmp[i];
             let mr = this.vhmarkers[el];
@@ -444,7 +421,6 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
         if (emp.isshow === undefined || emp.isshow === false) { return; }
         emp.isfollow = !emp.isfollow;
 
-        console.log(emp.isfollow);
         if (this.selectedFlwEmp.isfollow !== undefined) {
             if (emp.uid !== this.selectedFlwEmp.uid)
                 this.selectedFlwEmp.isfollow = false;
@@ -506,7 +482,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.sidebarTitle = "Info";
         this.selectedSEmp = emp;
-        this.loadComponent(InfoComponent, { "empid": emp.uid, loginUser: this.loginUser, _wsdetails: this._wsdetails });
+        this.loadComponent(InfoComponent, { "empid": emp.uid, loginUser: this.loginUser, _enttdetails: this._enttdetails });
 
         commonfun.loader("#loaderbody", "pulse", 'Loading Vehicle Info...')
         $.AdminBSB.rightSideBar.Open();
@@ -516,7 +492,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
     private stop_click(emp, event) {
         this.sidebarTitle = "Stops";
         this.selectedSEmp = emp;
-        this.loadComponent(TripsComponent, { "tripid": emp.tripid, loginUser: this.loginUser, _wsdetails: this._wsdetails });
+        this.loadComponent(TripsComponent, { "tripid": emp.tripid, loginUser: this.loginUser, _enttdetails: this._enttdetails });
 
         // commonfun.loader("#loaderbody", "pulse", 'Loading Stops...')
         // $.AdminBSB.rightSideBar.Open();
@@ -525,7 +501,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private history_click(emp, event) {
-        this.loadComponent(HistoryComponent, { "empid": emp.uid, loginUser: this.loginUser, _wsdetails: this._wsdetails, map: this.map });
+        this.loadComponent(HistoryComponent, { "empid": emp.uid, loginUser: this.loginUser, _enttdetails: this._enttdetails, map: this.map });
 
         this.sidebarTitle = "History";
         this.selectedSEmp = emp;

@@ -75,9 +75,9 @@
                     <p-column field="lat" header="Latitude" [style]="{'width': '100px', 'text-align': 'left'}"></p-column>
                     <p-column field="lng" header="Longitude" [style]="{'width': '100px', 'text-align': 'left'}"></p-column>
                     <p-column field="tag" header="Tag" [style]="{'text-align': 'left'}">
-                        <template let-row="rowData" pTemplate type="body">
+                        <ng-template let-row="rowData" pTemplate type="body">
                             <span *ngFor="let trow of row.tag">{{trow.tag}} | </span>
-                        </template>
+                        </ng-template>
                     </p-column>
                 </p-dataTable>
             </div>

@@ -51,9 +51,9 @@
                     <p-column field="menutitle" header="Menu Name" [style]="{'width': '130px', 'text-align': 'left'}"></p-column>
                     <p-column field="lastdate" header="Last Date" [style]="{'width': '130px', 'text-align': 'left'}"></p-column>
                     <p-column header="How Many" [style]="{'width': '50px', 'text-align': 'left'}">
-                        <template let-drow="rowData" pTemplate type="body">
+                        <ng-template let-drow="rowData" pTemplate type="body">
                             <a role="button" (click)="getLogDetails(drow)">{{drow.howmany}}</a>
-                        </template>
+                        </ng-template>
                     </p-column>
                 </p-dataTable>
             </div>

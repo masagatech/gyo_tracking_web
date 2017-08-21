@@ -19,11 +19,11 @@
                     <p-column field="val" header="Status Title" [style]="{'text-align':'left'}"></p-column>
                     <p-column field="ordno" header="Oreder No" [style]="{'width':'150px', 'text-align':'left'}"></p-column>
                     <p-column [style]="{'width': '50px', 'align': 'left'}">
-                        <template let-row="rowData" pTemplate type="body">
-							<button type="button" class="btn btn-theme btn-xs" (click)="editStatusForm(row)">
+                        <ng-template let-row="rowData" pTemplate type="body">
+                            <button type="button" class="btn btn-theme btn-xs" (click)="editStatusForm(row)">
                                 <i class="material-icons">edit</i>
                             </button>
-						</template>
+                        </ng-template>
                     </p-column>
                 </p-dataTable>
             </div>

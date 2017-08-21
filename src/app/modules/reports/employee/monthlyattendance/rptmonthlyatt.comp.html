@@ -45,11 +45,11 @@
                 <p-dataTable [value]="attData">
                     <p-column field="empname" header="Employee Name" [style]="{'width': '200px', 'text-align': 'left'}"></p-column>
                     <p-column *ngFor="let atcol of attColumn" header="{{atcol.day}}" [style]="{'width': '30px', 'text-align':'center'}">
-                        <template let-drow="rowData" pTemplate type="body">
+                        <ng-template let-drow="rowData" pTemplate type="body">
                             <span class="material-icons {{drow[atcol.day] == null ? 'cancel' : drow[atcol.day]}}">
                                 {{drow[atcol.day] == null ? 'cancel' : drow[atcol.day]}}
                             </span>
-                        </template>
+                        </ng-template>
                     </p-column>
                     <p-column field="done" header="C" [styleClass]="'P'" [style]="{'width': '30px', 'text-align': 'left'}"></p-column>
                     <p-column field="H" header="H" [styleClass]="'H'" [style]="{'width': '30px', 'text-align': 'center'}"></p-column>

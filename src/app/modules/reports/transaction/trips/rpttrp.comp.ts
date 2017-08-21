@@ -5,7 +5,7 @@ import { LoginUserModel, Globals } from '@models';
 import { ReportsService } from '@services/master';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 import { Angular2Csv } from 'angular2-csv/Angular2-csv';
-import jsPDF from 'jspdf'
+import jsPDF from 'jspdf';
 
 @Component({
     templateUrl: 'rpttrp.comp.html',
@@ -25,9 +25,14 @@ export class TripReportsComponent implements OnInit, OnDestroy {
 
     monthname: string = "";
 
-    tripData: any = [];
+    triptype: string = "";
+    tripSummaryDT: any = [];
+    tripDetailsDT: any = [];
 
     @ViewChild('emptrips') emptrips: ElementRef;
+
+    global = new Globals();
+    uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
         public _menuservice: MenuService, private _loginservice: LoginService, private _rptservice: ReportsService,
@@ -35,7 +40,7 @@ export class TripReportsComponent implements OnInit, OnDestroy {
         this.loginUser = this._loginservice.getUser();
         this._enttdetails = Globals.getEntityDetails();
 
-        this.getTripReports();
+        this.getTripSummary();
     }
 
     public ngOnInit() {
@@ -51,7 +56,7 @@ export class TripReportsComponent implements OnInit, OnDestroy {
     // Export
 
     public exportToCSV() {
-        new Angular2Csv(this.tripData, 'EmployeeTrips', { "showLabels": true });
+        new Angular2Csv(this.tripSummaryDT, 'EmployeeTrips', { "showLabels": true });
     }
 
     public exportToPDF() {
@@ -93,7 +98,7 @@ export class TripReportsComponent implements OnInit, OnDestroy {
         this.empid = event.value;
         this.empname = event.label;
 
-        this.getTripReports();
+        this.getTripSummary();
     }
 
     // Get Trip Data
@@ -128,7 +133,7 @@ export class TripReportsComponent implements OnInit, OnDestroy {
         return (+(value[0] + 'e' + (value[1] ? (+value[1] - 2) : -2))).toFixed(2);
     }
 
-    getTripReports() {
+    getTripSummary() {
         var that = this;
 
         that._rptservice.getTripReports({
@@ -142,10 +147,10 @@ export class TripReportsComponent implements OnInit, OnDestroy {
                         trprow.kilometer = that.getDistanceFromLatLonInKm(trprow.strlat, trprow.strlng, trprow.endlat, trprow.endlng);
                     }
 
-                    that.tripData = data.data;
+                    that.tripSummaryDT = data.data;
                 }
                 else {
-                    that.tripData = [];
+                    that.tripSummaryDT = [];
                 }
             }
             catch (e) {
@@ -156,6 +161,40 @@ export class TripReportsComponent implements OnInit, OnDestroy {
             that._msg.Show(messageType.error, "Error", err);
             console.log(err);
             commonfun.loaderhide();
+        }, () => {
+
+        })
+    }
+
+    getTripDetails(vtype, row) {
+        var that = this;
+
+        $("#stopsModal").modal('show');
+        commonfun.loader("#stopsModal");
+
+        that._rptservice.getTripReports({
+            "vtype": vtype, "enttid": that._enttdetails.enttid, "empid": that.empid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
+            "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin, "trpdate": row.trpdate
+        }).subscribe(data => {
+            try {
+                if (data.data.length !== 0) {
+                    that.tripDetailsDT = data.data;
+                    that.triptype = vtype == 'stops' ? "Stops" : "Task";
+                }
+                else {
+                    that.tripDetailsDT = [];
+                    that.triptype = "";
+                }
+            }
+            catch (e) {
+                that._msg.Show(messageType.error, "Error", e);
+            }
+
+            commonfun.loaderhide("#stopsModal");
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+            commonfun.loaderhide("#stopsModal");
         }, () => {
 
         })

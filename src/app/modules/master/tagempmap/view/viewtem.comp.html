@@ -51,9 +51,9 @@
             <div class="col-md-12 table-responsive">
                 <p-dataTable [value]="tagempDT">
                     <p-column [style]="{'width':'50px', 'text-align':'left'}">
-                        <template let-row="rowData" pTemplate type="body">
+                        <ng-template let-row="rowData" pTemplate type="body">
                             <span class="material-icons">{{row.tagtype == "p" ? 'desktop_windows' : 'settings_cell' }}</span>
-                        </template>
+                        </ng-template>
                     </p-column>
                     <p-column field="tagnm" header="Tag Name" [style]="{'text-align':'left'}"></p-column>
                     <p-column field="remark1" header="Remark 1" [style]="{'width':'240px', 'text-align':'left'}"></p-column>
@@ -61,11 +61,11 @@
                     <p-column field="remark3" header="Remark 3" [style]="{'width':'240px', 'text-align':'left'}"></p-column>
                     <p-column field="countemp" header="Employee" [style]="{'width':'80px', 'text-align':'center'}"></p-column>
                     <p-column [style]="{'width': '50px', 'align': 'left'}">
-                        <template let-row="rowData" pTemplate type="body">
+                        <ng-template let-row="rowData" pTemplate type="body">
                             <button type="button" class="btn btn-theme btn-xs" (click)="editTagEmployeeMap(row)">
                                 <i class="material-icons">edit</i>
                             </button>
-                        </template>
+                        </ng-template>
                     </p-column>
                 </p-dataTable>
             </div>

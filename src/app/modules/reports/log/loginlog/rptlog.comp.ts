@@ -107,7 +107,12 @@ export class LoginLogReportsComponent implements OnInit, OnDestroy {
             "flag": "userwise", "logtime": row.lastdate, "uid": row.loginid
         }).subscribe(data => {
             try {
-                that.logdetailsDT = data.data;
+                if (data.data.length !== 0) {
+                    that.logdetailsDT = data.data;
+                }
+                else {
+                    that.logdetailsDT = [];
+                }
 
                 that.ucode = that.logdetailsDT[0].ucode;
                 that.fullname = that.logdetailsDT[0].fullname;

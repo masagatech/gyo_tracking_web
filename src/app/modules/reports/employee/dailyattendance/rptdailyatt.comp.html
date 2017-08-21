@@ -17,9 +17,9 @@
                     <p-column field="email1" header="Email" [style]="{'width': '200px', 'text-align': 'left'}"></p-column>
                     <p-column field="mobileno1" header="Mobile No" [style]="{'width': '100px', 'text-align': 'left'}"></p-column>
                     <p-column header="Status" [style]="{'width': '100px', 'text-align': 'left'}">
-                        <template let-drow="rowData" pTemplate type="body">
+                        <ng-template let-drow="rowData" pTemplate type="body">
                             <span class="material-icons}}">{{drow.trptype}}</span>
-                        </template>
+                        </ng-template>
                     </p-column>
                 </p-dataTable>
             </div>

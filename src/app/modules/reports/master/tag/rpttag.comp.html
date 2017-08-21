@@ -43,9 +43,9 @@
             <div class="col-md-12 ">
                 <p-dataTable [value]="emptagDT">
                     <p-column [style]="{'width':'50px', 'text-align':'left'}">
-                        <template let-row="rowData" pTemplate type="body">
+                        <ng-template let-row="rowData" pTemplate type="body">
                             <span class="material-icons">{{row.tagtype == "p" ? 'desktop_windows' : 'settings_cell' }}</span>
-                        </template>
+                        </ng-template>
                     </p-column>
                     <p-column field="tagnm" header="Tag Name" [style]="{'text-align': 'left'}"></p-column>
                     <p-column field="remark1" header="Remark 1" [style]="{'width': '200px', 'text-align': 'left'}"></p-column>

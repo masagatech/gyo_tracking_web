@@ -17,6 +17,11 @@ export class ViewEmployeeComponent implements OnInit {
 
     employeeDT: any = [];
 
+    isShowGrid: boolean = true;
+    isShowList: boolean = false;
+
+    emptymsg: string = "";
+
     global = new Globals();
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
 
@@ -32,6 +37,30 @@ export class ViewEmployeeComponent implements OnInit {
         
     }
 
+    isshEmployee(viewtype) {
+        var that = this;
+        commonfun.loader("#divShow");
+
+        if (viewtype == "grid") {
+            that.isShowGrid = true;
+            that.isShowList = false;
+            commonfun.loaderhide("#divShow");
+        }
+        else {
+            that.isShowGrid = false;
+            that.isShowList = true;
+            commonfun.loaderhide("#divShow");
+        }
+
+        that.refreshButtons();
+    }
+
+    refreshButtons() {
+        setTimeout(function () {
+            commonfun.navistyle();
+        }, 0);
+    }
+
     getEmployeeDetails() {
         var that = this;
         var params = {};
@@ -42,8 +71,6 @@ export class ViewEmployeeComponent implements OnInit {
             "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
             "enttid": that._enttdetails.enttid, "issysadmin": that.loginUser.issysadmin, "wsautoid": that._enttdetails.wsautoid
         }
-
-        console.log(JSON.stringify(params));
 
         that._empservice.getEmployeeDetails(params).subscribe(data => {
             try {

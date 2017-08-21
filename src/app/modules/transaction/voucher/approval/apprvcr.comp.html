@@ -27,19 +27,19 @@
                             <p-column field="vcrtypename" header="Source" [style]="{'vertical-align':'top', 'width':'100px', 'text-align':'left'}"></p-column>
                             <p-column field="remark" header="Remark" [style]="{'vertical-align':'top', 'width':'200px', 'text-align':'left'}"></p-column>
                             <p-column header="Amount" [style]="{'vertical-align':'top', 'width':'120px', 'text-align':'right'}">
-                                <template let-row="rowData" pTemplate type="body">
+                                <ng-template let-row="rowData" pTemplate type="body">
                                     {{row.sendamt | _currency:loginUser.globsettings[0]}}
-                                </template>
+                                </ng-template>
                             </p-column>
                             <p-column header="Approval Amount" [style]="{'vertical-align':'top', 'width':'140px', 'text-align':'right'}">
-                                <template let-row="rowData" pTemplate type="body">
+                                <ng-template let-row="rowData" pTemplate type="body">
                                     <input type="text" [(ngModel)]="row.appramt" class="form-control text-right" OnlyNumber="true" min="0" tabindex="1">
-                                </template>
+                                </ng-template>
                             </p-column>
                             <p-column field="apprremark" header="Remark" [style]="{'vertical-align':'top', 'text-align':'left'}">
-                                <template let-row="rowData" pTemplate type="body">
+                                <ng-template let-row="rowData" pTemplate type="body">
                                     <textarea class="form-control" rows="4" [(ngModel)]="row.apprremark" tabindex="2"></textarea>
-                                </template>
+                                </ng-template>
                             </p-column>
                         </p-dataTable>
                     </div>

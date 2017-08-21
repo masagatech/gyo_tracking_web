@@ -31,7 +31,7 @@ export class InfoComponent implements OnInit {
             "uid": this.data.loginUser.uid,
             "utype": this.data.loginUser.utype,
             "issysadmin": this.data.loginUser.issysadmin,
-            "wsautoid": this.data._wsdetails.wsautoid
+            "wsautoid": this.data._enttdetails.wsautoid
         }).subscribe(data => {
             that.tripDT = data.data;
             commonfun.loaderhide("#loaderbody");
@@ -50,7 +50,7 @@ export class InfoComponent implements OnInit {
         this._trackDashbord.gettrackboard({
             "flag": "empid",
             "empid": this.data.empid,
-            "wsautoid": this.data._wsdetails.wsautoid
+            "wsautoid": this.data._enttdetails.wsautoid
         }).subscribe((data) => {
             try {
                 that.empinfo = data.data[0];

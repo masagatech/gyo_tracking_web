@@ -20,12 +20,12 @@
             <p-column field="lvtype" header="Leave Type" [style]="{'vertical-align':'top', 'width':'200px','text-align':'left'}"></p-column>
             <p-column field="remark" header="Remark" [style]="{'vertical-align':'top', 'width':'300px', 'text-align':'left'}"></p-column>
             <p-column field="apprremark" header="Remark" [style]="{'vertical-align':'top', 'text-align':'left'}">
-                <template let-row="rowData" pTemplate type="body">
+                <ng-template let-row="rowData" pTemplate type="body">
                     <textarea class="form-control" rows="4" [(ngModel)]="row.apprremark" tabindex="1"></textarea>
-                </template>
+                </ng-template>
             </p-column>
             <p-column field="status" header="Status" [style]="{'vertical-align':'top', 'width':'150px', 'text-align':'left'}">
-                <template let-row="rowData" pTemplate type="body">
+                <ng-template let-row="rowData" pTemplate type="body">
                     <div class="form-group">
                         <div class="form-line">
                             <select id="status" [(ngModel)]="row.status" class="form-control status" tabindex="2">
@@ -35,7 +35,7 @@
                             </select>
                         </div>
                     </div>
-                </template>
+                </ng-template>
             </p-column>
         </p-dataTable>
     </div>

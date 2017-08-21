@@ -8778,7 +8778,7 @@ fieldset[disabled] .form-control {
 }
 
 .sidebar .user-info {
-    padding: 10px 15px 10px 5px;
+    padding: 10px 15px 5px 5px;
     white-space: nowrap;
     position: relative;
     border-bottom: 1px solid #e9e9e9;

@@ -4,6 +4,7 @@ import { MessageService, messageType, MenuService, LoginService } from '@service
 import { LoginUserModel, Globals } from '@models';
 import { EntityService } from '@services/master';
 import { Angular2Csv } from 'angular2-csv/Angular2-csv';
+import { Cookie } from 'ng2-cookies/ng2-cookies';
 import jsPDF from 'jspdf'
 
 @Component({
@@ -14,6 +15,7 @@ import jsPDF from 'jspdf'
 export class EntityReportsComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
     _wsdetails: any = [];
+    _enttdetails: any = [];
 
     entityDT: any = [];
 
@@ -26,6 +28,7 @@ export class EntityReportsComponent implements OnInit, OnDestroy {
         public _menuservice: MenuService, private _loginservice: LoginService, private _entityservice: EntityService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
 
         this.getEntityDetails();
     }
@@ -63,7 +66,7 @@ export class EntityReportsComponent implements OnInit, OnDestroy {
 
         that._entityservice.getEntityDetails({
             "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
-            "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid
+            "issysadmin": that.loginUser.issysadmin, "wsautoid": Cookie.get("_wsdetails_") !== null ? that._wsdetails.wsautoid : that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
                 that.entityDT = data.data;

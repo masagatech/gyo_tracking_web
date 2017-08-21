@@ -134,7 +134,7 @@ export class UserReportsComponent implements OnInit, OnDestroy {
             "utype": this.loginUser.utype,
             "issysadmin": this.loginUser.issysadmin,
             "enttid": this.enttid,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": Cookie.get("_wsdetails_") !== null ? this._wsdetails.wsautoid : this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.entityDT = data.data;
@@ -169,7 +169,7 @@ export class UserReportsComponent implements OnInit, OnDestroy {
             "ucode": that.loginUser.ucode,
             "utype": that.loginUser.utype,
             "issysadmin": that.loginUser.issysadmin,
-            "wsautoid": that._wsdetails.wsautoid,
+            "wsautoid": Cookie.get("_wsdetails_") !== null ? that._wsdetails.wsautoid : that._enttdetails.wsautoid,
             "srcutype": that.srcutype,
             "search": query
         }).subscribe(data => {
@@ -224,8 +224,8 @@ export class UserReportsComponent implements OnInit, OnDestroy {
 
         uparams = {
             "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
-            "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid, "srcutype": that.srcutype,
-            "srcuid": that.autouid
+            "issysadmin": that.loginUser.issysadmin, "wsautoid": Cookie.get("_wsdetails_") !== null ? that._wsdetails.wsautoid : that._enttdetails.wsautoid,
+            "srcutype": that.srcutype, "srcuid": that.autouid
         };
 
         that._userservice.getUserDetails(uparams).subscribe(data => {

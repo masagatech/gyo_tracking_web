@@ -115,7 +115,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }).subscribe(data => {
       that.mastersMenuDT = data.data.filter(a => a.mptype === "master");
       that.reportsMenuDT = data.data.filter(a => a.mptype === "reports");
-      that.settingsMenuDT = data.data.filter(a => a.mptype === "settings");
     }, err => {
       that._msg.Show(messageType.error, "Error", err);
     }, () => {
