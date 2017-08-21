@@ -53,6 +53,24 @@ export class TripReportsComponent implements OnInit, OnDestroy {
         }, 100);
     }
 
+    public downloadImage(row) {
+        // $("<a>")
+        //     .attr("href", this.global.uploadurl + row.uploadimg)
+        //     .attr("download", "download." + row.imgtype)
+        //     .appendTo("body")
+        //     .click()
+        //     .remove();
+
+        var a = $("<a>")
+            .attr("href", this.global.uploadurl + row.uploadimg)
+            .attr("download", "download." + row.imgtype)
+            .appendTo("body");
+
+        a[0].click();
+
+        a.remove();
+    }
+
     // Export
 
     public exportToCSV() {
