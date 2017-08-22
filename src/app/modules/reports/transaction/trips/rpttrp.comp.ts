@@ -4,7 +4,10 @@ import { MessageService, messageType, LoginService, MenuService, CommonService }
 import { LoginUserModel, Globals } from '@models';
 import { TripReportsService } from '@services/master';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
+import { GMap } from 'primeng/primeng';
 import jsPDF from 'jspdf';
+
+declare var google: any;
 
 @Component({
     templateUrl: 'rpttrp.comp.html',
@@ -29,6 +32,14 @@ export class TripReportsComponent implements OnInit, OnDestroy {
     tripDetailsDT: any = [];
 
     @ViewChild('emptrips') emptrips: ElementRef;
+
+    marker: any;
+    @ViewChild("gmap")
+    _gmap: GMap;
+
+    private options: any;
+    private overlays: any[];
+    private map: any;
 
     global = new Globals();
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
@@ -207,6 +218,35 @@ export class TripReportsComponent implements OnInit, OnDestroy {
 
             })
         }
+    }
+
+    // Map View Lat Lon Wise
+
+    getLatLonWiseMap(row) {
+        $("#mapModal").modal('show');
+        commonfun.loader("#mapModal");
+
+        this.options = {
+            center: { lat: row.strlat, lng: row.endlng },
+            zoom: 18
+        };
+
+        this.marker = new google.maps.Marker({ position: { lat: row.strlat, lng: row.endlng }, title: "", draggable: true });
+        this.overlays = [this.marker];
+
+        if (row.strlat.toString() != "0" && row.strlat.toString() != "") {
+            var latlng = new google.maps.LatLng(Number(row.strlat), Number(row.endlng));
+            console.log(latlng);
+            this.marker.setPosition(latlng);
+            this._gmap.getMap().setCenter(latlng);
+        }
+
+        commonfun.loaderhide("#mapModal");
+    }
+
+    handleMapClick(e) {
+        var latlng = new google.maps.LatLng(e.latLng.lat(), e.latLng.lng());
+        this.marker.setPosition(latlng);
     }
 
     // Export
