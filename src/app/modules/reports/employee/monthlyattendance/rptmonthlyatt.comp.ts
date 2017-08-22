@@ -2,14 +2,13 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, messageType, LoginService, MenuService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { ReportsService } from '@services/master';
+import { EmployeeService } from '@services/master';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
-import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import jsPDF from 'jspdf'
 
 @Component({
     templateUrl: 'rptmonthlyatt.comp.html',
-    providers: [CommonService, MenuService, ReportsService]
+    providers: [CommonService, MenuService, EmployeeService]
 })
 
 export class MonthlyAttendanceComponent implements OnInit, OnDestroy {
@@ -27,7 +26,7 @@ export class MonthlyAttendanceComponent implements OnInit, OnDestroy {
     @ViewChild('psngrattnd') psngrattnd: ElementRef;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
-        public _menuservice: MenuService, private _loginservice: LoginService, private _rptservice: ReportsService,
+        public _menuservice: MenuService, private _loginservice: LoginService, private _rptempservice: EmployeeService,
         private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._enttdetails = Globals.getEntityDetails();
@@ -61,7 +60,7 @@ export class MonthlyAttendanceComponent implements OnInit, OnDestroy {
     // Export
 
     public exportToCSV() {
-        new Angular2Csv(this.attData, 'User Details', { "showLabels": true });
+        this._autoservice.exportToCSV(this.attData, "User Details");
     }
 
     public exportToPDF() {
@@ -82,7 +81,7 @@ export class MonthlyAttendanceComponent implements OnInit, OnDestroy {
         var that = this;
         commonfun.loader();
 
-        that._rptservice.getEmployeeAttendance({ "flag": "filterddl" }).subscribe(data => {
+        that._rptempservice.getEmployeeAttendance({ "flag": "filterddl" }).subscribe(data => {
             try {
                 that.monthDT = data.data.filter(a => a.group === "month");
                 // setTimeout(function () { $.AdminBSB.select.refresh('monthname'); }, 100);
@@ -109,7 +108,7 @@ export class MonthlyAttendanceComponent implements OnInit, OnDestroy {
     getMonthlyAttendanceData() {
         var that = this;
 
-        that._rptservice.getEmployeeAttendance({
+        that._rptempservice.getEmployeeAttendance({
             "flag": "column", "monthname": that.monthname, "enttid": that._enttdetails.enttid
         }).subscribe(data => {
             if (data.data.length !== 0) {
@@ -131,7 +130,7 @@ export class MonthlyAttendanceComponent implements OnInit, OnDestroy {
         else {
             commonfun.loader("#fltrpsngr");
 
-            that._rptservice.getEmployeeAttendance({
+            that._rptempservice.getEmployeeAttendance({
                 "flag": "monthly", "monthname": that.monthname, "enttid": that._enttdetails.enttid,
                 "uid": that.loginUser.uid, "utype": that.loginUser.utype,
                 "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin

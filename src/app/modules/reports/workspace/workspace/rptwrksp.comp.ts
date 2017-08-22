@@ -1,14 +1,13 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService, messageType, MenuService, LoginService } from '@services';
+import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { WorkspaceRepoertsService } from '@services/master';
-import { Angular2Csv } from 'angular2-csv/Angular2-csv';
+import { WorkspaceService } from '@services/master';
 import jsPDF from 'jspdf'
 
 @Component({
     templateUrl: 'rptwrksp.comp.html',
-    providers: [MenuService, WorkspaceRepoertsService]
+    providers: [MenuService, WorkspaceService, CommonService]
 })
 
 export class WorkspaceReportsComponent implements OnInit, OnDestroy {
@@ -23,7 +22,8 @@ export class WorkspaceReportsComponent implements OnInit, OnDestroy {
     @ViewChild('workspace') workspace: ElementRef;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
-        public _menuservice: MenuService, private _loginservice: LoginService, private _wspservice: WorkspaceRepoertsService) {
+        public _menuservice: MenuService, private _loginservice: LoginService, private _wsrptservice: WorkspaceService,
+        private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
 
@@ -43,7 +43,7 @@ export class WorkspaceReportsComponent implements OnInit, OnDestroy {
     // Export
 
     public exportToCSV() {
-        new Angular2Csv(this.workspaceDT, 'workspaceDetails', { "showLabels": true });
+        this._autoservice.exportToCSV(this.workspaceDT, "Workspace Details");
     }
 
     public exportToPDF() {
@@ -61,7 +61,7 @@ export class WorkspaceReportsComponent implements OnInit, OnDestroy {
 
         commonfun.loader();
 
-        that._wspservice.getWorkspaceDetails({
+        that._wsrptservice.getWorkspaceDetails({
             "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
             "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid
         }).subscribe(data => {

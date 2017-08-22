@@ -20,6 +20,7 @@ export const routes = [
                     { path: 'expense', loadChildren: './expense#ExpenseReportsModule' },
                     { path: 'trips', loadChildren: './trips#TripReportsModule' },
                     { path: 'stops', loadChildren: './stops#StopsReportsModule' },
+                    { path: 'notification', loadChildren: './notification#NotificationReportsModule' },
                 ]
             }
         ]

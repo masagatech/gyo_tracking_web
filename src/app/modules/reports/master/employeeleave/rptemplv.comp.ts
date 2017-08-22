@@ -5,7 +5,6 @@ import { LoginUserModel, Globals } from '@models';
 import { EmployeeLeaveService } from '@services/master';
 import { LazyLoadEvent } from 'primeng/primeng';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
-import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import jsPDF from 'jspdf'
 
 @Component({
@@ -110,7 +109,7 @@ export class EmployeeLeaveReportsComponent implements OnInit, OnDestroy {
     // Export
 
     public exportToCSV() {
-        new Angular2Csv(this.empleaveDT, 'EmployeeTrips', { "showLabels": true });
+        this._autoservice.exportToCSV(this.empleaveDT, "Employee Leave Details");
     }
 
     public exportToPDF() {

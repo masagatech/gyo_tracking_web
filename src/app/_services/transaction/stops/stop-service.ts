@@ -9,9 +9,4 @@ export class StopsReportsService {
     getTripStops(req: any) {
         return this._dataserver.post("getTripStops", req)
     }
-
-    saveTripStops(req: any) {
-        return this._dataserver.post("saveTripStops", req)
-    }
 }
-

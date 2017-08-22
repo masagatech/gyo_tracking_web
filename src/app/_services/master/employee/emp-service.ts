@@ -17,4 +17,12 @@ export class EmployeeService {
     updateEmployeeInfo(req: any) {
         return this._dataserver.post("updateEmployeeInfo", req)
     }
+
+    getEmployeeAttendance(req: any) {
+        return this._dataserver.post("getEmployeeAttendance", req)
+    }
+
+    getTeamWiseEmployeeReports(req: any) {
+        return this._dataserver.post("getTeamWiseEmployeeReports", req)
+    }
 }

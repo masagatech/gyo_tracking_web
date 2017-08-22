@@ -6,7 +6,7 @@
                 <div class="form-group">
                     <div class="form-line">
                         <label class="control-label">From Date</label>
-                        <input type="date" [(ngModel)]="frmdt" class="form-control">
+                        <input type="date" [(ngModel)]="frmdt" class="form-control" tabindex="1">
                     </div>
                 </div>
             </div>
@@ -14,7 +14,7 @@
                 <div class="form-group">
                     <div class="form-line">
                         <label class="control-label">To Date</label>
-                        <input type="date" [(ngModel)]="todt" class="form-control">
+                        <input type="date" [(ngModel)]="todt" class="form-control" tabindex="2">
                     </div>
                 </div>
             </div>
@@ -22,7 +22,7 @@
                 <div class="form-group" id="divAssignedBy">
                     <div class="form-line">
                         <label class="control-label">Assigned By <strong>*</strong></label>
-                        <p-autoComplete id="assbyname" name="assbyname" [(ngModel)]="assbydata" [tabindex]="1" (onSelect)="selectAssignedByData($event)" [suggestions]="assignedbyDT" (completeMethod)="getAssignedByData($event)" field="uname" [minLength]="1" [size]="30" class="form-controlAutoComplete assbyname"></p-autoComplete>
+                        <p-autoComplete id="assbyname" name="assbyname" [(ngModel)]="assbydata" [tabindex]="3" (onSelect)="selectAssignedByData($event)" [suggestions]="assignedbyDT" (completeMethod)="getAssignedByData($event)" field="uname" [minLength]="1" [size]="30" class="form-controlAutoComplete assbyname"></p-autoComplete>
                         <span class="material-icons inputserachico">search</span>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                 <div class="form-group" id="divAssignedTo">
                     <div class="form-line">
                         <label class="control-label">Assigned To <strong>*</strong></label>
-                        <p-autoComplete id="asstoname" name="asstoname" [(ngModel)]="asstodata" [tabindex]="1" (onSelect)="selectAssignedToData($event)" [suggestions]="assignedtoDT" (completeMethod)="getAssignedToData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete asstoname"></p-autoComplete>
+                        <p-autoComplete id="asstoname" name="asstoname" [(ngModel)]="asstodata" [tabindex]="4" (onSelect)="selectAssignedToData($event)" [suggestions]="assignedtoDT" (completeMethod)="getAssignedToData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete asstoname"></p-autoComplete>
                         <span class="material-icons inputserachico">search</span>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                 <div class="form-group" id="divAssignedTo">
                     <div class="form-line">
                         <label class="control-label">Tag</label>
-                        <p-autoComplete id="tagname" name="tagname" [(ngModel)]="tagdata" [tabindex]="1" (onSelect)="selectTagData($event)" [suggestions]="tagDT" (completeMethod)="getTagData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete tagname"></p-autoComplete>
+                        <p-autoComplete id="tagname" name="tagname" [(ngModel)]="tagdata" [tabindex]="5" (onSelect)="selectTagData($event)" [suggestions]="tagDT" (completeMethod)="getTagData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete tagname"></p-autoComplete>
                         <span class="material-icons inputserachico">search</span>
                     </div>
                 </div>

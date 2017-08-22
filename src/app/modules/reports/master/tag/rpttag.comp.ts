@@ -4,7 +4,6 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
 import { TagService } from '@services/master';
-import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import jsPDF from 'jspdf'
 
 @Component({
@@ -49,7 +48,7 @@ export class TagReportsComponent implements OnInit, OnDestroy {
     // Export
 
     public exportToCSV() {
-        new Angular2Csv(this.emptagDT, 'Employee Details', { "showLabels": true });
+        this._autoservice.exportToCSV(this.emptagDT, "Tag Details");
     }
 
     public exportToPDF() {

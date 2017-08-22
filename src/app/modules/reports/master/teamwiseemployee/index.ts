@@ -6,7 +6,7 @@ import { SharedComponentModule } from '@services';
 import { AuthGuard } from '@services';
 
 import { TeamWiseEmployeeComponent } from './tmwiseemp.comp';
-import { ReportsService } from '@services/master';
+import { EmployeeService } from '@services/master';
 
 import { LazyLoadEvent, DataTableModule, AutoCompleteModule } from 'primeng/primeng';
 
@@ -30,7 +30,7 @@ export const routes = [
     CommonModule, FormsModule, SharedComponentModule, RouterModule.forChild(routes), DataTableModule, AutoCompleteModule
   ],
 
-  providers: [AuthGuard, ReportsService]
+  providers: [AuthGuard, EmployeeService]
 })
 
 export class TeamWiseEmployeeModule {

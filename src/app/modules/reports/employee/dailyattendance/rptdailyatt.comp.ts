@@ -2,14 +2,13 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, messageType, LoginService, MenuService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { ReportsService } from '@services/master';
+import { EmployeeService } from '@services/master';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
-import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import jsPDF from 'jspdf'
 
 @Component({
     templateUrl: 'rptdailyatt.comp.html',
-    providers: [MenuService, ReportsService, CommonService]
+    providers: [MenuService, EmployeeService, CommonService]
 })
 
 export class DailyAttendanceComponent implements OnInit, OnDestroy {
@@ -22,7 +21,7 @@ export class DailyAttendanceComponent implements OnInit, OnDestroy {
     @ViewChild('dailyatt') dailyatt: ElementRef;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
-        public _menuservice: MenuService, private _loginservice: LoginService, private _rptservice: ReportsService,
+        public _menuservice: MenuService, private _loginservice: LoginService, private _rptempservice: EmployeeService,
         private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._enttdetails = Globals.getEntityDetails();
@@ -52,7 +51,7 @@ export class DailyAttendanceComponent implements OnInit, OnDestroy {
     // Export
 
     public exportToCSV() {
-        new Angular2Csv(this.attData, 'DailyAttendance', { "showLabels": true });
+        this._autoservice.exportToCSV(this.attData, "Daily Attendance");
     }
 
     public exportToPDF() {
@@ -75,7 +74,7 @@ export class DailyAttendanceComponent implements OnInit, OnDestroy {
         else {
             commonfun.loader();
 
-            that._rptservice.getEmployeeAttendance({
+            that._rptempservice.getEmployeeAttendance({
                 "flag": "daily", "monthname": monthname, "enttid": that._enttdetails.enttid,
                 "uid": that.loginUser.uid, "utype": that.loginUser.utype,
                 "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin

@@ -2,9 +2,8 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, messageType, LoginService, MenuService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { ReportsService } from '@services/master';
+import { EmployeeService } from '@services/master';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
-import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import jsPDF from 'jspdf'
 
 @Component({
@@ -19,7 +18,6 @@ export class TeamWiseEmployeeComponent implements OnInit, OnDestroy {
     batchDT: any = [];
     batchid: number = 0;
 
-    exportData: any = [];
     teamDT: any = [];
     employeeDT: any = [];
 
@@ -29,7 +27,7 @@ export class TeamWiseEmployeeComponent implements OnInit, OnDestroy {
     @ViewChild('grpwiseemp') grpwiseemp: ElementRef;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, public _menuservice: MenuService,
-        private _loginservice: LoginService, private _rptservice: ReportsService, private _autoservice: CommonService) {
+        private _loginservice: LoginService, private _rptempservice: EmployeeService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._enttdetails = Globals.getEntityDetails();
 
@@ -53,7 +51,7 @@ export class TeamWiseEmployeeComponent implements OnInit, OnDestroy {
         var that = this;
         commonfun.loader();
 
-        that._rptservice.getTeamWiseEmployeeReports({
+        that._rptempservice.getTeamWiseEmployeeReports({
             "flag": "team", "enttid": that._enttdetails.enttid, "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
@@ -80,7 +78,7 @@ export class TeamWiseEmployeeComponent implements OnInit, OnDestroy {
 
         commonfun.loader("#ddlemp");
 
-        that._rptservice.getTeamWiseEmployeeReports({
+        that._rptempservice.getTeamWiseEmployeeReports({
             "flag": "employee", "enttid": that._enttdetails.enttid, "tmid": row.tmid, "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
@@ -110,7 +108,7 @@ export class TeamWiseEmployeeComponent implements OnInit, OnDestroy {
 
         that.employeeDT = [];
 
-        that._rptservice.getTeamWiseEmployeeReports({
+        that._rptempservice.getTeamWiseEmployeeReports({
             "flag": "rtwise", "stpid": row.stpid, "enttid": row.schoolid, "rtid": row.rtid,
             "batchid": row.batchid, "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
@@ -146,12 +144,11 @@ export class TeamWiseEmployeeComponent implements OnInit, OnDestroy {
 
         commonfun.loader("#exportemp");
 
-        that._rptservice.getTeamWiseEmployeeReports({
+        that._rptempservice.getTeamWiseEmployeeReports({
             "flag": "export", "enttid": that._enttdetails.enttid, "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
-                that.exportData = data.data;
-                new Angular2Csv(that.exportData, 'GroupWiseEmployee', { "showLabels": true });
+                that._autoservice.exportToCSV(data.data, "Team Wise Employee");
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);

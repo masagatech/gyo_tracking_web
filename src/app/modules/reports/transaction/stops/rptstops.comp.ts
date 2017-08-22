@@ -2,8 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { StopsReportsService } from '@services/reports';
-import { Angular2Csv } from 'angular2-csv/Angular2-csv';
+import { StopsReportsService } from '@services/master';
 import jsPDF from 'jspdf'
 
 @Component({
@@ -162,7 +161,7 @@ export class StopsReportsComponent implements OnInit, OnDestroy {
     // Export
 
     public exportToCSV() {
-        new Angular2Csv(this.stopsDT, 'stops', { "showLabels": true });
+        this._autoservice.exportToCSV(this.stopsDT, "Stops Details");
     }
 
     public exportToPDF() {

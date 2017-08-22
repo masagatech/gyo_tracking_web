@@ -2,14 +2,13 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, messageType, LoginService, MenuService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { ReportsService } from '@services/master';
+import { TripReportsService } from '@services/master';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
-import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import jsPDF from 'jspdf';
 
 @Component({
     templateUrl: 'rpttrp.comp.html',
-    providers: [CommonService, MenuService, ReportsService]
+    providers: [CommonService, MenuService, TripReportsService]
 })
 
 export class TripReportsComponent implements OnInit, OnDestroy {
@@ -35,12 +34,10 @@ export class TripReportsComponent implements OnInit, OnDestroy {
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
-        public _menuservice: MenuService, private _loginservice: LoginService, private _rptservice: ReportsService,
+        public _menuservice: MenuService, private _loginservice: LoginService, private _rpttrpservice: TripReportsService,
         private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._enttdetails = Globals.getEntityDetails();
-
-        this.getTripSummary();
     }
 
     public ngOnInit() {
@@ -54,13 +51,6 @@ export class TripReportsComponent implements OnInit, OnDestroy {
     }
 
     public downloadImage(row) {
-        // $("<a>")
-        //     .attr("href", this.global.uploadurl + row.uploadimg)
-        //     .attr("download", "download." + row.imgtype)
-        //     .appendTo("body")
-        //     .click()
-        //     .remove();
-
         var a = $("<a>")
             .attr("href", this.global.uploadurl + row.uploadimg)
             .attr("download", "download." + row.imgtype)
@@ -69,22 +59,6 @@ export class TripReportsComponent implements OnInit, OnDestroy {
         a[0].click();
 
         a.remove();
-    }
-
-    // Export
-
-    public exportToCSV() {
-        new Angular2Csv(this.tripSummaryDT, 'EmployeeTrips', { "showLabels": true });
-    }
-
-    public exportToPDF() {
-        let pdf = new jsPDF('l', 'pt', 'a4');
-        let options = {
-            pagesplit: true
-        };
-        pdf.addHTML(this.emptrips.nativeElement, 0, 0, options, () => {
-            pdf.save("EmployeeTrips.pdf");
-        });
     }
 
     // Auto Completed Employee
@@ -151,71 +125,138 @@ export class TripReportsComponent implements OnInit, OnDestroy {
         return (+(value[0] + 'e' + (value[1] ? (+value[1] - 2) : -2))).toFixed(2);
     }
 
+    // Summary
+
     getTripSummary() {
         var that = this;
 
-        that._rptservice.getTripReports({
-            "enttid": that._enttdetails.enttid, "empid": that.empid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
-            "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin, "vtype": "p"
-        }).subscribe(data => {
-            try {
-                if (data.data.length !== 0) {
-                    for (var i = 0; i < data.data.length; i++) {
-                        var trprow = data.data[i];
-                        trprow.kilometer = that.getDistanceFromLatLonInKm(trprow.strlat, trprow.strlng, trprow.endlat, trprow.endlng);
+        if (that.empid == 0) {
+            that._msg.Show(messageType.info, "Info", "Please Enter Employee Name");
+        }
+        else {
+            commonfun.loader();
+
+            that._rpttrpservice.getTripReports({
+                "enttid": that._enttdetails.enttid, "empid": that.empid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
+                "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin, "vtype": "p"
+            }).subscribe(data => {
+                try {
+                    if (data.data.length !== 0) {
+                        for (var i = 0; i < data.data.length; i++) {
+                            var trprow = data.data[i];
+                            trprow.kilometer = that.getDistanceFromLatLonInKm(trprow.strlat, trprow.strlng, trprow.endlat, trprow.endlng);
+                        }
+
+                        that.tripSummaryDT = data.data;
                     }
-
-                    that.tripSummaryDT = data.data;
+                    else {
+                        that.tripSummaryDT = [];
+                    }
                 }
-                else {
-                    that.tripSummaryDT = [];
+                catch (e) {
+                    that._msg.Show(messageType.error, "Error", e);
                 }
-            }
-            catch (e) {
-                that._msg.Show(messageType.error, "Error", e);
-            }
-            commonfun.loaderhide();
-        }, err => {
-            that._msg.Show(messageType.error, "Error", err);
-            console.log(err);
-            commonfun.loaderhide();
-        }, () => {
 
-        })
+                commonfun.loaderhide();
+            }, err => {
+                that._msg.Show(messageType.error, "Error", err);
+                console.log(err);
+                commonfun.loaderhide();
+            }, () => {
+
+            })
+        }
     }
+
+    // Details
 
     getTripDetails(vtype, row) {
         var that = this;
 
-        $("#stopsModal").modal('show');
-        commonfun.loader("#stopsModal");
+        if (that.empid == 0) {
+            that._msg.Show(messageType.info, "Info", "Please Enter Employee Name");
+        }
+        else {
+            $("#stopsModal").modal('show');
+            commonfun.loader("#stopsModal");
 
-        that._rptservice.getTripReports({
-            "vtype": vtype, "enttid": that._enttdetails.enttid, "empid": that.empid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
-            "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin, "trpdate": row.trpdate
-        }).subscribe(data => {
-            try {
-                if (data.data.length !== 0) {
-                    that.tripDetailsDT = data.data;
-                    that.triptype = vtype == 'stops' ? "Stops" : "Task";
+            that._rpttrpservice.getTripReports({
+                "vtype": vtype, "enttid": that._enttdetails.enttid, "empid": that.empid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
+                "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin, "trpdate": row.trpdate
+            }).subscribe(data => {
+                try {
+                    if (data.data.length !== 0) {
+                        that.tripDetailsDT = data.data;
+                        that.triptype = vtype == 'stops' ? "Stops" : "Task";
+                    }
+                    else {
+                        that.tripDetailsDT = [];
+                        that.triptype = "";
+                    }
                 }
-                else {
-                    that.tripDetailsDT = [];
-                    that.triptype = "";
+                catch (e) {
+                    that._msg.Show(messageType.error, "Error", e);
                 }
-            }
-            catch (e) {
-                that._msg.Show(messageType.error, "Error", e);
-            }
 
-            commonfun.loaderhide("#stopsModal");
-        }, err => {
-            that._msg.Show(messageType.error, "Error", err);
-            console.log(err);
-            commonfun.loaderhide("#stopsModal");
-        }, () => {
+                commonfun.loaderhide("#stopsModal");
+            }, err => {
+                that._msg.Show(messageType.error, "Error", err);
+                console.log(err);
+                commonfun.loaderhide("#stopsModal");
+            }, () => {
 
-        })
+            })
+        }
+    }
+
+    // Export
+
+    public exportToCSV() {
+        var that = this;
+
+        if (that.empid == 0) {
+            that._msg.Show(messageType.info, "Info", "Please Enter Employee Name");
+        }
+        else {
+            var tripExportDT: any = [];
+            commonfun.loader();
+
+            that._rpttrpservice.getTripReports({
+                "enttid": that._enttdetails.enttid, "empid": that.empid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
+                "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin, "vtype": "export"
+            }).subscribe(data => {
+                try {
+                    if (data.data.length !== 0) {
+                        tripExportDT = data.data;
+                        that._autoservice.exportToCSV(tripExportDT, "Employee trips");
+                    }
+                    else {
+                        tripExportDT = [];
+                    }
+                }
+                catch (e) {
+                    that._msg.Show(messageType.error, "Error", e);
+                }
+
+                commonfun.loaderhide();
+            }, err => {
+                that._msg.Show(messageType.error, "Error", err);
+                console.log(err);
+                commonfun.loaderhide();
+            }, () => {
+
+            })
+        }
+    }
+
+    public exportToPDF() {
+        let pdf = new jsPDF('l', 'pt', 'a4');
+        let options = {
+            pagesplit: true
+        };
+        pdf.addHTML(this.emptrips.nativeElement, 0, 0, options, () => {
+            pdf.save("Employee Trips.pdf");
+        });
     }
 
     public ngOnDestroy() {

@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { AuthGuard } from '@services';
 
 import { MonthlyAttendanceComponent } from './rptmonthlyatt.comp';
-import { ReportsService } from '@services/master';
+import { EmployeeService } from '@services/master';
 
 import { LazyLoadEvent, DataTableModule, AutoCompleteModule } from 'primeng/primeng';
 
@@ -29,7 +29,7 @@ export const routes = [
     CommonModule, FormsModule, RouterModule.forChild(routes), DataTableModule, AutoCompleteModule
   ],
 
-  providers: [AuthGuard, ReportsService]
+  providers: [AuthGuard, EmployeeService]
 })
 
 export class MonthlyAttendanceModule {

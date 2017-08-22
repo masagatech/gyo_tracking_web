@@ -1,13 +1,12 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService, messageType, MenuService, LoginService } from '@services';
+import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import jsPDF from 'jspdf'
 
 @Component({
     templateUrl: 'rptmnlg.comp.html',
-    providers: [MenuService]
+    providers: [MenuService, CommonService]
 })
 
 export class MenuLogReportsComponent implements OnInit, OnDestroy {
@@ -27,7 +26,7 @@ export class MenuLogReportsComponent implements OnInit, OnDestroy {
     @ViewChild('menulog') menulog: ElementRef;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
-        public _menuservice: MenuService, private _loginservice: LoginService) {
+        public _menuservice: MenuService, private _loginservice: LoginService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._enttdetails = Globals.getEntityDetails();
 
@@ -138,7 +137,7 @@ export class MenuLogReportsComponent implements OnInit, OnDestroy {
             "flag": "export", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
-                new Angular2Csv(data.data, 'MenuLogDetails', { "showLabels": true });
+                this._autoservice.exportToCSV(data.data, "Menu Log Details");
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);

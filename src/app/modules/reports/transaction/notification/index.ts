@@ -5,8 +5,8 @@ import { RouterModule } from '@angular/router';
 import { SharedComponentModule } from '@services';
 import { AuthGuard } from '@services';
 
-import { StopsReportsComponent } from './rptstops.comp';
-import { StopsReportsService } from '@services/master';
+import { NotificationReportsComponent } from './rptntf.comp';
+import { NotificationService } from '@services/master';
 
 import { LazyLoadEvent, DataTableModule, AutoCompleteModule } from 'primeng/primeng';
 
@@ -14,8 +14,8 @@ export const routes = [
   {
     path: '', children: [
       {
-        path: '', component: StopsReportsComponent, canActivate: [AuthGuard],
-        data: { "module": "stops", "submodule": "rptstp", "rights": "view", "urlname": "/stops" }
+        path: '', component: NotificationReportsComponent, canActivate: [AuthGuard],
+        data: { "module": "notification", "submodule": "rptstp", "rights": "view", "urlname": "/Notification" }
       }
     ]
   },
@@ -23,16 +23,16 @@ export const routes = [
 
 @NgModule({
   declarations: [
-    StopsReportsComponent
+    NotificationReportsComponent
   ],
 
   imports: [
     CommonModule, FormsModule, SharedComponentModule, RouterModule.forChild(routes), DataTableModule, AutoCompleteModule
   ],
 
-  providers: [AuthGuard, StopsReportsService]
+  providers: [AuthGuard, NotificationService]
 })
 
-export class StopsReportsModule {
+export class NotificationReportsModule {
   public static routes = routes;
 }
