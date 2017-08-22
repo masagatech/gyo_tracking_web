@@ -15,16 +15,16 @@ export class NotificationReportsComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
     _enttdetails: any = [];
 
-    assignedbyDT: any = [];
-    assbydata: any = [];
-    assbyid: number = 0;
-    assbyname: string = "";
-    assbytype: string = "";
+    fromDT: any = [];
+    fromdata: any = [];
+    fromid: number = 0;
+    fromname: string = "";
+    fromtype: string = "";
 
-    assignedtoDT: any = [];
-    asstodata: any = [];
-    asstoid: number = 0;
-    asstoname: string = "";
+    toDT: any = [];
+    todata: any = [];
+    toid: number = 0;
+    toname: string = "";
 
     notificationDT: any = [];
 
@@ -33,7 +33,7 @@ export class NotificationReportsComponent implements OnInit, OnDestroy {
         this.loginUser = this._loginservice.getUser();
         this._enttdetails = Globals.getEntityDetails();
 
-        this.getNotification();
+        this.getNotificationReports();
     }
 
     public ngOnInit() {
@@ -46,9 +46,9 @@ export class NotificationReportsComponent implements OnInit, OnDestroy {
         }, 0);
     }
 
-    // Auto Completed Assigned By
+    // Auto Completed From Name
 
-    getAssignedByData(event) {
+    getFromData(event) {
         var that = this;
         let query = event.query;
 
@@ -61,7 +61,7 @@ export class NotificationReportsComponent implements OnInit, OnDestroy {
             "wsautoid": that._enttdetails.wsautoid,
             "search": query
         }).subscribe(data => {
-            that.assignedbyDT = data.data;
+            that.fromDT = data.data;
         }, err => {
             that._msg.Show(messageType.error, "Error", err);
         }, () => {
@@ -69,19 +69,19 @@ export class NotificationReportsComponent implements OnInit, OnDestroy {
         });
     }
 
-    // Selected Assigned By
+    // Selected From Name
 
-    selectAssignedByData(event, arg) {
+    selectFromData(event, arg) {
         var that = this;
 
-        that.assbyid = event.uid;
-        that.assbyname = event.uname;
-        that.assbytype = event.utype;
+        that.fromid = event.uid;
+        that.fromname = event.uname;
+        that.fromtype = event.utype;
     }
 
-    // Auto Completed Assigned To
+    // Auto Completed To Name
 
-    getAssignedToData(event) {
+    getToData(event) {
         let query = event.query;
 
         this._autoservice.getAutoData({
@@ -94,7 +94,7 @@ export class NotificationReportsComponent implements OnInit, OnDestroy {
             "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
-            this.assignedtoDT = data.data;
+            this.toDT = data.data;
         }, err => {
             this._msg.Show(messageType.error, "Error", err);
         }, () => {
@@ -102,21 +102,22 @@ export class NotificationReportsComponent implements OnInit, OnDestroy {
         });
     }
 
-    // Selected Assigned To
+    // Selected To Name
 
-    selectAssignedToData(event) {
-        this.asstoid = event.value;
-        this.asstoname = event.label;
+    selectToData(event) {
+        this.toid = event.value;
+        this.toname = event.label;
     }
 
     // Notification
 
-    getNotification() {
+    getNotificationReports() {
         var that = this;
         commonfun.loader();
 
         that._ntfservice.getNotification({
-            "flag": "all", "wsautoid": that._enttdetails.wsautoid, "enttid": that._enttdetails.enttid, "empid": that.asstoid
+            "flag": "reports", "fromid": that.fromid, "toid": that.toid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
+            "enttid": that._enttdetails.enttid, "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
         }).subscribe(data => {
             try {
                 that.notificationDT = data.data;
