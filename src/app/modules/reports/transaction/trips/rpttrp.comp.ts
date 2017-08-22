@@ -228,7 +228,7 @@ export class TripReportsComponent implements OnInit, OnDestroy {
                 try {
                     if (data.data.length !== 0) {
                         tripExportDT = data.data;
-                        that._autoservice.exportToCSV(tripExportDT, "Employee trips");
+                        that._autoservice.exportToCSV(tripExportDT, "Employee Trips");
                     }
                     else {
                         tripExportDT = [];

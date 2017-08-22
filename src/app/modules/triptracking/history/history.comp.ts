@@ -118,7 +118,6 @@ export class HistoryComponent implements OnInit, OnDestroy {
             "todt": that.dateToValue
         }).subscribe((data) => {
             try {
-                //console.log(data.data);
                 that.historyDt = data.data;
             }
             catch (e) {
@@ -162,7 +161,6 @@ export class HistoryComponent implements OnInit, OnDestroy {
         }, () => {
         });
 
-        // that.data.tripid = tripid;
         that.getTaskAndStops(tripid);
     }
 
@@ -340,7 +338,6 @@ export class HistoryComponent implements OnInit, OnDestroy {
         this.index = e;
     }
 
-
     private initPoly() {
         var icon = {
             path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
@@ -447,16 +444,6 @@ export class HistoryComponent implements OnInit, OnDestroy {
         if (this.HistoryMarker["start"]) this.HistoryMarker["start"].setMap(null);
         if (this.HistoryMarker["stop"]) this.HistoryMarker["stop"].setMap(null);
     }
-
-    //injecter service
-
-    // private loadComponent(component, data) {
-    //     let componentFactory = this.componentFactoryResolver.resolveComponentFactory(component);
-    //     let viewContainerRef = this._Host.viewContainerRef;
-    //     viewContainerRef.clear();
-    //     let componentRef = viewContainerRef.createComponent(componentFactory);
-    //     (<HOSTComponent>componentRef.instance).data = data;
-    // }
 
     ngOnDestroy() {
         this.clearAll();
