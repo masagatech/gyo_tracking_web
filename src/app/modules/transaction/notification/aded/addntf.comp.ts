@@ -199,7 +199,8 @@ export class AddNotificationComponent implements OnInit {
                     "msg": that.msg,
                     "cuid": that.loginUser.ucode,
                     "enttid": that._enttdetails.enttid,
-                    "wsautoid": that._enttdetails.wsautoid
+                    "wsautoid": that._enttdetails.wsautoid,
+                    "ntftype": "other"
                 }
 
                 this._ntfservice.saveNotification(saveemp).subscribe(data => {
