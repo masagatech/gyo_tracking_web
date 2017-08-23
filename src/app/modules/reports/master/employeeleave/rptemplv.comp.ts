@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
+import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
 import { EmployeeLeaveService } from '@services/master';
 import { LazyLoadEvent } from 'primeng/primeng';
@@ -9,7 +9,7 @@ import jsPDF from 'jspdf'
 
 @Component({
     templateUrl: 'rptemplv.comp.html',
-    providers: [MenuService, CommonService]
+    providers: [CommonService]
 })
 
 export class EmployeeLeaveReportsComponent implements OnInit, OnDestroy {

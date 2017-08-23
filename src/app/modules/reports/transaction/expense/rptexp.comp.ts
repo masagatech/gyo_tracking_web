@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
+import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
 import { ExpenseService } from '@services/master';
 import { LazyLoadEvent } from 'primeng/primeng';
@@ -8,7 +8,7 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 @Component({
     templateUrl: 'rptexp.comp.html',
-    providers: [MenuService, CommonService]
+    providers: [CommonService]
 })
 
 export class ExpenseReportsComponent implements OnInit, OnDestroy {

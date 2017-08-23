@@ -1,14 +1,14 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
-import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
+import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
 import { TagService } from '@services/master';
 import jsPDF from 'jspdf'
 
 @Component({
     templateUrl: 'rpttag.comp.html',
-    providers: [MenuService, CommonService]
+    providers: [CommonService]
 })
 
 export class TagReportsComponent implements OnInit, OnDestroy {
@@ -24,7 +24,7 @@ export class TagReportsComponent implements OnInit, OnDestroy {
 
     @ViewChild('tag') tag: ElementRef;
 
-    constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, public _menuservice: MenuService,
+    constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
         private _loginservice: LoginService, private _tagservice: TagService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._enttdetails = Globals.getEntityDetails();

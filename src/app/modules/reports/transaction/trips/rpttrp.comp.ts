@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService, messageType, LoginService, MenuService, CommonService } from '@services';
+import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
 import { TripReportsService } from '@services/master';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
@@ -11,7 +11,7 @@ declare var google: any;
 
 @Component({
     templateUrl: 'rpttrp.comp.html',
-    providers: [CommonService, MenuService, TripReportsService]
+    providers: [CommonService, TripReportsService]
 })
 
 export class TripReportsComponent implements OnInit, OnDestroy {
@@ -45,7 +45,7 @@ export class TripReportsComponent implements OnInit, OnDestroy {
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
-        public _menuservice: MenuService, private _loginservice: LoginService, private _rpttrpservice: TripReportsService,
+        private _loginservice: LoginService, private _rpttrpservice: TripReportsService,
         private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._enttdetails = Globals.getEntityDetails();

@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
+import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { UserService } from '@services/master';
 import { LoginUserModel, Globals } from '@models';
 import jsPDF from 'jspdf'
 
 @Component({
     templateUrl: 'rptlog.comp.html',
-    providers: [MenuService, CommonService]
+    providers: [CommonService]
 })
 
 export class LoginLogReportsComponent implements OnInit, OnDestroy {
@@ -27,7 +27,7 @@ export class LoginLogReportsComponent implements OnInit, OnDestroy {
     @ViewChild('loginlog') loginlog: ElementRef;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
-        public _menuservice: MenuService, private _loginservice: LoginService, private _userservice: UserService,
+        private _loginservice: LoginService, private _userservice: UserService,
         private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._enttdetails = Globals.getEntityDetails();
@@ -134,27 +134,7 @@ export class LoginLogReportsComponent implements OnInit, OnDestroy {
     // Export
 
     public exportToCSV() {
-        var that = this;
-        commonfun.loader("#btnExport");
-
-        that._menuservice.getMenuLog({
-            "flag": "export", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that._enttdetails.wsautoid
-        }).subscribe(data => {
-            try {
-                this._autoservice.exportToCSV(data.data, "Login Log Details");
-            }
-            catch (e) {
-                that._msg.Show(messageType.error, "Error", e);
-            }
-
-            commonfun.loaderhide("#btnExport");
-        }, err => {
-            that._msg.Show(messageType.error, "Error", err);
-            console.log(err);
-            commonfun.loaderhide("#btnExport");
-        }, () => {
-
-        })
+        this._autoservice.exportToCSV(this.loginlogDT, "Login Log Details");
     }
 
     public exportToPDF() {

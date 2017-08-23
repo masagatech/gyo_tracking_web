@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
+import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
 import { StopsReportsService } from '@services/master';
 import jsPDF from 'jspdf'
 
 @Component({
     templateUrl: 'rptstops.comp.html',
-    providers: [MenuService, CommonService]
+    providers: [CommonService]
 })
 
 export class StopsReportsComponent implements OnInit, OnDestroy {
@@ -32,7 +32,7 @@ export class StopsReportsComponent implements OnInit, OnDestroy {
     @ViewChild('stops') stops: ElementRef;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
-        public _menuservice: MenuService, private _loginservice: LoginService, private _stopservice: StopsReportsService,
+        private _loginservice: LoginService, private _stopservice: StopsReportsService,
         private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._enttdetails = Globals.getEntityDetails();

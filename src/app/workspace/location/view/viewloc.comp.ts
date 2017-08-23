@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService, messageType, MenuService, LoginService } from '@services';
+import { MessageService, messageType, LoginService } from '@services';
 import { LocationService } from '@services/master';
 import { LoginUserModel } from '@models';
 import { LazyLoadEvent } from 'primeng/primeng';
 
 @Component({
-    templateUrl: 'viewloc.comp.html',
-    providers: [MenuService]
+    templateUrl: 'viewloc.comp.html'
 })
 
 export class ViewLocationComponent implements OnInit {
@@ -15,7 +14,7 @@ export class ViewLocationComponent implements OnInit {
 
     locationDT: any = [];
 
-    constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, public _menuservice: MenuService,
+    constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
         private _loginservice: LoginService, private _locservice: LocationService) {
         this.loginUser = this._loginservice.getUser();
         this.getLocationDetails();
