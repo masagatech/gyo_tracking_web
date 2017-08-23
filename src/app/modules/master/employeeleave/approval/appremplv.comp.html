@@ -12,31 +12,89 @@
             </li>
         </ul>
     </div>
+</div>
 
-    <div class="body">
-        <p-dataTable [value]="pendEmpLeaveDT">
-            <p-column field="frmdt" header="From Date" [style]="{'vertical-align':'top', 'width':'150px','text-align':'left'}"></p-column>
-            <p-column field="todt" header="To Date" [style]="{'vertical-align':'top', 'width':'150px','text-align':'left'}"></p-column>
-            <p-column field="lvtype" header="Leave Type" [style]="{'vertical-align':'top', 'width':'200px','text-align':'left'}"></p-column>
-            <p-column field="remark" header="Remark" [style]="{'vertical-align':'top', 'width':'300px', 'text-align':'left'}"></p-column>
-            <p-column field="apprremark" header="Remark" [style]="{'vertical-align':'top', 'text-align':'left'}">
-                <ng-template let-row="rowData" pTemplate type="body">
-                    <textarea class="form-control" rows="4" [(ngModel)]="row.apprremark" tabindex="1"></textarea>
-                </ng-template>
-            </p-column>
-            <p-column field="status" header="Status" [style]="{'vertical-align':'top', 'width':'150px', 'text-align':'left'}">
-                <ng-template let-row="rowData" pTemplate type="body">
-                    <div class="form-group">
-                        <div class="form-line">
-                            <select id="status" [(ngModel)]="row.status" class="form-control status" tabindex="2">
-                                <option [value]="0">Select Status</option>
-                                <option [value]="1">Accept</option>
-                                <option [value]="2">Reject</option>
-                            </select>
+<div class="row clearfix">
+    <div class="col-md-10">
+        <div class="card" *ngIf="empLeaveDetailsDT.length">
+            <div class="body">
+                <div class="row clearfix">
+                    <div class="col-md-6">
+                        <div class="row clearfix">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>From Date : </label> {{frmdt}}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>To Date : </label> {{todt}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Leave Type : </label> {{lvtype}}
+                        </div>
+                        <div class="form-group">
+                            <label>Reason : </label> {{reason}}
                         </div>
                     </div>
-                </ng-template>
-            </p-column>
-        </p-dataTable>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="form-line">
+                                <label>Remark <strong>*</strong></label>
+                                <textarea class="form-control" rows="6" [(ngModel)]="apprremark" tabindex="1"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-line">
+                                <label>Status <strong>*</strong></label>
+                                <select id="status" [(ngModel)]="status" class="form-control status" tabindex="2">
+                                    <option [value]="0">Select Status</option>
+                                    <option [value]="1">Accept</option>
+                                    <option [value]="2">Reject</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <p-dataTable [value]="empLeaveDetailsDT">
+                    <p-column field="frmdt" header="From Date" [style]="{'vertical-align':'top', 'width':'130px','text-align':'left'}"></p-column>
+                    <p-column field="todt" header="To Date" [style]="{'vertical-align':'top', 'width':'130px','text-align':'left'}"></p-column>
+                    <p-column field="lvtype" header="Leave Type" [style]="{'vertical-align':'top', 'width':'150px','text-align':'left'}"></p-column>
+                    <p-column field="remark" header="Remark" [style]="{'vertical-align':'top', 'width':'250px', 'text-align':'left'}"></p-column>
+                    <p-column field="apprremark" header="Remark" [style]="{'vertical-align':'top', 'text-align':'left'}">
+                        <ng-template let-row="rowData" pTemplate type="body">
+
+                        </ng-template>
+                    </p-column>
+                    <p-column field="status" header="Status" [style]="{'vertical-align':'top', 'width':'140px', 'text-align':'left'}">
+                        <ng-template let-row="rowData" pTemplate type="body">
+                            <div class="form-group">
+                                <div class="form-line">
+
+                                </div>
+                            </div>
+                        </ng-template>
+                    </p-column>
+                </p-dataTable> -->
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card">
+            <div class="header">
+                <b>Leave Employee</b>
+            </div>
+            <div class="body">
+                <div *ngFor="let row of empLeaveDT" style="padding: 10px;">
+                    <a role="button" (click)="getEmpLeaveDetails(row);">
+                        {{row.lvdate}}
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

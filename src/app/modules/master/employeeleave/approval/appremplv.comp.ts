@@ -19,9 +19,19 @@ export class ApprovalEmployeeLeaveComponent implements OnInit, OnDestroy {
 
     empid: number = 0;
     empname: string = "";
-    status: number = 0;
 
-    pendEmpLeaveDT: any = [];
+    headertitle: string = "";
+    empLeaveDT: any = [];
+    empLeaveDetailsDT: any = [];
+    selectedlvrow: any = [];
+
+    elid: number = 0;
+    frmdt: any = "";
+    todt: any = "";
+    lvtype: string = "";
+    reason: string = "";
+    apprremark: string = "";
+    status: number = 0;
 
     private subscribeParameters: any;
 
@@ -30,7 +40,7 @@ export class ApprovalEmployeeLeaveComponent implements OnInit, OnDestroy {
         this.loginUser = this._loginservice.getUser();
         this._enttdetails = Globals.getEntityDetails();
 
-        this.getEmployeeLeaveDetails();
+        this.getLeaveEmployee();
     }
 
     public ngOnInit() {
@@ -44,7 +54,9 @@ export class ApprovalEmployeeLeaveComponent implements OnInit, OnDestroy {
         }, 100);
     }
 
-    getEmployeeLeaveDetails() {
+    // Get Leave Employee
+
+    getLeaveEmployee() {
         var that = this;
         var params = {};
 
@@ -55,15 +67,60 @@ export class ApprovalEmployeeLeaveComponent implements OnInit, OnDestroy {
                 that.empid = params['empid'];
 
                 params = {
-                    "flag": "byemp", "empid": that.empid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
-                    "issysadmin": that.loginUser.issysadmin, "enttid": that._enttdetails.enttid,
-                    "wsautoid": that._enttdetails.wsautoid
+                    "flag": "empleave", "empid": that.empid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
+                    "issysadmin": that.loginUser.issysadmin, "enttid": that._enttdetails.enttid, "wsautoid": that._enttdetails.wsautoid
                 }
 
                 that._emplvservice.getEmployeeLeave(params).subscribe(data => {
                     try {
-                        that.pendEmpLeaveDT = data.data;
-                        that.empname = that.pendEmpLeaveDT[0].empname;
+                        that.empLeaveDT = data.data;
+                        that.empname = that.empLeaveDT[0].empname;
+                    }
+                    catch (e) {
+                        that._msg.Show(messageType.error, "Error", e);
+                    }
+
+                    commonfun.loaderhide();
+                }, err => {
+                    that._msg.Show(messageType.error, "Error", err);
+                    console.log(err);
+                    commonfun.loaderhide();
+                }, () => {
+
+                })
+            }
+            else {
+                commonfun.loaderhide();
+            }
+        });
+    }
+
+    getEmpLeaveDetails(row) {
+        var that = this;
+        var params = {};
+
+        commonfun.loader();
+
+        that.selectedlvrow = row;
+        // that.headertitle = "Voucher No : " + row.expid + " (" + row.countvcr + ")";
+
+        that.subscribeParameters = that._routeParams.params.subscribe(params => {
+            if (params['empid'] !== undefined) {
+                that.empid = params['empid'];
+
+                params = {
+                    "flag": "byemp", "elid": row.elid, "empid": that.empid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
+                    "issysadmin": that.loginUser.issysadmin, "enttid": that._enttdetails.enttid, "wsautoid": that._enttdetails.wsautoid
+                }
+
+                that._emplvservice.getEmployeeLeave(params).subscribe(data => {
+                    try {
+                        that.empLeaveDetailsDT = data.data;
+                        that.elid = that.empLeaveDetailsDT[0].elid;
+                        that.frmdt = that.empLeaveDetailsDT[0].frmdt;
+                        that.todt = that.empLeaveDetailsDT[0].todt;
+                        that.lvtype = that.empLeaveDetailsDT[0].lvtype;
+                        that.reason = that.empLeaveDetailsDT[0].reason;
                     }
                     catch (e) {
                         that._msg.Show(messageType.error, "Error", e);
@@ -88,55 +145,65 @@ export class ApprovalEmployeeLeaveComponent implements OnInit, OnDestroy {
 
     saveEmployeeLeaveApproval() {
         var that = this;
-        var emplvapprdata = [];
+        var emplvapprdata = {};
 
-        commonfun.loader();
-
-        for (var i = 0; i < that.pendEmpLeaveDT.length; i++) {
-            var lvrow = that.pendEmpLeaveDT[i];
-
-            if (lvrow.status !== 0) {
-                emplvapprdata.push({
-                    "elaid": "0",
-                    "enttid": that._enttdetails.enttid,
-                    "empid": that.empid,
-                    "elid": lvrow.elid,
-                    "lvtype": lvrow.lvtype,
-                    "apprremark": lvrow.apprremark,
-                    "status": lvrow.status,
-                    "cuid": that.loginUser.ucode,
-                    "wsautoid": that._enttdetails.wsautoid,
-                    "isactive": true
-                })
-            }
+        if (that.apprremark == "") {
+            that._msg.Show(messageType.info, "Info", "Please Enter Remark");
         }
+        else if (that.status == 0) {
+            that._msg.Show(messageType.info, "Info", "Please Select Status");
+        }
+        else {
+            commonfun.loader();
 
-        that._emplvservice.saveEmployeeLeaveApproval({ "emplvapprdata": emplvapprdata }).subscribe(data => {
-            try {
-                var dataResult = data.data[0].funsave_empleaveapproval;
-                var msg = dataResult.msg;
-                var msgid = dataResult.msgid;
-
-                if (msgid != "-1") {
-                    that._msg.Show(messageType.success, "Success", msg);
-                    that.getEmployeeLeaveDetails();
-
-                    commonfun.loaderhide();
-                }
-                else {
-                    that._msg.Show(messageType.error, "Error", msg);
-                    commonfun.loaderhide();
-                }
+            emplvapprdata = {
+                "elaid": "0",
+                "enttid": that._enttdetails.enttid,
+                "empid": that.empid,
+                "elid": that.elid,
+                "lvtype": that.lvtype,
+                "apprremark": that.apprremark,
+                "status": that.status,
+                "cuid": that.loginUser.ucode,
+                "wsautoid": that._enttdetails.wsautoid,
+                "isactive": true
             }
-            catch (e) {
-                that._msg.Show(messageType.error, "Error", e);
-            }
-        }, err => {
-            that._msg.Show(messageType.error, "Error", err);
-            console.log(err);
-            commonfun.loaderhide();
-        }, () => {
-        });
+
+            that._emplvservice.saveEmployeeLeaveApproval(emplvapprdata).subscribe(data => {
+                try {
+                    var dataResult = data.data[0].funsave_empleaveapproval;
+                    var msg = dataResult.msg;
+                    var msgid = dataResult.msgid;
+
+                    if (msgid != "-1") {
+                        that._msg.Show(messageType.success, "Success", msg);
+                        
+                        that.getLeaveEmployee();
+                        that.resetEmpLeaveApproval();
+
+                        commonfun.loaderhide();
+                    }
+                    else {
+                        that._msg.Show(messageType.error, "Error", msg);
+                        commonfun.loaderhide();
+                    }
+                }
+                catch (e) {
+                    that._msg.Show(messageType.error, "Error", e);
+                }
+            }, err => {
+                that._msg.Show(messageType.error, "Error", err);
+                console.log(err);
+                commonfun.loaderhide();
+            }, () => {
+            });
+        }
+    }
+
+    resetEmpLeaveApproval() {
+        this.empLeaveDetailsDT = [];
+        this.apprremark = "";
+        this.status = 0;
     }
 
     // Back For View Data
