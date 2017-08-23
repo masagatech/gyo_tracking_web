@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewEncapsulation, AfterViewInit } from '@angular/core';
-import { MenuService } from './_services/menus/menu-service';
 import { MessageService } from "./_services/messages/message-service";
 import { Message } from 'primeng/primeng';
 import { AppState } from './app.service';
@@ -12,7 +11,6 @@ declare var loader: any;
   selector: 'app',
   encapsulation: ViewEncapsulation.None,
   templateUrl: 'app.component.html',
-  providers: [MenuService]
 })
 
 export class AppComponent implements OnInit, AfterViewInit {
@@ -45,9 +43,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     { nm: 'black', disp: 'Black' }
   ];
 
-  constructor(public appState: AppState, _messageServ: MessageService, public _menuservice: MenuService,
-    private _routeParams: ActivatedRoute, private _router: Router) {
-
+  constructor(public appState: AppState, _messageServ: MessageService, private _routeParams: ActivatedRoute, private _router: Router) {
     this.subscription = _messageServ.notificationReceiver$.subscribe(_messagestack => {
       this.messagestack.push({
         severity: _messagestack.severity, detail: _messagestack.detail, summary: _messagestack.summary
@@ -55,13 +51,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     });
   }
 
-    public ngAfterViewInit() {
-        loader.loadall();
-    }
+  public ngAfterViewInit() {
+    loader.loadall();
+  }
 
-    private changeSkin(theme: any) {
-        loader.skinChanger(theme);
-    }
+  private changeSkin(theme: any) {
+    loader.skinChanger(theme);
+  }
 
   public ngOnInit() {
   }
