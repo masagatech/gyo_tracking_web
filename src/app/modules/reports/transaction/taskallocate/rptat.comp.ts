@@ -44,8 +44,7 @@ export class TaskAllocateComponent implements OnInit, OnDestroy {
         this.loginUser = this._loginservice.getUser();
         this._enttdetails = Globals.getEntityDetails();
 
-        this.setFromDateAndToDate();
-        this.getTaskReports();
+        this.resetTaskAllocate();
     }
 
     public ngOnInit() {
@@ -245,6 +244,27 @@ export class TaskAllocateComponent implements OnInit, OnDestroy {
         } else {
             row.issh = 0;
         }
+    }
+
+    resetTaskAllocate() {
+        this.setFromDateAndToDate();
+
+        this.assbyid = this.loginUser.uid;
+        this.assbyname = this.loginUser.utypename + " : " + this.loginUser.ucode + "-" + this.loginUser.fullname;
+        this.assbytype = this.loginUser.utype;
+        this.assbydata.uid = this.assbyid;
+        this.assbydata.uname = this.assbyname;
+        this.assbydata.utype = this.assbytype;
+
+        this.asstoid = 0;
+        this.asstoname = "";
+        this.asstodata = [];
+
+        this.tagid = 0;
+        this.tagname = "";
+        this.tagdata = [];
+        
+        this.getTaskReports();
     }
 
     public ngOnDestroy() {

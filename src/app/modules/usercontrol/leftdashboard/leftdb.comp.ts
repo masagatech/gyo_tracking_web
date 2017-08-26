@@ -14,7 +14,7 @@ declare var $: any;
 
 export class LeftDashboardComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
-    _enttdetails: any = [];
+    _wsdetails: any = [];
 
     global = new Globals();
 
@@ -28,7 +28,7 @@ export class LeftDashboardComponent implements OnInit, OnDestroy {
     constructor(private _autoservice: CommonService, private _authservice: AuthenticationService, private _loginservice: LoginService,
         private _router: Router, private _msg: MessageService) {
         this.loginUser = this._loginservice.getUser();
-        this._enttdetails = Globals.getEntityDetails();
+        this._wsdetails = Globals.getWSDetails();
 
         this.ufullname = this.loginUser.fullname;
         this.utype = this.loginUser.utype;
@@ -50,7 +50,7 @@ export class LeftDashboardComponent implements OnInit, OnDestroy {
 
         var dbparams = {
             "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
-            "issysadmin": that.loginUser.issysadmin, "wsautoid": that._enttdetails.wsautoid, "dbview": "ws"
+            "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid, "dbview": "ws"
         }
 
         that._autoservice.getDashboard(dbparams).subscribe(data => {

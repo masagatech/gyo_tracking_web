@@ -5236,6 +5236,10 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
 }
 
 @media (max-width: 767px) {
+    .navbar-brand>span.title {
+        padding-left: 0!important;
+        font-size: 12px!important;
+    }
     .navbar-nav .open .dropdown-menu {
         position: static;
         float: none;

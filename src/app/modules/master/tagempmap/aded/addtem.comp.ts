@@ -16,26 +16,28 @@ export class AddTagEmployeeMapComponent implements OnInit {
     loginUser: LoginUserModel;
     _enttdetails: any = [];
 
-    disableentt: boolean = false;
     disabletag: boolean = false;
 
     temid: number = 0;
 
     tagDT: any = [];
+    tagdata: any = [];
     tagid: number = 0;
-    tagnm: any = [];
+    tagnm: string = "";
 
     selectedPType: string = 'team';
     isteam: boolean = false;
     isemployee: boolean = false;
 
     teamDT: any = [];
+    tmdata: any = [];
     tmid: number = 0;
-    tmnm: any = [];
+    tmnm: string = "";
 
     employeeDT: any = [];
+    empdata: any = [];
     empid: number = 0;
-    empname: any = [];
+    empname: string = "";
 
     employeeList: any = [];
 
@@ -58,10 +60,11 @@ export class AddTagEmployeeMapComponent implements OnInit {
             $(".enttname input").focus();
         }, 100);
 
-
         that.subscribeParameters = that._routeParams.params.subscribe(params => {
             if (params['id'] !== undefined) {
                 var ptagid = params['id'];
+
+                that.disabletag = true;
                 that.getTagEmployeeMap(ptagid);
             }
             else {
@@ -94,6 +97,7 @@ export class AddTagEmployeeMapComponent implements OnInit {
 
     selectTagData(event) {
         this.tagid = event.value;
+        this.tagnm = event.label;
         this.getTagEmployeeMap(this.tagid);
     }
 
@@ -139,6 +143,7 @@ export class AddTagEmployeeMapComponent implements OnInit {
 
     selectTeamData(event) {
         this.tmid = event.value;
+        this.tmnm = event.label;
         this.getTeamEmployeeMap();
     }
 
@@ -161,7 +166,8 @@ export class AddTagEmployeeMapComponent implements OnInit {
                 else {
                     that._msg.Show(messageType.error, "Error", "There are no Employee");
                     that.tmid = 0;
-                    that.tmnm = [];
+                    that.tmnm = "";
+                    that.tmdata = [];
                     that.employeeList = [];
                     $(".tmnm input").focus();
                 }
@@ -207,6 +213,7 @@ export class AddTagEmployeeMapComponent implements OnInit {
 
     selectEmployeeData(event) {
         this.empid = event.value;
+        this.empname = event.label;
         this.addEmployeeList();
 
         $(".selectall").is(':checked');
@@ -250,11 +257,12 @@ export class AddTagEmployeeMapComponent implements OnInit {
         var duplicateEmployee = that.isDuplicateEmployee();
 
         if (!duplicateEmployee) {
-            that.employeeList.push({ "empid": that.empname.value, "empname": that.empname.label });
+            that.employeeList.push({ "empid": that.empid, "empname": that.empname });
         }
 
         that.empid = 0;
-        that.empname = [];
+        that.empname = "";
+        that.empdata = [];
         $(".empname input").focus();
         commonfun.loaderhide("#divEmployee");
     }
@@ -265,9 +273,11 @@ export class AddTagEmployeeMapComponent implements OnInit {
         var that = this;
 
         that.tmid = 0;
-        that.tmnm = [];
+        that.tmnm = "";
+        that.tmdata = [];
         that.empid = 0;
-        that.empname = [];
+        that.empname = "";
+        that.empdata = [];
         that.remark = "";
         that.employeeList = [];
     }
@@ -396,25 +406,23 @@ export class AddTagEmployeeMapComponent implements OnInit {
         var that = this;
         commonfun.loader();
 
-        that.disableentt = true;
-        that.disabletag = true;
-
         that._ptservice.getTagEmployeeMap({
-            "flag": "edit",
-            "tagid": ptagid,
-            "wsautoid": that._enttdetails.wsautoid
+            "flag": "edit", "tagid": ptagid, "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
+            "enttid": that._enttdetails.enttid, "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
         }).subscribe(data => {
             try {
-                that.temid = data.data[0].temid;
-                that.tagid = data.data[0].tagid;
-                that.tagnm.value = data.data[0].tagid;
-                that.tagnm.label = data.data[0].tagnm;
-                that.selectedPType = data.data[0].emptype;
-                that.tmid = data.data[0].tmid;
-                that.tmnm.value = data.data[0].tmid;
-                that.tmnm.label = data.data[0].tmnm;
-                that.remark = data.data[0].remark;
-                that.employeeList = data.data[0].empdata;
+                if (data.data.length > 0) {
+                    that.temid = data.data[0].temid;
+                    that.tagid = data.data[0].tagid;
+                    that.tagdata.value = data.data[0].tagid;
+                    that.tagdata.label = data.data[0].tagnm;
+                    that.selectedPType = data.data[0].emptype;
+                    // that.tmid = data.data[0].tmid;
+                    // that.tmdata.value = data.data[0].tmid;
+                    // that.tmdata.label = data.data[0].tmnm;
+                    that.remark = data.data[0].remark;
+                    that.employeeList = data.data[0].empdata;
+                }
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);

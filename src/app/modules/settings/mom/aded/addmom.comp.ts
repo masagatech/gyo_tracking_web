@@ -12,6 +12,7 @@ declare var $: any;
 
 export class AddMOMComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
+    _enttdetails: any = [];
 
     title: any;
     validSuccess: Boolean = true;
@@ -28,6 +29,8 @@ export class AddMOMComponent implements OnInit, OnDestroy {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _loginservice: LoginService,
         private _commonservice: CommonService, private _msg: MessageService) {
         this.loginUser = this._loginservice.getUser();
+        this._enttdetails = Globals.getEntityDetails();
+        
         this.getMOMGroup();
     }
 
@@ -95,11 +98,12 @@ export class AddMOMComponent implements OnInit, OnDestroy {
         that.validSuccess = that.isValidateFields()
 
         var saveMOM = {
-            "autoid": that.momid,
+            "id": that.momid,
             "group": that.group,
             "key": that.key,
             "val": that.val,
-            "uidcode": that.loginUser.login
+            "cuid": that.loginUser.login,
+            "wsautoid": that._enttdetails.wsautoid,
         }
 
         if (that.validSuccess) {
@@ -137,7 +141,7 @@ export class AddMOMComponent implements OnInit, OnDestroy {
     // get mom by id
 
     getMOMByID(pmomid: number) {
-        this._commonservice.getMOM({ "flag": "id", "autoid": pmomid }).subscribe(data => {
+        this._commonservice.getMOM({ "flag": "id", "id": pmomid }).subscribe(data => {
             var dataresult = data.data;
 
             this.momid = dataresult[0].autoid;

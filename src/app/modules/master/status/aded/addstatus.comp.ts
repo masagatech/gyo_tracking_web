@@ -66,7 +66,7 @@ export class AddStatusComponent implements OnInit {
             commonfun.loader();
 
             var saveStatus = {
-                "autoid": that.statusid,
+                "id": that.statusid,
                 "key": that.statusnm,
                 "val": that.statusnm,
                 "ordno": that.ordno,
@@ -125,14 +125,7 @@ export class AddStatusComponent implements OnInit {
             if (params['id'] !== undefined) {
                 that.statusid = params['id'];
 
-                params = {
-                    "flag": "id",
-                    "group": "taskstatus",
-                    "id": that.statusid,
-                    "wsautoid": that._enttdetails.wsautoid
-                }
-
-                that._autoservice.getMOM(params).subscribe(data => {
+                that._autoservice.getMOM({ "flag": "id", "id": that.statusid }).subscribe(data => {
                     try {
                         that.statusid = data.data[0].autoid;
                         that.statusnm = data.data[0].val;
