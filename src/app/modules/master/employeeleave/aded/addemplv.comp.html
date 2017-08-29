@@ -30,7 +30,7 @@
                         <div class="form-group">
                             <div class="form-line">
                                 <label class="control-label">Leave Type <strong>*</strong></label>
-                                <select id="restype" [(ngModel)]="restype" class="form-control restype" tabindex="5">
+                                <select id="restype" [(ngModel)]="restype" class="form-control restype" tabindex="2">
                                     <option [value]="''">Select Type</option>
                                     <option *ngFor="let row of leavetypeDT" [value]="row.key">
                                         {{row.val}}
@@ -46,7 +46,7 @@
                         <div class="form-group">
                             <label>From Date</label>
                             <div class="form-line">
-                                <input type="date" [(ngModel)]="frmdt" class="form-control frmdt">
+                                <input type="date" [(ngModel)]="frmdt" class="form-control frmdt" tabindex="3">
                             </div>
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                         <div class="form-group">
                             <label>Time</label>
                             <div class="form-line">
-                                <input type="time" [(ngModel)]="frmtm" class="form-control">
+                                <input type="time" [(ngModel)]="frmtm" class="form-control" tabindex="4">
                             </div>
                         </div>
                     </div>
@@ -62,7 +62,7 @@
                         <div class="form-group">
                             <label>To Date</label>
                             <div class="form-line">
-                                <input type="date" [(ngModel)]="todt" class="form-control todt">
+                                <input type="date" [(ngModel)]="todt" class="form-control todt" tabindex="5">
                             </div>
                         </div>
                     </div>
@@ -70,7 +70,7 @@
                         <div class="form-group">
                             <label>Time</label>
                             <div class="form-line">
-                                <input type="time" [(ngModel)]="totm" class="form-control">
+                                <input type="time" [(ngModel)]="totm" class="form-control" tabindex="6">
                             </div>
                         </div>
                     </div>
@@ -79,7 +79,7 @@
                 <div class="form-group">
                     <label>Reason</label>
                     <div class="form-line">
-                        <textarea class="form-control" rows="5" [(ngModel)]="reason"></textarea>
+                        <textarea class="form-control reason" rows="5" [(ngModel)]="reason" tabindex="7"></textarea>
                     </div>
                 </div>
             </div>

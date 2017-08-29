@@ -36,7 +36,6 @@
                             {{row.area}}<span *ngIf="row.city !== ''">{{" " + row.city}}</span><span *ngIf="row.state !== ''">{{" " + row.state}}</span><span *ngIf="row.country !== ''">{{", " + row.country}}</span>
                         </ng-template>
                     </p-column>
-                    <p-column field="entttype" header="Entity Type" [style]="{'width':'100px', 'text-align':'left','vertical-align':'top'}"></p-column>
                     <p-column field="mode" header="Status" [style]="{'width':'100px', 'text-align':'left','vertical-align':'top'}"></p-column>
                 </p-dataTable>
             </div>

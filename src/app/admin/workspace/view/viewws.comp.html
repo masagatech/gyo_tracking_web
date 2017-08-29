@@ -26,10 +26,6 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Workspace Type : </label> {{row.wstype}}
-                    </div>
-
-                    <div class="form-group">
                         <label>Workspace Code : </label> {{row.lgcode + "." + row.wscode}}
                     </div>
 
@@ -124,7 +120,7 @@
                             <h2 class="title">
                                 <img class="logo pull-left" src="{{uploadconfig.uploadurl + row.wslogo}}" onerror="this.src='assets/img/nologo.gif';" height="40px" style="margin-right: 7px;">
                                 <a role="button" (click)="openEntityForm(row)">{{row.wsname}}</a>
-                                <small>{{row.wstype}}</small>
+                                <small>{{row.ucode}}</small>
                             </h2>
                             <ul class="header-dropdown m-r--5" style="top:20px">
                                 <li class="dropdown">
@@ -140,7 +136,8 @@
                         </div>
                         <div class="body">
                             <ul>
-                                <li>Total Entity : {{row.countentity}}</li>
+                                <li>Total Entity : {{row.maxenttcount}}</li>
+                                <li>Total Space Entity : {{row.maxenttcount - row.countentity}}</li>
                                 <li>{{row.name}} ({{row.mobileno1}})</li>
                                 <li>{{row.email1}}</li>
                             </ul>
@@ -161,11 +158,10 @@
                             </ng-template>
                         </p-column>
                         <p-column field="wscode" header="Code" [style]="{'width': '90px', 'text-align': 'left', 'vertical-align':'top'}"></p-column>
-                        <p-column field="systype" header="" [style]="{'width': '140px', 'text-align': 'left', 'vertical-align':'top'}"></p-column>
                         <p-column field="wsname" header="Name" [style]="{'width': '270px', 'text-align': 'left', 'vertical-align':'top'}">
                             <ng-template let-row="rowData" pTemplate type="body">
                                 {{row.wsname}}<br/>
-                                <b>({{row.wstype}})</b>
+                                <b>({{row.systype}})</b>
                             </ng-template>
                         </p-column>
                         <p-column field="name" header="Contact Name" [style]="{'width': '150px', 'text-align': 'left', 'vertical-align':'top'}"></p-column>

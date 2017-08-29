@@ -74,7 +74,13 @@ export class ApprovalEmployeeLeaveComponent implements OnInit, OnDestroy {
                 that._emplvservice.getEmployeeLeave(params).subscribe(data => {
                     try {
                         that.empLeaveDT = data.data;
-                        that.empname = that.empLeaveDT[0].empname;
+
+                        if (that.empLeaveDT.length > 0) {
+                            that.empname = that.empLeaveDT[0].empname;
+                        }
+                        else {
+                            that.empname = "";
+                        }
                     }
                     catch (e) {
                         that._msg.Show(messageType.error, "Error", e);
@@ -177,7 +183,7 @@ export class ApprovalEmployeeLeaveComponent implements OnInit, OnDestroy {
 
                     if (msgid != "-1") {
                         that._msg.Show(messageType.success, "Success", msg);
-                        
+
                         that.getLeaveEmployee();
                         that.resetEmpLeaveApproval();
 

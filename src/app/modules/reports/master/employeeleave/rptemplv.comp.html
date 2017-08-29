@@ -70,14 +70,14 @@
                 <table class="table table-bordered table-responsive">
                     <thead>
                         <tr>
+                            <th width="150px">
+                                Applied Date
+                            </th>
                             <th width="200px">
-                                Leave Date
+                                From Date
                             </th>
-                            <th width="150px">
-                                From Time
-                            </th>
-                            <th width="150px">
-                                To Time
+                            <th width="200px">
+                                To Date
                             </th>
                             <th width="150px">
                                 Leave Type
@@ -97,17 +97,17 @@
                             </th>
                         </tr>
                         <tr *ngFor="let eldrow of row.value" class="{{eldrow.color}}">
+                            <td width="150px">
+                                {{eldrow.appldt}}
+                            </td>
                             <td width="200px">
-                                {{eldrow.lvdate}}
+                                {{eldrow.frmdt}} {{eldrow.frmtm == null ? '' : eldrow.frmtm}}
+                            </td>
+                            <td width="200px">
+                                {{eldrow.todt}} {{eldrow.totm == null ? '' : eldrow.totm}}
                             </td>
                             <td width="150px">
-                                {{eldrow.frmtm}}
-                            </td>
-                            <td width="150px">
-                                {{eldrow.totm}}
-                            </td>
-                            <td width="150px">
-                                {{eldrow.lvtype}}
+                                {{eldrow.restype}}
                             </td>
                             <td>
                                 {{eldrow.reason}}

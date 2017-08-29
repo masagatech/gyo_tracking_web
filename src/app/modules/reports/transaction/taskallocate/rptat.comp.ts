@@ -249,12 +249,12 @@ export class TaskAllocateComponent implements OnInit, OnDestroy {
     resetTaskAllocate() {
         this.setFromDateAndToDate();
 
-        this.assbyid = this.loginUser.uid;
-        this.assbyname = this.loginUser.utypename + " : " + this.loginUser.ucode + "-" + this.loginUser.fullname;
-        this.assbytype = this.loginUser.utype;
-        this.assbydata.uid = this.assbyid;
-        this.assbydata.uname = this.assbyname;
-        this.assbydata.utype = this.assbytype;
+        // this.assbyid = this.loginUser.uid;
+        // this.assbyname = this.loginUser.utypename + " : " + this.loginUser.ucode + "-" + this.loginUser.fullname;
+        // this.assbytype = this.loginUser.utype;
+        // this.assbydata.uid = this.assbyid;
+        // this.assbydata.uname = this.assbyname;
+        // this.assbydata.utype = this.assbytype;
 
         this.asstoid = 0;
         this.asstoname = "";

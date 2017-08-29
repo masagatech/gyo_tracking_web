@@ -18,7 +18,7 @@ export class AddEmployeeLeaveComponent implements OnInit {
     _enttdetails: any = [];
 
     elid: number = 0;
-    
+
     employeeDT: any = [];
     empid: number = 0;
     empname: any = [];
@@ -34,6 +34,8 @@ export class AddEmployeeLeaveComponent implements OnInit {
     mode: string = "";
     isactive: boolean = true;
 
+    countlvdays: number = 0;
+
     private subscribeParameters: any;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
@@ -41,6 +43,7 @@ export class AddEmployeeLeaveComponent implements OnInit {
         this.loginUser = this._loginservice.getUser();
         this._enttdetails = Globals.getEntityDetails();
 
+        this.setAppliedLVDate();
         this.fillLeaveTypeDropDown();
     }
 
@@ -116,7 +119,6 @@ export class AddEmployeeLeaveComponent implements OnInit {
 
         that._emplvservice.getEmployeeLeave({ "flag": "dropdown" }).subscribe(data => {
             that.leavetypeDT = data.data;
-            // setTimeout(function () { $.AdminBSB.select.refresh('restype'); }, 100);
             commonfun.loaderhide();
         }, err => {
             that._msg.Show(messageType.error, "Error", err);
@@ -137,47 +139,94 @@ export class AddEmployeeLeaveComponent implements OnInit {
         this.reason = "";
     }
 
-    // Save Data
+    // Validation For Save
 
-    saveEmployeeLeave() {
+    setAppliedLVDate() {
+        var that = this;
+
+        that._emplvservice.getEmployeeLeave({
+            "flag": "lvbeforelimit",
+            "enttid": that._enttdetails.enttid,
+            "wsautoid": that._enttdetails.wsautoid
+        }).subscribe(data => {
+            if (data.data.length > 0) {
+                that.countlvdays = parseInt(data.data[0].val);
+            }
+            else {
+                that.countlvdays = 1;
+            }
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+            commonfun.loaderhide();
+        }, () => {
+
+        })
+    }
+
+    isValidationForSave() {
         var that = this;
 
         var date = new Date();
-        var today = this.formatDate(new Date(date.getFullYear(), date.getMonth(), date.getDate()));
+        var today = that.formatDate(new Date(date.getFullYear(), date.getMonth(), date.getDate()));
+        var lvappldate = that.formatDate(new Date(date.getFullYear(), date.getMonth(), date.getDate() + that.countlvdays));
 
         if (that.empid == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Employee Name");
             $(".empname input").focus();
-        }
-        else if (that.frmdt == "") {
-            that._msg.Show(messageType.error, "Error", "Enter From Date");
-            $(".frmdt").focus();
-        }
-        else if (today > that.frmdt) {
-            that._msg.Show(messageType.error, "Error", "Sholul Be From Date Greater Than Current Date");
-            $(".frmdt").focus();
-        }
-        else if (that.todt == "") {
-            that._msg.Show(messageType.error, "Error", "Enter To Date");
-            $(".todt").focus();
-        }
-        else if (today > that.todt) {
-            that._msg.Show(messageType.error, "Error", "Sholul Be To Date Greater Than Current Date");
-            $(".todt").focus();
-        }
-        else if (that.frmdt > that.todt) {
-            that._msg.Show(messageType.error, "Error", "Sholul Be To Date Greater Than From Date");
-            $(".todt").focus();
+            return false;
         }
         else if (that.restype == "") {
             that._msg.Show(messageType.error, "Error", "Enter Leave Type");
             $(".restype").focus();
+            return false;
+        }
+        else if (that.frmdt == "") {
+            that._msg.Show(messageType.error, "Error", "Enter From Date");
+            $(".frmdt").focus();
+            return false;
+        }
+        else if (today > that.frmdt) {
+            that._msg.Show(messageType.error, "Error", "Sholuld Be From Date Greater Than Current Date");
+            $(".frmdt").focus();
+            return false;
+        }
+        else if (lvappldate > that.frmdt) {
+            that._msg.Show(messageType.error, "Error", "Sholuld Be Leave Date After " + that.countlvdays + " Days");
+            $(".frmdt").focus();
+            return false;
+        }
+        else if (that.todt == "") {
+            that._msg.Show(messageType.error, "Error", "Enter To Date");
+            $(".todt").focus();
+            return false;
+        }
+        else if (today > that.todt) {
+            that._msg.Show(messageType.error, "Error", "Sholuld Be To Date Greater Than Current Date");
+            $(".todt").focus();
+            return false;
+        }
+        else if (that.frmdt > that.todt) {
+            that._msg.Show(messageType.error, "Error", "Sholul Be To Date Greater Than From Date");
+            $(".todt").focus();
+            return false;
         }
         else if (that.reason == "") {
             that._msg.Show(messageType.error, "Error", "Enter Reason");
-            $(".reason input").focus();
+            $(".reason").focus();
+            return false;
         }
-        else {
+
+        return true;
+    }
+
+    // Save Data
+
+    saveEmployeeLeave() {
+        var that = this;
+        var isvalid = that.isValidationForSave();
+
+        if (isvalid) {
             commonfun.loader();
 
             var saveEmployeeLeave = {

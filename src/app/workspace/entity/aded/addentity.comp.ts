@@ -23,6 +23,9 @@ export class AddEntityComponent implements OnInit {
     private overlays: any[];
     private map: any;
 
+    countentity: number = 0;
+    limitentity: number = 0;
+
     stateDT: any = [];
     cityDT: any = [];
     areaDT: any = [];
@@ -40,7 +43,6 @@ export class AddEntityComponent implements OnInit {
     city: number = 0;
     area: number = 0;
     pincode: number = 0;
-    entttype: string = "";
     remark1: string = "";
 
     name: string = "";
@@ -54,12 +56,12 @@ export class AddEntityComponent implements OnInit {
 
     mode: string = "";
     isactive: boolean = true;
+    isvalidentt: boolean = true;
 
     contactDT: any = [];
     duplicateContact: boolean = true;
 
     weekDT: any = [];
-    entttypeDT: any = [];
 
     uploadLogoDT: any = [];
     global = new Globals();
@@ -74,6 +76,7 @@ export class AddEntityComponent implements OnInit {
         this._wsdetails = Globals.getWSDetails();
         this.getUploadConfig();
 
+        this.getValidEntity();
         this.fillDropDownList();
         this.fillStateDropDown();
         this.fillCityDropDown();
@@ -126,28 +129,65 @@ export class AddEntityComponent implements OnInit {
         this.marker.setPosition(latlng);
     }
 
+    // Get Valid Entity
+
+    getValidEntity() {
+        var that = this;
+        var params = {};
+
+        that.subscribeParameters = that._routeParams.params.subscribe(params => {
+            if (params['id'] == undefined) {
+                commonfun.loader();
+
+                params = {
+                    "flag": "countentt", "wsautoid": that._wsdetails.wsautoid
+                }
+
+                that._entityservice.getEntityDetails(params).subscribe(data => {
+                    try {
+                        var enttdata = data.data;
+
+                        if (enttdata.length > 0) {
+                            that.countentity = enttdata[0].countentt;
+                            that.limitentity = that._wsdetails.maxenttcount;
+
+                            if (that.limitentity <= that.countentity) {
+                                that.isvalidentt = false;
+                                that._msg.Show(messageType.info, "Info", "Only " + that.limitentity + " Entity Allowed");
+                            }
+                            else {
+                                that.isvalidentt = true;
+                            }
+                        }
+                        else {
+                            that.isvalidentt = false;
+                        }
+                    }
+                    catch (e) {
+                        that._msg.Show(messageType.error, "Error", e);
+                    }
+
+                    commonfun.loaderhide();
+                }, err => {
+                    that._msg.Show(messageType.error, "Error", err);
+                    console.log(err);
+                    commonfun.loaderhide();
+                }, () => {
+
+                })
+            }
+        });
+    }
+
     // Entity Type DropDown
 
     fillDropDownList() {
         var that = this;
         commonfun.loader();
 
-        that._entityservice.getEntityDetails({ "flag": "dropdown", "wscode": that._wsdetails.wscode }).subscribe(data => {
+        that._entityservice.getEntityDetails({ "flag": "dropdown" }).subscribe(data => {
             try {
-                that.entttypeDT = data.data.filter(a => a.group === "workspace");
-
-                if (that.entttypeDT.length == 1) {
-                    that.entttype = that.entttypeDT[0].key;
-                    that.chooseLabel = "Upload " + that.entttype + " Logo";
-                }
-                else {
-                    that.entttypeDT.splice(0, 0, { "key": "", "val": "Select Entity Type" });
-                    that.entttype = "";
-                    that.chooseLabel = "Upload Logo";
-                }
-
-                that.weekDT = data.data.filter(a => a.group === "week");
-                // setTimeout(function () { $.AdminBSB.select.refresh('entttype'); }, 100);
+                that.weekDT = data.data;
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -155,7 +195,7 @@ export class AddEntityComponent implements OnInit {
 
             commonfun.loaderhide();
         }, err => {
-            //that._msg.Show(messageType.error, "Error", err);
+            that._msg.Show(messageType.error, "Error", err);
             console.log(err);
             commonfun.loaderhide();
         }, () => {
@@ -395,6 +435,7 @@ export class AddEntityComponent implements OnInit {
         that.pincode = 0;
         that.isactive = true;
         that.mode = "";
+        that.chooseLabel = "Upload Entity Logo";
     }
 
     // Active / Deactive Data
@@ -439,16 +480,12 @@ export class AddEntityComponent implements OnInit {
         var mweek = null;
         var weeklyoff = "";
 
-        if (that.entttype == "") {
-            that._msg.Show(messageType.error, "Error", "Enter " + that.entttype + " Type");
-            $(".entttype").focus();
-        }
-        else if (that.schcd == "") {
-            that._msg.Show(messageType.error, "Error", "Enter " + that.entttype + " Code");
+        if (that.schcd == "") {
+            that._msg.Show(messageType.error, "Error", "Enter Entity Code");
             $(".schcd").focus();
         }
         else if (that.schnm == "") {
-            that._msg.Show(messageType.error, "Error", "Enter " + that.entttype + " Name");
+            that._msg.Show(messageType.error, "Error", "Enter Entity Name");
             $(".schnm").focus();
         }
         else if (that.address == "") {
@@ -495,7 +532,6 @@ export class AddEntityComponent implements OnInit {
 
                 var saveentity = {
                     "autoid": that.schid,
-                    "entttype": that.entttype,
                     "schcd": that.schcd,
                     "schnm": that.schnm,
                     "schlogo": that.uploadLogoDT.length == 0 ? "" : that.uploadLogoDT[0].athurl,
@@ -576,16 +612,15 @@ export class AddEntityComponent implements OnInit {
                 }).subscribe(data => {
                     try {
                         that.schid = data.data[0].autoid;
-                        that.entttype = data.data[0].entttype;
                         that.schcd = data.data[0].schoolcode;
                         that.schnm = data.data[0].schoolname;
 
                         if (data.data[0].schlogo !== "") {
                             that.uploadLogoDT.push({ "athurl": data.data[0].schlogo });
-                            that.chooseLabel = "Change " + that.entttype + " Logo";
+                            that.chooseLabel = "Change Entity Logo";
                         }
                         else {
-                            that.chooseLabel = "Upload " + that.entttype + " Logo";
+                            that.chooseLabel = "Upload Entity Logo";
                         }
 
                         that.lat = data.data[0].lat;

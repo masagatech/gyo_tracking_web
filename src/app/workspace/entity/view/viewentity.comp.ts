@@ -20,9 +20,6 @@ export class ViewEntityComponent implements OnInit, OnDestroy {
     enttid: number = 0;
     enttname: any = [];
 
-    entttypeDT: any = [];
-    entttype: string = "";
-
     entityDT: any = [];
 
     isSelectWS: boolean = false;
@@ -34,54 +31,12 @@ export class ViewEntityComponent implements OnInit, OnDestroy {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
 
-        this.fillDropDownList();
-
-        if (Cookie.get('_entttype_') != null) {
-            this.entttype = Cookie.get('_entttype_');
-        }
-        else {
-            this.entttype = "";
-        }
-
         this.getEntityDetails();
     }
 
     public ngOnInit() {
         var that = this;
         that.refreshButtons();
-    }
-
-    // Entity Type DropDown
-
-    fillDropDownList() {
-        var that = this;
-        commonfun.loader();
-
-        that._entityservice.getEntityDetails({ "flag": "dropdown", "wscode": that._wsdetails.wscode }).subscribe(data => {
-            try {
-                that.entttypeDT = data.data.filter(a => a.group === "workspace");
-
-                if (that.entttypeDT.length == 1) {
-                    that.entttype = that.entttypeDT[0].key;
-                }
-                else {
-                    that.entttypeDT.splice(0, 0, { "key": "", "val": "All" });
-                }
-                
-                // setTimeout(function () { $.AdminBSB.select.refresh('entttype'); }, 100);
-            }
-            catch (e) {
-                that._msg.Show(messageType.error, "Error", e);
-            }
-
-            commonfun.loaderhide();
-        }, err => {
-            that._msg.Show(messageType.error, "Error", err);
-            console.log(err);
-            commonfun.loaderhide();
-        }, () => {
-
-        })
     }
 
     isshEntity(viewtype) {
@@ -141,14 +96,11 @@ export class ViewEntityComponent implements OnInit, OnDestroy {
         var that = this;
         var params = {};
 
-        Cookie.set("_entttype_", this.entttype);
-        this.entttype = Cookie.get('_entttype_');
-
         commonfun.loader();
 
         params = {
             "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
-            "entttype": that.entttype, "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid,
+            "issysadmin": that.loginUser.issysadmin, "wsautoid": that._wsdetails.wsautoid,
             "enttid": that.enttid
         }
 
@@ -173,8 +125,6 @@ export class ViewEntityComponent implements OnInit, OnDestroy {
     }
 
     resetEntityDetails() {
-        Cookie.delete('_entttype_');
-        this.entttype = "";
         this.enttid = 0;
         this.enttname = [];
         this.getEntityDetails();

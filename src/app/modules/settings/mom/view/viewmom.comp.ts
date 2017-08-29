@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { MessageService, messageType, CommonService } from '@services';
+import { MessageService, messageType, LoginService, CommonService } from '@services';
+import { LoginUserModel, Globals } from '@models';
 import { Router } from '@angular/router';
 import { LazyLoadEvent, DataTable } from 'primeng/primeng';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
@@ -10,11 +11,16 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 })
 
 export class ViewMOMComponent implements OnInit, OnDestroy {
+    loginUser: LoginUserModel;
+    _enttdetails: any = [];
+
     momGroupDT: any = [];
     momDT: any = [];
     headertitle: string = "";
 
-    constructor(private _router: Router, private _commonservice: CommonService, private _msg: MessageService) {
+    constructor(private _router: Router, private _autoservice: CommonService, private _msg: MessageService, private _loginservice: LoginService) {
+        this.loginUser = this._loginservice.getUser();
+        this._enttdetails = Globals.getEntityDetails();
         this.fillMOMGroup();
     }
 
@@ -29,7 +35,7 @@ export class ViewMOMComponent implements OnInit, OnDestroy {
     fillMOMGroup() {
         var that = this;
 
-        that._commonservice.getMOM({ "flag": "group" }).subscribe(data => {
+        that._autoservice.getMOM({ "flag": "group" }).subscribe(data => {
             that.momGroupDT = data.data;
         }, err => {
             that._msg.Show(messageType.error, "Error", err);
@@ -40,8 +46,9 @@ export class ViewMOMComponent implements OnInit, OnDestroy {
 
     BindMOMGrid(row) {
         var that = this;
-        that._commonservice.getMOM({
-            "flag": "grid", "group": row.grpcd, "enttid":"0"
+        that._autoservice.getMOM({
+            "flag": "grid", "group": row.grpcd, "enttid": that._enttdetails.enttid,
+            "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
                 Cookie.set("_grpnm_", row.grpnm);

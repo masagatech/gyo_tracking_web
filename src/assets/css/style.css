@@ -5581,7 +5581,7 @@ section.content {
 }
 
 .table-bordered tbody tr.tr-table th {
-    padding: 5px 10px 0!important;
+    padding: 5px 10px!important;
     background-color: #eeeeee!important;
     color: #000000!important;
 }

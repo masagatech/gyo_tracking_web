@@ -2,38 +2,37 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
-import { EmployeeLeaveService } from '@services/master';
+import { TeamService } from '@services/master';
 import { LazyLoadEvent } from 'primeng/primeng';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 @Component({
-    templateUrl: 'viewemplv.comp.html',
+    templateUrl: 'rpttm.comp.html',
     providers: [CommonService]
 })
 
-export class ViewEmployeeLeaveComponent implements OnInit {
+export class TeamReportsComponent implements OnInit {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
-    empleaveDT: any = [];
+    teamDT: any = [];
 
     global = new Globals();
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
 
-    constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
-        private _emplvservice: EmployeeLeaveService, private _autoservice: CommonService) {
+    constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
+        private _loginservice: LoginService, private _tmservice: TeamService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
         this._enttdetails = Globals.getEntityDetails();
 
-        this.getEmployeeLeave();
+        this.getTeamDetails();
     }
 
     public ngOnInit() {
 
     }
 
-    getEmployeeLeave() {
+    getTeamDetails() {
         var that = this;
         var params = {};
 
@@ -41,12 +40,12 @@ export class ViewEmployeeLeaveComponent implements OnInit {
 
         params = {
             "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
-            "issysadmin": that.loginUser.issysadmin, "status": -1, "enttid": that._enttdetails.enttid, "wsautoid": that._enttdetails.wsautoid
+            "enttid": that._enttdetails.enttid, "issysadmin": that.loginUser.issysadmin, "wsautoid": that._enttdetails.wsautoid,
         }
 
-        that._emplvservice.getEmployeeLeave(params).subscribe(data => {
+        that._tmservice.getTeamDetails(params).subscribe(data => {
             try {
-                that.empleaveDT = data.data;
+                that.teamDT = data.data;
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -62,15 +61,11 @@ export class ViewEmployeeLeaveComponent implements OnInit {
         })
     }
 
-    public addEmployeeLeaveForm() {
-        this._router.navigate(['/master/employeeleave/add']);
+    public addTeamForm() {
+        this._router.navigate(['/master/team/add']);
     }
 
-    public editEmployeeLeaveForm(row) {
-        this._router.navigate(['/master/employeeleave/edit', row.elid]);
-    }
-
-    public openApprovalForm(row) {
-        this._router.navigate(['/master/employeeleave/approval', row.key.split(':')[0]]);
+    public editTeamForm(row) {
+        this._router.navigate(['/master/team/edit', row.tmid]);
     }
 }

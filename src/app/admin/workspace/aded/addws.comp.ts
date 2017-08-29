@@ -15,7 +15,6 @@ export class AddWorkspaceComponent implements OnInit {
     loginUser: LoginUserModel;
     disablecode: boolean = false;
 
-    wstypeDT: any = [];
     stateDT: any = [];
     cityDT: any = [];
     areaDT: any = [];
@@ -41,13 +40,8 @@ export class AddWorkspaceComponent implements OnInit {
     pincode: number = 0;
     isactive: boolean = false;
 
-    iscompany: boolean = false;
-    cmppsngrrate: any = "0";
-    cmpenttmaxno: number = 0;
-
-    isschool: boolean = false;
-    schpsngrrate: any = "0";
-    schenttmaxno: number = 0;
+    empperrate: any = "0";
+    maxenttcount: number = 0;
 
     mode: string = "";
 
@@ -63,7 +57,6 @@ export class AddWorkspaceComponent implements OnInit {
         this.loginUser = this._loginservice.getUser();
         this.getUploadConfig();
 
-        this.fillDropDownList();
         this.fillStateDropDown();
         this.fillCityDropDown();
         this.fillAreaDropDown();
@@ -79,30 +72,6 @@ export class AddWorkspaceComponent implements OnInit {
 
     public ngAfterViewInit() {
         $.AdminBSB.input.activate();
-    }
-
-    // Entity Type DropDown
-
-    fillDropDownList() {
-        var that = this;
-        commonfun.loader();
-
-        that._wsservice.getWorkspaceDetails({ "flag": "dropdown" }).subscribe(data => {
-            try {
-                that.wstypeDT = data.data;
-            }
-            catch (e) {
-                that._msg.Show(messageType.error, "Error", e);
-            }
-
-            commonfun.loaderhide();
-        }, err => {
-            //that._msg.Show(messageType.error, "Error", err);
-            console.log(err);
-            commonfun.loaderhide();
-        }, () => {
-
-        })
     }
 
     // Get State DropDown
@@ -278,13 +247,8 @@ export class AddWorkspaceComponent implements OnInit {
         that.pincode = 0;
         that.isactive = true;
 
-        that.iscompany = false;
-        that.cmppsngrrate = "0";
-        that.cmpenttmaxno = 0;
-
-        that.isschool = false;
-        that.schpsngrrate = "0";
-        that.schenttmaxno = 0;
+        that.empperrate = "0";
+        that.maxenttcount = 0;
 
         that.uploadLogoDT = [];
         that.chooseLabel = "Upload Logo";
@@ -392,42 +356,16 @@ export class AddWorkspaceComponent implements OnInit {
             $(".city").focus();
             return false;
         }
-        else if ((!that.iscompany) && (!that.isschool)) {
-            that._msg.Show(messageType.error, "Error", "Select 1 Workspace Type");
+        else if (that.empperrate == "0") {
+            that._msg.Show(messageType.error, "Error", "Enter Rate / Passenger for Company");
+            $(".cmppsngrrate").focus();
             return false;
         }
-
-        if (that.iscompany) {
-            if (that.cmppsngrrate == "0") {
-                that._msg.Show(messageType.error, "Error", "Enter Rate / Passenger for Company");
-                $(".cmppsngrrate").focus();
-                return false;
-            }
-            else if (that.cmpenttmaxno == 0) {
-                that._msg.Show(messageType.error, "Error", "Enter Max Allowed Entity for Company");
-                $(".cmpenttmaxno").focus();
-                return false;
-            }
-
-            console.log("abc 001");
-            console.log("isschool : " + that.isschool);
+        else if (that.maxenttcount == 0) {
+            that._msg.Show(messageType.error, "Error", "Enter Max Allowed Entity for Company");
+            $(".cmpenttmaxno").focus();
+            return false;
         }
-        if (that.isschool == true) {
-            if (that.schpsngrrate == "0") {
-                that._msg.Show(messageType.error, "Error", "Enter Rate / Passenger for School");
-                $(".schpsngrrate").focus();
-                return false;
-            }
-            else if (that.schenttmaxno == 0) {
-                that._msg.Show(messageType.error, "Error", "Enter Max Allowed Entity for School");
-                $(".schenttmaxno").focus();
-                return false;
-            }
-
-            console.log("abc 002");
-        }
-
-        console.log("isschool : " + that.isschool);
 
         return true;
     }
@@ -436,23 +374,12 @@ export class AddWorkspaceComponent implements OnInit {
 
     saveWorkspaceInfo() {
         var that = this;
-        var _wstype = "";
         var _iswsvalid = false;
 
         _iswsvalid = that.isWorkspaceValidation();
 
         if (_iswsvalid) {
             commonfun.loader();
-
-            if ((that.iscompany) && (!that.isschool)) {
-                _wstype = "Company";
-            }
-            else if ((!that.iscompany) && (that.isschool)) {
-                _wstype = "School";
-            }
-            else if ((that.iscompany) && (that.isschool)) {
-                _wstype = "Company,School";
-            }
 
             var saveWorkspace = {
                 "wsautoid": that.wsautoid,
@@ -461,11 +388,8 @@ export class AddWorkspaceComponent implements OnInit {
                 "wsname": that.wsname,
                 "wsdesc": that.wsdesc,
                 "wslogo": that.uploadLogoDT.length > 0 ? that.uploadLogoDT[0].athurl : "",
-                "wstype": _wstype,
-                "cmppsngrrate": that.cmppsngrrate,
-                "cmpenttmaxno": that.cmpenttmaxno,
-                "schpsngrrate": that.schpsngrrate,
-                "schenttmaxno": that.schenttmaxno,
+                "empperrate": that.empperrate,
+                "maxenttcount": that.maxenttcount,
                 "lgcode": that.lgcode,
                 "lgpwd": that.lgpwd,
                 "cpname": that.cpname,
@@ -572,14 +496,9 @@ export class AddWorkspaceComponent implements OnInit {
                             that.isactive = data.data[0].isactive;
                             that.remark = data.data[0].remark1;
 
-                            that.iscompany = data.data[0].iscompany;
-                            that.cmppsngrrate = data.data[0].cmppsngrrate;
-                            that.cmpenttmaxno = data.data[0].cmpenttmaxno;
-
-                            that.isschool = data.data[0].isschool;
-                            that.schpsngrrate = data.data[0].schpsngrrate;
-                            that.schenttmaxno = data.data[0].schenttmaxno;
-
+                            that.empperrate = data.data[0].empperrate;
+                            that.maxenttcount = data.data[0].maxenttcount;
+                            
                             that.mode = data.data[0].mode;
                         }
                         else {

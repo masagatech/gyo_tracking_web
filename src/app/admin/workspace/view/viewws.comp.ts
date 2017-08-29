@@ -25,7 +25,6 @@ export class ViewWorkspaceComponent implements OnInit {
     wsautoid: number = 0;
     wscode: string = "";
     wsname: string = "";
-    wstype: string = "";
     wslogo: string = "";
     lgcode: string = "";
     issysadmin: boolean = false;
@@ -137,7 +136,6 @@ export class ViewWorkspaceComponent implements OnInit {
                     that.wsautoid = myWorkspaceDT[0].wsautoid;
                     that.wscode = myWorkspaceDT[0].wscode;
                     that.wsname = myWorkspaceDT[0].wsname;
-                    that.wstype = myWorkspaceDT[0].wstype;
                     that.wslogo = myWorkspaceDT[0].wslogo;
                     that.lgcode = myWorkspaceDT[0].lgcode;
                     that.issysadmin = myWorkspaceDT[0].issysadmin;
@@ -190,7 +188,6 @@ export class ViewWorkspaceComponent implements OnInit {
             "wsautoid": this.wsautoid.toString(),
             "wscode": this.wscode,
             "wsname": this.wsname,
-            "wstype": this.wstype,
             "wslogo": this.wslogo,
             "issysadmin": this.issysadmin
         }

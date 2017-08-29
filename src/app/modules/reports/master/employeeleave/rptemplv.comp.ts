@@ -124,13 +124,17 @@ export class EmployeeLeaveReportsComponent implements OnInit, OnDestroy {
 
     getEmployeeLeaveReports() {
         var that = this;
+        var params = {};
+
         commonfun.loader();
 
-        that._emplvservice.getEmployeeLeaveReports({
-            "flag": "reports", "frmdt": that.frmdt, "todt": that.todt, "empid": that.empid,
+        params = {
+            "flag": "all", "frmdt": that.frmdt, "todt": that.todt, "empid": that.empid,
             "uid": that.loginUser.uid, "utype": that.loginUser.utype, "issysadmin": that.loginUser.issysadmin,
-            "status": that.status, "enttid": that._enttdetails.enttid, "wsautoid": that._enttdetails.wsautoid,
-        }).subscribe(data => {
+            "status": that.status, "enttid": that._enttdetails.enttid, "wsautoid": that._enttdetails.wsautoid
+        }
+
+        that._emplvservice.getEmployeeLeave(params).subscribe(data => {
             try {
                 that.empleaveDT = data.data;
             }

@@ -43,27 +43,16 @@
                     </div>
 
                     <div class="row clearfix">
-                        <div class="col-md-12">
-                            <div class="form-group form-float">
-                                <div class="form-line">
-                                    <label class="control-label">Description</label>
-                                    <textarea [(ngModel)]="wsdesc" rows="5" class="form-control no-resize auto-growth wsdesc" maxlength="500" tabindex="3"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row clearfix">
                         <div class="col-md-6">
                             <div class="form-group form-float">
                                 <div class="form-line">
                                     <label class="control-label">Login Code <strong>*</strong></label>
                                     <div class="row clearfix">
-                                        <div class="col-md-7">
+                                        <div class="col-md-8">
                                             <input type="text" [(ngModel)]="lgcode" class="form-control lgcode" minlength="3" maxlength="6" tabindex="4" />
                                         </div>
-                                        <div class="col-md-5">
-                                            {{"." + wscode}}
+                                        <div class="col-md-4">
+                                            <input type="text" [(ngModel)]="wscode" class="form-control" disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -80,11 +69,64 @@
                     </div>
 
                     <div class="row clearfix">
+                        <div class="col-md-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <label class="control-label">Max Entity Count <strong>*</strong></label>
+                                    <input type="text" [(ngModel)]="maxenttcount" class="form-control maxenttcount" minlength="4" maxlength="6" tabindex="7" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <label class="control-label">Employee Per Rate <strong>*</strong></label>
+                                    <input type="text" [(ngModel)]="empperrate" class="form-control empperrate" minlength="4" maxlength="100" tabindex="8" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row clearfix">
+                        <div class="col-md-12">
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <label class="control-label">Description</label>
+                                    <textarea [(ngModel)]="wsdesc" rows="5" class="form-control no-resize auto-growth wsdesc" maxlength="500" tabindex="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row clearfix">
                         <div class="col-md-12">
                             <div class="form-group form-float">
                                 <div class="form-line">
                                     <label class="control-label">Remark</label>
                                     <textarea [(ngModel)]="remark" rows="5" class="form-control no-resize auto-growth remark" maxlength="500" tabindex="6"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <p-fileUpload mode="basic" name="fileUploaded" url="{{uploadconfig.server}}" chooseLabel="{{chooseLabel}}" (onUpload)="onUpload($event)" accept="{{uploadconfig.acceptedFiles}}" maxFileSize="{{uploadconfig.maxFilesize}}" auto="true"></p-fileUpload>
+
+                        <div class="row clearfix">
+                            <div class="col-md-12">
+                                <div *ngIf="uploadLogoDT.length">
+                                    <div *ngFor="let file of uploadLogoDT" class="box">
+                                        <div class="row clearfix">
+                                            <div class="col-md-9">
+                                                <img src="{{uploadconfig.uploadurl + file.athurl}}" onerror="this.src='assets/img/nologo.gif';" height="40px" />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button type="button" class="btn btn-danger btn-xs" (click)="removeLogoUpload()">
+                                                    <i class="material-icons">delete</i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -96,7 +138,7 @@
                             <div class="form-group form-float">
                                 <div class="form-line">
                                     <label class="control-label">Contact Person <strong>*</strong></label>
-                                    <input type="text" [(ngModel)]="cpname" class="form-control cpname" minlength="10" maxlength="100" tabindex="7" />
+                                    <input type="text" [(ngModel)]="cpname" class="form-control cpname" minlength="10" maxlength="100" tabindex="9" />
                                 </div>
                             </div>
                         </div>
@@ -107,7 +149,7 @@
                             <div class="form-group form-float">
                                 <div class="form-line">
                                     <label class="control-label">Mobile (Login No) <strong>*</strong></label>
-                                    <input type="text" [(ngModel)]="mobileno1" class="form-control mobileno1" minlength="10" maxlength="10" tabindex="8" />
+                                    <input type="text" [(ngModel)]="mobileno1" class="form-control mobileno1" minlength="10" maxlength="10" tabindex="10" />
                                 </div>
                             </div>
                         </div>
@@ -115,7 +157,7 @@
                             <div class="form-group form-float">
                                 <div class="form-line">
                                     <label class="control-label">Alternate Mobile</label>
-                                    <input type="text" [(ngModel)]="mobileno2" class="form-control" minlength="10" maxlength="10" tabindex="9" />
+                                    <input type="text" [(ngModel)]="mobileno2" class="form-control" minlength="10" maxlength="10" tabindex="11" />
                                 </div>
                             </div>
                         </div>
@@ -126,7 +168,7 @@
                             <div class="form-group form-float">
                                 <div class="form-line">
                                     <label class="control-label">Email <strong>*</strong></label>
-                                    <input type="text" [(ngModel)]="email1" class="form-control email1" minlength="5" maxlength="50" tabindex="10" />
+                                    <input type="text" [(ngModel)]="email1" class="form-control email1" minlength="5" maxlength="50" tabindex="12" />
                                 </div>
                             </div>
                         </div>
@@ -134,7 +176,7 @@
                             <div class="form-group form-float">
                                 <div class="form-line">
                                     <label class="control-label">Alternate Email</label>
-                                    <input type="text" [(ngModel)]="email2" class="form-control" minlength="5" maxlength="50" tabindex="11" />
+                                    <input type="text" [(ngModel)]="email2" class="form-control" minlength="5" maxlength="50" tabindex="13" />
                                 </div>
                             </div>
                         </div>
@@ -145,7 +187,7 @@
                             <div class="form-group form-float">
                                 <div class="form-line">
                                     <label class="control-label">Address <strong>*</strong></label>
-                                    <textarea [(ngModel)]="address" rows="5" class="form-control no-resize auto-growth address" maxlength="500" tabindex="12"></textarea>
+                                    <textarea [(ngModel)]="address" rows="5" class="form-control no-resize auto-growth address" maxlength="500" tabindex="14"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -156,7 +198,7 @@
                             <div class="form-group">
                                 <div class="form-line">
                                     <label class="control-label">Country <strong>*</strong></label>
-                                    <input type="text" [(ngModel)]="country" class="form-control country" maxlength="20" tabindex="13" disabled />
+                                    <input type="text" [(ngModel)]="country" class="form-control country" maxlength="20" tabindex="15" disabled />
                                 </div>
                             </div>
                         </div>
@@ -164,7 +206,7 @@
                             <div class="form-group">
                                 <div class="form-line">
                                     <label class="control-label">State <strong>*</strong></label>
-                                    <select id="state" [(ngModel)]="state" class="form-control state" (ngModelChange)="fillCityDropDown()" tabindex="14">
+                                    <select id="state" [(ngModel)]="state" class="form-control state" (ngModelChange)="fillCityDropDown()" tabindex="16">
                                         <option [value]="0">Select State</option>
                                         <option *ngFor="let row of stateDT" [value]="row.key">
                                             {{row.val}}
@@ -180,7 +222,7 @@
                             <div class="form-group">
                                 <div class="form-line">
                                     <label class="control-label">City <strong>*</strong></label>
-                                    <select id="city" [(ngModel)]="city" class="form-control city" (ngModelChange)="fillAreaDropDown()" tabindex="15">
+                                    <select id="city" [(ngModel)]="city" class="form-control city" (ngModelChange)="fillAreaDropDown()" tabindex="17">
                                         <option [value]="0">Select City</option>
                                         <option *ngFor="let row of cityDT" [value]="row.key">
                                             {{row.val}}
@@ -190,65 +232,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <hr />
-
-            <div class="row clearfix">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <p-fileUpload mode="basic" name="fileUploaded" url="{{uploadconfig.server}}" chooseLabel="{{chooseLabel}}" (onUpload)="onUpload($event)" accept="{{uploadconfig.acceptedFiles}}" maxFileSize="{{uploadconfig.maxFilesize}}" auto="true"></p-fileUpload>
-
-                        <div *ngIf="uploadLogoDT.length">
-                            <div *ngFor="let file of uploadLogoDT" class="box">
-                                <div class="row clearfix">
-                                    <div class="col-md-9">
-                                        <img src="{{uploadlogoconfig.uploadurl + file.athurl}}" onerror="this.src='assets/img/nologo.gif';" height="40px" />
-                                    </div>
-                                    <div class="col-md-3">
-                                        <button type="button" class="btn btn-danger btn-xs" (click)="removeLogoUpload()">
-                                        <i class="material-icons">delete</i>
-                                    </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <span *ngIf="!uploadLogoDT.length">Upload Logo Here....</span>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <table cellspacing="3" cellpadding="3" class="ui-datatable" width="100%">
-                        <tr>
-                            <td align="center">Workspace Type</td>
-                            <td align="center" width="150px">Rate / Passenger</td>
-                            <td align="center" width="150px">Max Allowed Entity </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type="checkbox" id="company" [(ngModel)]="iscompany" value="Company" name="Company" class="actrights filled-in" />
-                                <label class="control-label" for="company">Company</label>
-                            </td>
-                            <td>
-                                <input type="number" [(ngModel)]="cmppsngrrate" class="form-control cmppsngrrate text-right" maxlength="20" tabindex="16" />
-                            </td>
-                            <td>
-                                <input type="number" [(ngModel)]="cmpenttmaxno" class="form-control cmpenttmaxno text-right" maxlength="20" tabindex="17" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type="checkbox" id="school" [(ngModel)]="isschool" value="School" name="School" class="actrights filled-in" />
-                                <label class="control-label" for="school">School</label>
-                            </td>
-                            <td>
-                                <input type="number" [(ngModel)]="schpsngrrate" class="form-control schpsngrrate text-right" maxlength="20" tabindex="18" />
-                            </td>
-                            <td>
-                                <input type="number" [(ngModel)]="schenttmaxno" class="form-control schenttmaxno text-right" maxlength="20" tabindex="19" />
-                            </td>
-                        </tr>
-                    </table>
                 </div>
             </div>
         </div>
