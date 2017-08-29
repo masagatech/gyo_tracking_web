@@ -31,7 +31,6 @@ export class LeftSideBarComponent implements OnInit, OnDestroy {
     constructor(private _authservice: AuthenticationService, public _menuservice: MenuService, private _loginservice: LoginService,
         private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
 
         this.ufullname = this.loginUser.fullname;
@@ -53,7 +52,7 @@ export class LeftSideBarComponent implements OnInit, OnDestroy {
         var that = this;
 
         that._menuservice.getMenuDetails({
-            "flag": "main", "uid": that.loginUser.uid, "issysadmin": that.loginUser.issysadmin,
+            "flag": "main", "uid": that.loginUser.uid, "issysadmin": that._enttdetails.issysadmin,
             "utype": that.loginUser.utype
         }).subscribe(data => {
             that.mainMenuDT = data.data;
@@ -73,7 +72,7 @@ export class LeftSideBarComponent implements OnInit, OnDestroy {
 
         that._menuservice.getMenuDetails({
             "flag": "parent", "loginid": that.loginUser.loginid, "uid": that.loginUser.uid, "utype": that.loginUser.utype,
-            "issysadmin": that.loginUser.issysadmin
+            "issysadmin": that._enttdetails.issysadmin
 
         }).subscribe(data => {
             that.parentMenuDT = data.data;

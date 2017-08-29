@@ -112,33 +112,40 @@
 </div>
 
 <div *ngIf="loginUser.issysadmin">
-    <div class="row clearfix" *ngIf="isShowGrid">
-        <div *ngFor="let row of workspaceDT" class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-            <div class="card">
-                <div class="header">
-                    <h2 class="title">
-                        <img class="logo pull-left" src="{{uploadconfig.uploadurl + row.wslogo}}" onerror="this.src='assets/img/nologo.gif';" height="40px" style="margin-right: 7px;">
-                        <a role="button" (click)="openEntityForm(row)">{{row.wsname}}</a>
-                        <small>{{row.wstype}}</small>
-                    </h2>
-                    <ul class="header-dropdown m-r--5" style="top:20px">
-                        <li class="dropdown">
-                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                <i class="material-icons">more_vert</i>
-                            </a>
-                            <ul class="dropdown-menu pull-right">
-                                <li><a role="button" (click)="openEntityForm(row)"><i class="material-icons">arrow_forward</i> Go</a></li>
-                                <li><a role="button" (click)="editWorkspaceForm(row)"><i class="material-icons">edit</i> Edit</a></li>
+    <div *ngIf="isShowGrid">
+        <div *ngFor="let wsrow of workspaceDT | groupBy: 'systype'">
+            <div class="header-title" *ngIf="wsrow.key !== ''">
+                {{wsrow.key}}
+            </div>
+            <div class="row clearfix">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12" *ngFor="let row of wsrow.value">
+                    <div class="card">
+                        <div class="header">
+                            <h2 class="title">
+                                <img class="logo pull-left" src="{{uploadconfig.uploadurl + row.wslogo}}" onerror="this.src='assets/img/nologo.gif';" height="40px" style="margin-right: 7px;">
+                                <a role="button" (click)="openEntityForm(row)">{{row.wsname}}</a>
+                                <small>{{row.wstype}}</small>
+                            </h2>
+                            <ul class="header-dropdown m-r--5" style="top:20px">
+                                <li class="dropdown">
+                                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                        <i class="material-icons">more_vert</i>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li><a role="button" (click)="openEntityForm(row)"><i class="material-icons">arrow_forward</i> Go</a></li>
+                                        <li><a role="button" (click)="editWorkspaceForm(row)"><i class="material-icons">edit</i> Edit</a></li>
+                                    </ul>
+                                </li>
                             </ul>
-                        </li>
-                    </ul>
-                </div>
-                <div class="body">
-                    <ul>
-                        <li>Total Entity : {{row.countentity}}</li>
-                        <li>{{row.name}} ({{row.mobileno1}})</li>
-                        <li>{{row.email1}}</li>
-                    </ul>
+                        </div>
+                        <div class="body">
+                            <ul>
+                                <li>Total Entity : {{row.countentity}}</li>
+                                <li>{{row.name}} ({{row.mobileno1}})</li>
+                                <li>{{row.email1}}</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -148,12 +155,13 @@
             <div class="card">
                 <div class="body">
                     <p-dataTable [value]="workspaceDT" [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,30,40]">
-                        <p-column header="" [style]="{'width':'60px','text-align':'center','vertical-align':'top'}">
+                        <p-column header="" [style]="{'width':'50px','text-align':'center','vertical-align':'top'}">
                             <ng-template let-row="rowData" pTemplate type="body">
                                 <img alt="{{row.wsname}}" src="{{global.uploadurl + row.wslogo}}" onerror="this.src='assets/img/default.gif';" height="40px" width="40px">
                             </ng-template>
                         </p-column>
                         <p-column field="wscode" header="Code" [style]="{'width': '90px', 'text-align': 'left', 'vertical-align':'top'}"></p-column>
+                        <p-column field="systype" header="" [style]="{'width': '140px', 'text-align': 'left', 'vertical-align':'top'}"></p-column>
                         <p-column field="wsname" header="Name" [style]="{'width': '270px', 'text-align': 'left', 'vertical-align':'top'}">
                             <ng-template let-row="rowData" pTemplate type="body">
                                 {{row.wsname}}<br/>
@@ -161,7 +169,7 @@
                             </ng-template>
                         </p-column>
                         <p-column field="name" header="Contact Name" [style]="{'width': '150px', 'text-align': 'left', 'vertical-align':'top'}"></p-column>
-                        <p-column field="mobileno1" header="Mobile" [style]="{'width': '120px', 'text-align': 'left', 'vertical-align':'top'}"></p-column>
+                        <p-column field="mobileno1" header="Mobile" [style]="{'width': '100px', 'text-align': 'left', 'vertical-align':'top'}"></p-column>
                         <p-column field="email1" header="Email" [style]="{'width': '200px', 'text-align': 'left', 'vertical-align':'top'}"></p-column>
                         <p-column field="address" header="Address" [style]="{'text-align': 'left', 'vertical-align':'top'}"></p-column>
                         <p-column [style]="{'width': '50px', 'align': 'left', 'vertical-align':'top'}">

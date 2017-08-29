@@ -16,7 +16,7 @@ export class ViewEmployeeLeaveComponent implements OnInit {
     _wsdetails: any = [];
     _enttdetails: any = [];
 
-    employeeLeaveDT: any = [];
+    empleaveDT: any = [];
 
     global = new Globals();
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
@@ -46,7 +46,7 @@ export class ViewEmployeeLeaveComponent implements OnInit {
 
         that._emplvservice.getEmployeeLeave(params).subscribe(data => {
             try {
-                that.employeeLeaveDT = data.data;
+                that.empleaveDT = data.data;
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -68,5 +68,9 @@ export class ViewEmployeeLeaveComponent implements OnInit {
 
     public editEmployeeLeaveForm(row) {
         this._router.navigate(['/master/employeeleave/edit', row.elid]);
+    }
+
+    public openApprovalForm(row) {
+        this._router.navigate(['/master/employeeleave/approval', row.key.split(':')[0]]);
     }
 }

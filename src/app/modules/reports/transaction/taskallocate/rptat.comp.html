@@ -133,6 +133,8 @@
                                     <th width="350px" align="left">Remark</th>
                                     <th width="130px" align="left">Expense Value</th>
                                     <th align="left">Expense Description</th>
+                                    <th width="100px" align="left">Updated By</th>
+                                    <th width="100px" align="left">Updated On</th>
                                 </tr>
                             </thead>
                             <tbody *ngFor="let drow of row.tskupdate let i=index;">
@@ -157,6 +159,12 @@
                                     </td>
                                     <td>
                                         {{drow.expdesc}}
+                                    </td>
+                                    <td>
+                                        {{drow.createdby}}
+                                    </td>
+                                    <td>
+                                        {{drow.createdon}}
                                     </td>
                                 </tr>
                             </tbody>

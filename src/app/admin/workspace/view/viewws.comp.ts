@@ -130,8 +130,8 @@ export class ViewWorkspaceComponent implements OnInit {
             "flag": "userwise", "ucode": that.loginUser.ucode, "issysadmin": that.loginUser.issysadmin, "wsautoid": that.autowsid
         }).subscribe(data => {
             try {
-                that.workspaceDT = data.data.filter(a => a.issysadmin === false);
-                myWorkspaceDT = data.data.filter(a => a.issysadmin === true);
+                that.workspaceDT = data.data; //.filter(a => a.issysadmin === false);
+                myWorkspaceDT = data.data.filter(a => a.wsautoid === that.loginUser.wsautoid).filter(a => a.issysadmin === true);
 
                 if (myWorkspaceDT.length > 0) {
                     that.wsautoid = myWorkspaceDT[0].wsautoid;

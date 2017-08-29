@@ -23,8 +23,10 @@ export class AddEmployeeLeaveComponent implements OnInit {
     empid: number = 0;
     empname: any = [];
 
-    frmdt: number = 0;
-    todt: number = 0;
+    frmdt: any = "";
+    frmtm: any = "";
+    todt: any = "";
+    totm: any = "";
     leavetypeDT: string = "";
     restype: string = "";
     reason: string = "";
@@ -43,11 +45,40 @@ export class AddEmployeeLeaveComponent implements OnInit {
     }
 
     public ngOnInit() {
+        var that = this;
+
         setTimeout(function () {
-            $(".frmdt").focus();
+            $(".empname input").focus();
         }, 100);
 
-        this.getEmployeeLeave();
+        that.getEmployeeLeave();
+    }
+
+    // Selected Calendar Date
+
+    formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
+
+    // Format Date
+
+    setFromDateAndToDate() {
+        var date = new Date();
+        var _frmdt = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+        var _todt = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+
+        this.frmdt = this.formatDate(_frmdt);
+        this.todt = this.formatDate(_todt);
+        this.frmtm = "";
+        this.totm = "";
     }
 
     getEmployeeData(event) {
@@ -95,14 +126,14 @@ export class AddEmployeeLeaveComponent implements OnInit {
 
         })
     }
-  // Clear Fields
+
+    // Clear Fields
 
     resetEmployeeLeaveFields() {
         this.elid = 0;
         this.empname = [];
+        this.setFromDateAndToDate();
         this.restype = "";
-        this.frmdt = 0;
-        this.todt = 0;
         this.reason = "";
     }
 
@@ -111,9 +142,32 @@ export class AddEmployeeLeaveComponent implements OnInit {
     saveEmployeeLeave() {
         var that = this;
 
+        var date = new Date();
+        var today = this.formatDate(new Date(date.getFullYear(), date.getMonth(), date.getDate()));
+
         if (that.empid == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Employee Name");
             $(".empname input").focus();
+        }
+        else if (that.frmdt == "") {
+            that._msg.Show(messageType.error, "Error", "Enter From Date");
+            $(".frmdt").focus();
+        }
+        else if (today > that.frmdt) {
+            that._msg.Show(messageType.error, "Error", "Sholul Be From Date Greater Than Current Date");
+            $(".frmdt").focus();
+        }
+        else if (that.todt == "") {
+            that._msg.Show(messageType.error, "Error", "Enter To Date");
+            $(".todt").focus();
+        }
+        else if (today > that.todt) {
+            that._msg.Show(messageType.error, "Error", "Sholul Be To Date Greater Than Current Date");
+            $(".todt").focus();
+        }
+        else if (that.frmdt > that.todt) {
+            that._msg.Show(messageType.error, "Error", "Sholul Be To Date Greater Than From Date");
+            $(".todt").focus();
         }
         else if (that.restype == "") {
             that._msg.Show(messageType.error, "Error", "Enter Leave Type");
@@ -131,7 +185,9 @@ export class AddEmployeeLeaveComponent implements OnInit {
                 "enttid": that._enttdetails.enttid,
                 "empid": that.empid,
                 "frmdt": that.frmdt,
+                "frmtm": that.frmtm,
                 "todt": that.todt,
+                "totm": that.totm,
                 "restype": that.restype,
                 "reason": that.reason,
                 "cuid": that.loginUser.ucode,
@@ -201,6 +257,8 @@ export class AddEmployeeLeaveComponent implements OnInit {
                         that.empname.label = data.data[0].empname;
                         that.frmdt = data.data[0].frmdt;
                         that.todt = data.data[0].todt;
+                        that.frmtm = data.data[0].frmtm;
+                        that.totm = data.data[0].totm;
                         that.restype = data.data[0].restype;
                         that.reason = data.data[0].reason;
                     }
