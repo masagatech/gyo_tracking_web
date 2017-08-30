@@ -10477,13 +10477,24 @@ body.waitMe_body .waitMe_container.text>div {
 
 .reports {}
 
+.reports tbody tr.tr-table th {
+    font-size: 12px;
+    padding: 4px!important;
+}
+
 .reports th {
     font-size: 11px;
     padding: 4px!important;
 }
 
 .reports td {
+    font-size: 11px;
     padding: 4px!important;
+}
+
+.reports td a {
+    font-size: 13px;
+    padding: 0 4px!important;
 }
 
 .reports td span {

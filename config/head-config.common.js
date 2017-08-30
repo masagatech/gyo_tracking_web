@@ -1,4 +1,4 @@
-var cssver = 25;
+var cssver = 26;
 
 var conf = {
     link: [

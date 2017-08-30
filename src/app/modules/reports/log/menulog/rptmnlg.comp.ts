@@ -62,9 +62,10 @@ export class MenuLogReportsComponent implements OnInit, OnDestroy {
 
     setFromDateAndToDate() {
         var date = new Date();
+        var before1month = new Date(date.getFullYear(), date.getMonth(), date.getDate() - 30);
         var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
-        this.frmdt = this.formatDate(today);
+        this.frmdt = this.formatDate(before1month);
         this.todt = this.formatDate(today);
     }
 
