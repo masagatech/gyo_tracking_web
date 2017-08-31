@@ -187,13 +187,15 @@ export class AddUserMenuMapComponent implements OnInit, OnDestroy {
                 that._userservice.saveUserRights(saveUR).subscribe(data => {
                     try {
                         var dataResult = data.data;
+                        var msg = dataResult[0].funsave_userrights.msg;
+                        var msgid = dataResult[0].funsave_userrights.msgid;
 
-                        if (dataResult[0].funsave_userrights.msgid != "-1") {
-                            that._msg.Show(messageType.success, "Success", dataResult[0].funsave_userrights.msg);
+                        if (msgid != "-1") {
+                            that._msg.Show(messageType.success, "Success", msg);
                             $("#menus").prop('checked', false);
                         }
                         else {
-                            that._msg.Show(messageType.error, "Error", dataResult[0].funsave_userrights.msg);
+                            that._msg.Show(messageType.error, "Error", msg);
                         }
                     }
                     catch (e) {

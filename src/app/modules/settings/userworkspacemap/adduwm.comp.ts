@@ -15,7 +15,7 @@ export class AddUserWorkspaceMapComponent implements OnInit, OnDestroy {
     _wsdetails: any = [];
 
     usersDT: any = [];
-    
+
     userdata: any = [];
     uid: number = 0;
     uname: string = "";
@@ -50,7 +50,7 @@ export class AddUserWorkspaceMapComponent implements OnInit, OnDestroy {
 
     resetUserRights() {
         $("#uname input").focus();
-    
+
         this.uid = 0;
         this.uname = "";
         this.userdata = [];
@@ -88,7 +88,7 @@ export class AddUserWorkspaceMapComponent implements OnInit, OnDestroy {
         that.uname = event.uname;
         that.utype = event.utype;
 
-        that.getUserRightsById(that.uid, that.utype);
+        that.getUserRightsById();
     }
 
     getUserDetails() {
@@ -127,7 +127,7 @@ export class AddUserWorkspaceMapComponent implements OnInit, OnDestroy {
         commonfun.loader();
 
         that._wsservice.getWorkspaceDetails({
-            "flag": "userwise", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
+            "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
             "issysadmin": that.loginUser.issysadmin, "wsautoid": 0
         }).subscribe(data => {
             try {
@@ -152,55 +152,58 @@ export class AddUserWorkspaceMapComponent implements OnInit, OnDestroy {
     }
 
     getUserRights() {
-        var _giverights = {};
         var wsitem = null;
+
+        var actrights = "";
+        var _wsights = {};
 
         for (var i = 0; i <= this.workspaceDT.length - 1; i++) {
             wsitem = null;
             wsitem = this.workspaceDT[i];
 
             if (wsitem !== null) {
-                var actrights = "";
-
-                $("#M" + wsitem.mid).find("input[type=checkbox]").each(function () {
+                $("#ws" + wsitem.wsautoid).find("input[type=checkbox]").each(function () {
                     actrights += (this.checked ? $(this).val() + "," : "");
                 });
 
                 if (actrights != "") {
-                    _giverights = actrights.slice(0, -1);
+                    _wsights = actrights.slice(0, -1);
                 }
             }
         }
 
-        return _giverights;
+        return _wsights;
     }
 
-    saveUserRights() {
+    saveUserWorkspaceMapping() {
         var that = this;
+        var _wsrights = null;
+        
+        _wsrights = that.getUserRights();
 
-        var _giverights = that.getUserRights();
-
-        if (_giverights === {}) {
+        if (_wsrights === {}) {
             that._msg.Show(messageType.error, "Error", "Select Atleast 1 Rights");
         }
         else {
             var saveUR = {
                 "uid": that.uid,
                 "utype": that.utype,
-                "wsrights": _giverights,
+                "wsrights": "{" + that._wsdetails.wsautoid + "," + _wsrights + "}",
                 "cuid": that.loginUser.login
             }
 
             that._userservice.updateUserInfo(saveUR).subscribe(data => {
                 try {
                     var dataResult = data.data;
+                    var msg = dataResult[0].funupdate_userinfo.msg;
+                    var msgid = dataResult[0].funupdate_userinfo.msgid;
 
-                    if (dataResult[0].funsave_userrights.msgid != "-1") {
-                        that._msg.Show(messageType.success, "Success", dataResult[0].funsave_userrights.msg);
+                    if (msgid != "-1") {
+                        that._msg.Show(messageType.success, "Success", msg);
                         $("#menus").prop('checked', false);
                     }
                     else {
-                        that._msg.Show(messageType.error, "Error", dataResult[0].funsave_userrights.msg);
+                        that._msg.Show(messageType.error, "Error", msg);
                     }
                 }
                 catch (e) {
@@ -222,61 +225,41 @@ export class AddUserWorkspaceMapComponent implements OnInit, OnDestroy {
         }
     }
 
-    private selectAndDeselectMenuWiseCheckboxes(row) {
-        if ($("#" + row.mid).is(':checked')) {
-            $("#M" + row.mid + " input[type=checkbox]").prop('checked', true);
-        }
-        else {
-            $("#M" + row.mid + " input[type=checkbox]").prop('checked', false);
-        }
-    }
-
     private clearcheckboxes(): void {
         $(".allcheckboxes input[type=checkbox]").prop('checked', false);
     }
 
-    getUserRightsById(_uid, _utype) {
+    getUserRightsById() {
         var that = this;
         this.clearcheckboxes();
 
-        that._userservice.getUserRights({ "flag": "details", "uid": _uid, "utype": _utype }).subscribe(data => {
+        that._userservice.getUserDetails({ "flag": "wsrights", "uid": that.uid, "wsautoid": that._wsdetails.wsautoid }).subscribe(data => {
             try {
                 var viewUR = data.data;
 
-                var _userrights = null;
-                var _menuitem = null;
-                var _actrights = null;
+                var _wsrights = null;
+                var _wsitem = null;
 
                 if (viewUR[0] != null) {
-                    _userrights = null;
-                    _userrights = viewUR[0].giverights;
+                    _wsrights = null;
+                    _wsrights = viewUR[0].wsrights;
 
-                    if (_userrights != null) {
-                        for (var i = 0; i < _userrights.length; i++) {
-                            _menuitem = null;
-                            _menuitem = _userrights[i];
+                    if (_wsrights != null) {
+                        for (var i = 0; i < _wsrights.length; i++) {
+                            _wsitem = null;
+                            _wsitem = _wsrights[i];
 
-                            if (_menuitem != null) {
-                                _actrights = null;
-                                _actrights = _menuitem.mrights.split(',');
-
-                                if (_actrights != null) {
-                                    for (var j = 0; j <= _actrights.length - 1; j++) {
-                                        $("#M" + _menuitem.mid).find("#" + _menuitem.mid + _actrights[j]).prop('checked', true);
-                                    }
-                                    $(".allcheckboxes").find("#" + _menuitem.mid).prop('checked', true);
-                                    $("#menus").prop('checked', true);
-                                }
-                                else {
-                                    $(".allcheckboxes").find("#" + _menuitem.mid).prop('checked', false);
-                                    $("#menus").prop('checked', false);
-                                }
+                            if (_wsitem != null) {
+                                $("#selectall").prop('checked', true);
+                                $("#ws" + _wsitem).find("#" + _wsitem).prop('checked', true);
+                            }
+                            else {
+                                $("#selectall").prop('checked', false);
                             }
                         }
                     }
                     else {
-                        $(".allcheckboxes").find("#" + _menuitem.mid).prop('checked', false);
-                        $("#menus").prop('checked', false);
+                        $("#selectall").prop('checked', false);
                     }
                 }
             }
@@ -290,6 +273,6 @@ export class AddUserWorkspaceMapComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        
+
     }
 }

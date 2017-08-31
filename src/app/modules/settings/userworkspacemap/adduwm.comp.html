@@ -3,7 +3,7 @@
         <h4>User Workspace Mapping</h4>
         <ul class="header-dropdown m-r--5">
             <li>
-                <a role="button" class="btn btn-theme btn-xs" (click)="saveUserRights()">
+                <a role="button" class="btn btn-theme btn-xs" (click)="saveUserWorkspaceMapping()">
                     <i class="material-icons">save</i>
                 </a>
             </li>
@@ -22,7 +22,7 @@
             </div>
             <div class="col-md-2" style="padding-top:20px">
                 <div class="form-group">
-                    <button type="button" class="btn btn-theme btn-xs" (click)="getUserRightsById(refuid, refutype)">
+                    <button type="button" class="btn btn-theme btn-xs" (click)="getUserRightsById()">
                         <span class="material-icons">restore</span>
                     </button>
                 </div>
@@ -43,10 +43,12 @@
                                 <div class="form-line">
                                     <img class="logo pull-left" src="{{uploadconfig.uploadurl + row.wslogo}}" onerror="this.src='assets/img/nologo.gif';" height="40px" style="margin-right: 7px;">
 
-                                    <input id="{{row.wsautoid}}" name="ws{{i + 1}}" type="checkbox" value="{{row.wsautoid}}" (change)="selectAndDeselectMenuWiseCheckboxes(row)" class="filled-in" />
-                                    <label for="{{row.wsautoid}}">{{row.wsname}}</label>
-                                    <br />
-                                    <small>{{row.ucode}}</small>
+                                    <span id="ws{{row.wsautoid}}">
+                                        <input id="{{row.wsautoid}}" name="ws{{i + 1}}" type="checkbox" value="{{row.wsautoid}}" class="filled-in" />
+                                        <label for="{{row.wsautoid}}">{{row.wsname}}</label>
+                                        <br />
+                                        <small>{{row.ucode}}</small>
+                                    </span>
                                 </div>
                             </div>
                         </div>
