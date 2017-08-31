@@ -5,14 +5,90 @@
                 <h4>Team</h4>
             </div>
             <div class="col-md-10 col-xs-8" align="right">
-                <button type="button" class="btn btn-theme btn-xs" (click)="addTeamForm()">
-					<span class="material-icons">add</span>
-				</button>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Export <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a role="button" (click)="exportToCSV()"><i class="fa fa-file-excel-o"></i> CSV</a></li>
+                        <li><a role="button" (click)="exportToPDF()"><i class="fa fa-file-pdf-o"></i> PDF</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="body no-padding">
+        <table id="tblpsngrtrprpt" class="table table-bordered table-responsive">
+            <thead>
+                <tr>
+                    <th width="30px"></th>
+                    <th width="200px">Team Name</th>
+                    <th width="300px">Purpose</th>
+                    <th>Remark</th>
+                    <th width="350px">Owner Name</th>
+                    <th width="140px" align="center">Count Employee</th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let row of teamDT">
+                <tr style="font-weight:bold;">
+                    <td>
+                        <a role="button" (click)="expandTeamEmpDetails(row)" [style.display]="row.isdetails == 0?'none':''">
+                            <i class="{{row.issh == 0 ? 'fa fa-plus-square' : 'fa fa-minus-square'}}"></i>
+                        </a>
+                    </td>
+                    <td>
+                        {{row.tmnm}}
+                    </td>
+                    <td>
+                        {{row.purpose}}
+                    </td>
+                    <td>
+                        {{row.remark}}
+                    </td>
+                    <td>
+                        {{row.onrnm}}
+                    </td>
+                    <td align="center">
+                        {{row.countemp}}
+                    </td>
+                </tr>
+                <tr [style.display]="row.issh == 0?'none':''">
+                    <td colspan="6">
+                        <table id="tblpsngrtrprpt" class="table table-bordered table-responsive nested-table">
+                            <thead>
+                                <tr>
+                                    <th width="50px">#</th>
+                                    <th width="300px">Employee Name</th>
+                                    <th width="250px">Email</th>
+                                    <th width="130px">Mobile</th>
+                                </tr>
+                            </thead>
+                            <tbody *ngFor="let drow of row.details let i=index;">
+                                <tr>
+                                    <td>
+                                        {{i+1}}
+                                    </td>
+                                    <td>
+                                        {{drow.empname}}
+                                    </td>
+                                    <td>
+                                        {{drow.email1}}
+                                    </td>
+                                    <td>
+                                        {{drow.mobileno1}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- <div class="body no-padding">
         <div class="row clearfix">
             <div class="col-md-12">
                 <p-dataTable [value]="teamDT" [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,30,40]">
@@ -23,5 +99,5 @@
                 </p-dataTable>
             </div>
         </div>
-    </div>
+    </div> -->
 </div>

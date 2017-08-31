@@ -5,6 +5,7 @@ import { LoginUserModel, Globals } from '@models';
 import { TaskAllocateService } from '@services/master';
 import { LazyLoadEvent } from 'primeng/primeng';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
+import jsPDF from 'jspdf';
 
 @Component({
     templateUrl: 'rptat.comp.html',
@@ -249,12 +250,12 @@ export class TaskAllocateComponent implements OnInit, OnDestroy {
     resetTaskAllocate() {
         this.setFromDateAndToDate();
 
-        // this.assbyid = this.loginUser.uid;
-        // this.assbyname = this.loginUser.utypename + " : " + this.loginUser.ucode + "-" + this.loginUser.fullname;
-        // this.assbytype = this.loginUser.utype;
-        // this.assbydata.uid = this.assbyid;
-        // this.assbydata.uname = this.assbyname;
-        // this.assbydata.utype = this.assbytype;
+        this.assbyid = this.loginUser.uid;
+        this.assbyname = this.loginUser.utypename + " : " + this.loginUser.ucode + "-" + this.loginUser.fullname;
+        this.assbytype = this.loginUser.utype;
+        this.assbydata.uid = this.assbyid;
+        this.assbydata.uname = this.assbyname;
+        this.assbydata.utype = this.assbytype;
 
         this.asstoid = 0;
         this.asstoname = "";
@@ -265,6 +266,47 @@ export class TaskAllocateComponent implements OnInit, OnDestroy {
         this.tagdata = [];
         
         this.getTaskReports();
+    }
+
+    // Export
+
+    public exportToCSV() {
+        var that = this;
+        var exportData = [];
+        var params = {};
+
+        var tagids = that.taglist.length !== 0 ? that.taglist.map(function (val) { return val.tagid; }).join(',') : "0";
+        
+        params = {
+            "flag": "export", "frmdt": that.frmdt, "todt": that.todt, "assbyid": that.assbyid, "assbytype": that.assbytype, "asstoid": that.asstoid,
+            "uid": that.loginUser.uid, "utype": that.loginUser.utype, "tagid": tagids, "tsktitle": "", "enttid": that._enttdetails.enttid,
+            "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
+        }
+
+        that._atservice.getTaskReports(params).subscribe(data => {
+            try {
+                exportData = data.data;
+                that._autoservice.exportToCSV(exportData, "Task Details");
+            }
+            catch (e) {
+                that._msg.Show(messageType.error, "Error", e);
+            }
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+        }, () => {
+
+        })
+    }
+
+    public exportToPDF() {
+        let pdf = new jsPDF('l', 'pt', 'a4');
+        let options = {
+            pagesplit: true
+        };
+        pdf.addHTML(this.stops.nativeElement, 0, 0, options, () => {
+            pdf.save("TaskAllocate.pdf");
+        });
     }
 
     public ngOnDestroy() {

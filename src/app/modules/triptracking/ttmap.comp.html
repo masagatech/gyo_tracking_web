@@ -10,6 +10,14 @@
                                 <label for="{{row.empid}}"></label>
                                 <img src="{{global.uploadurl + row.empph}}" onerror="this.src='assets/img/default.gif';" height="40px" />
                             </div>
+                            <span class="vhbatr pull-right" *ngIf="row.isshow">
+                                {{row.isempty}}
+                            <span class="vhbtrper">{{row.btr | _currency:{'decimals':0, 'currsym': '' }  }}%</span>
+                            <span class="btr">
+								<span class="btr-line" title="{{row.btr}}%" [ngStyle]="{'width': row.btr+'%'}"></span>
+                            </span>
+                            </span>
+
                             <div class="vhtitle">
                                 {{row.empname}}
                             </div>

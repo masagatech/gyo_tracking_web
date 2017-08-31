@@ -186,13 +186,15 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this._socketservice.getMessage().subscribe(data => {
             var _d = data;
-            
+            console.log(_d);
             if (_d["evt"] == "regreq") {
-                if (that.empIds.length > 0) {
+                if (that.empIds.length > 0) { 
+                   
                     that._socketservice.sendMessage("reg_v", that.empIds.join(','));
                 }
             }
             else if (_d["evt"] == "registered") {
+                
                 that.connectmsg = "Registered...";
                 setTimeout(function () {
                     that.connectmsg = "Waiting for data..";
@@ -201,6 +203,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
             else if (_d["evt"] == "data") {
                 try {
                     var geoloc = _d["data"];
+                    console.log(geoloc);
                     let el = that.employeeDT.find(a => a.uid === parseInt(geoloc.uid));
 
                     if (el !== undefined) {
@@ -212,6 +215,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
                         el.sertm = geoloc.sertm;
                         el.isshow = true;
                         el.min = 0;
+                        el.flag = geoloc.flag;
                         el.ju = true;
                     }
 
@@ -306,6 +310,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
                 el.min = this.getTimeDiff(d.sertm);
                 el.isshow = true;
                 el.ju = false;
+                el.flag = d.flag;
 
                 this.moveMarker([el.loc[1], el.loc[0]], el.uid, el.bearing);
             } else if (el.ju) {

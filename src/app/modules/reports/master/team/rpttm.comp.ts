@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
 import { TeamService } from '@services/master';
 import { LazyLoadEvent } from 'primeng/primeng';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
+import jsPDF from 'jspdf';
 
 @Component({
     templateUrl: 'rpttm.comp.html',
@@ -65,6 +66,77 @@ export class TeamReportsComponent implements OnInit, OnDestroy {
         }, () => {
 
         })
+    }
+
+    // Expand Team Employee Details
+
+    expandTeamEmpDetails(row) {
+        let that = this;
+        var params = {};
+
+        if (row.issh == 0) {
+            row.issh = 1;
+
+            if (row.details.length === 0) {
+                params = {
+                    "flag": "tmdetails", "tmid": row.tmid, "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
+                    "enttid": that._enttdetails.enttid, "issysadmin": that.loginUser.issysadmin, "wsautoid": that._enttdetails.wsautoid
+                }        
+
+                that._tmservice.getTeamDetails(params).subscribe(data => {
+                    row.details = data.data;
+
+                    for (var i = 0; i < row.details.length; i++) {
+                        if (row.details[i].issh == 0) {
+                            row.details[i].issh = false;
+                        }
+                        else {
+                            row.details[i].issh = true;
+                        }
+                    }
+                }, err => {
+                    that._msg.Show(messageType.error, "Error", err);
+                    console.log(err);
+                }, () => {
+
+                })
+            }
+        } else {
+            row.issh = 0;
+        }
+    }
+
+    // Export
+
+    public exportToCSV() {
+        let that = this;
+        var params = {};
+        var exportDT = [];
+
+        params = {
+            "flag": "tmdetails", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
+            "enttid": that._enttdetails.enttid, "issysadmin": that.loginUser.issysadmin, "wsautoid": that._enttdetails.wsautoid
+        }        
+
+        that._tmservice.getTeamDetails(params).subscribe(data => {
+            exportDT = data.data;
+            that._autoservice.exportToCSV(exportDT, "Team Details");
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+        }, () => {
+
+        })
+    }
+
+    public exportToPDF() {
+        let pdf = new jsPDF('l', 'pt', 'a4');
+        let options = {
+            pagesplit: true
+        };
+        pdf.addHTML(this.teamDT.nativeElement, 0, 0, options, () => {
+            pdf.save("Stops.pdf");
+        });
     }
 
     public addTeamForm() {

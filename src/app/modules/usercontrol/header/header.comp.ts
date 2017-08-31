@@ -73,7 +73,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this._enttdetails = Globals.getEntityDetails();
 
     this.getHeaderDetails();
-    this.getTopMenuList();
+
+    //if (Cookie.get("_enttdetails_") !== null && Cookie.get("_enttdetails_") !== undefined) {
+      this.getTopMenuList();
+    //}
 
     _router.events.forEach((event: NavigationEvent) => {
       if (event instanceof NavigationStart) {
@@ -115,6 +118,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }).subscribe(data => {
       that.mastersMenuDT = data.data.filter(a => a.mptype === "master");
       that.reportsMenuDT = data.data.filter(a => a.mptype === "reports");
+      that.settingsMenuDT = data.data.filter(a => a.mptype === "settings");
     }, err => {
       that._msg.Show(messageType.error, "Error", err);
     }, () => {
