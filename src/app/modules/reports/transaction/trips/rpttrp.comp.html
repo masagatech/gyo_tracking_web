@@ -20,7 +20,7 @@
                     </button>
                 </div>
             </div>
-            <div class="col-md-5" style="padding-top: 20px;" align="right">
+            <div id="divExport" class="col-md-5" style="padding-top: 20px;" align="right">
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Export <span class="caret"></span>
@@ -56,12 +56,16 @@
                             <a role="button" (click)="getTripDetails('task', row)">{{row.task}}</a>
                         </ng-template>
                     </p-column>
-                    <p-column field="kilometer" header="Kilometer" [style]="{'width': '130px', 'text-align': 'right'}"></p-column>
-                    <p-column header="Map" [style]="{'width': '100px', 'text-align': 'left'}">
+                    <p-column header="Kilometer" [style]="{'width': '130px', 'text-align': 'left'}">
+                        <ng-template let-row="rowData" pTemplate type="body">
+                            {{row.strlat == '0.00000000' || row.endlat == '0.00000000' || row.strlng == '0.00000000' || row.endlng == '0.00000000' ? '0.00' : row.kilometer}}
+                        </ng-template>
+                    </p-column>
+                    <!-- <p-column header="Map" [style]="{'width': '100px', 'text-align': 'left'}">
                         <ng-template let-row="rowData" pTemplate type="body">
                             <a role="button" (click)="getLatLonWiseMap(row)">View Map</a>
                         </ng-template>
-                    </p-column>
+                    </p-column> -->
                 </p-dataTable>
             </div>
         </div>

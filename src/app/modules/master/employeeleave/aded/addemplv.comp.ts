@@ -23,6 +23,8 @@ export class AddEmployeeLeaveComponent implements OnInit {
     empid: number = 0;
     empname: any = [];
 
+    currdate: any = "";
+    currtime: any = "";
     frmdt: any = "";
     frmtm: any = "";
     todt: any = "";
@@ -57,7 +59,7 @@ export class AddEmployeeLeaveComponent implements OnInit {
         that.getEmployeeLeave();
     }
 
-    // Selected Calendar Date
+    // Format Date Time
 
     formatDate(date) {
         var d = new Date(date),
@@ -71,17 +73,29 @@ export class AddEmployeeLeaveComponent implements OnInit {
         return [year, month, day].join('-');
     }
 
-    // Format Date
+    formatTime(date) {
+        var d = new Date(date),
+        h = '' + d.getHours(),
+        m = '' + d.getMinutes();
+
+        if (h.length < 2) h = '0' + h;
+        if (m.length < 2) m = '0' + m;
+
+        return h + ':' + m;
+    }
 
     setFromDateAndToDate() {
         var date = new Date();
-        var _frmdt = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
-        var _todt = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+        var _currdate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
 
-        this.frmdt = this.formatDate(_frmdt);
-        this.todt = this.formatDate(_todt);
-        this.frmtm = "";
-        this.totm = "";
+        this.currdate = this.formatDate(_currdate);
+        this.currtime = this.formatDate(date);
+
+        this.frmdt = this.formatDate(_currdate);
+        this.todt = this.formatDate(_currdate);
+        
+        this.frmtm = this.formatTime(date);
+        this.totm = this.formatTime(date);
     }
 
     getEmployeeData(event) {
@@ -169,6 +183,7 @@ export class AddEmployeeLeaveComponent implements OnInit {
 
         var date = new Date();
         var today = that.formatDate(new Date(date.getFullYear(), date.getMonth(), date.getDate()));
+        var currtime = this.formatTime(date);
         var lvappldate = that.formatDate(new Date(date.getFullYear(), date.getMonth(), date.getDate() + that.countlvdays));
 
         if (that.empid == 0) {
@@ -209,6 +224,16 @@ export class AddEmployeeLeaveComponent implements OnInit {
         else if (that.frmdt > that.todt) {
             that._msg.Show(messageType.error, "Error", "Sholul Be To Date Greater Than From Date");
             $(".todt").focus();
+            return false;
+        }
+        else if (currtime > that.frmtm) {
+            that._msg.Show(messageType.error, "Error", "Sholuld Be From Time Greater Than Current Time");
+            $(".frmtm").focus();
+            return false;
+        }
+        else if (that.frmtm > that.totm) {
+            that._msg.Show(messageType.error, "Error", "Sholul Be To Time Greater Than From Time");
+            $(".totm").focus();
             return false;
         }
         else if (that.reason == "") {

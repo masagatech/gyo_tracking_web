@@ -105,18 +105,18 @@ export class LoginLogReportsComponent implements OnInit, OnDestroy {
         commonfun.loader("#loginModal");
 
         that._userservice.getUserLoginLog({
-            "flag": "userwise", "logtime": row.lastdate, "uid": row.loginid
+            "flag": "userwise", "logtime": row.lastdate, "uid": row.loginid, "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
                 if (data.data.length !== 0) {
                     that.logdetailsDT = data.data;
+
+                    that.ucode = that.logdetailsDT[0].ucode;
+                    that.fullname = that.logdetailsDT[0].fullname;
                 }
                 else {
                     that.logdetailsDT = [];
                 }
-
-                that.ucode = that.logdetailsDT[0].ucode;
-                that.fullname = that.logdetailsDT[0].fullname;
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -135,7 +135,27 @@ export class LoginLogReportsComponent implements OnInit, OnDestroy {
     // Export
 
     public exportToCSV() {
-        this._autoservice.exportToCSV(this.loginlogDT, "Login Log Details");
+        var that = this;
+        commonfun.loader("#divExport");
+
+        that._userservice.getUserLoginLog({
+            "flag": "export", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that._enttdetails.wsautoid
+        }).subscribe(data => {
+            try {
+                that._autoservice.exportToCSV(data.data, "Login Log Details");
+            }
+            catch (e) {
+                that._msg.Show(messageType.error, "Error", e);
+            }
+
+            commonfun.loaderhide("#divExport");
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+            commonfun.loaderhide("#divExport");
+        }, () => {
+
+        })
     }
 
     public exportToPDF() {

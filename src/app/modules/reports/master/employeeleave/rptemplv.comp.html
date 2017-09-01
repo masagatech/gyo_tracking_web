@@ -50,7 +50,7 @@
                     </button>
                 </div>
             </div>
-            <div class="col-md-1 col-xs-2" style="text-align: right; padding-top: 20px;">
+            <div id="divExport" class="col-md-1 col-xs-2" style="text-align: right; padding-top: 20px;">
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Export <span class="caret"></span>
@@ -70,13 +70,13 @@
                 <table class="table table-bordered table-responsive reports">
                     <thead>
                         <tr>
-                            <th width="200px">
+                            <th width="180px">
                                 Employee / Applied Date
                             </th>
-                            <th width="150px">
+                            <th width="120px">
                                 From Date
                             </th>
-                            <th width="150px">
+                            <th width="120px">
                                 To Date
                             </th>
                             <th width="150px">
@@ -85,6 +85,12 @@
                             <th>
                                 Reason
                             </th>
+                            <th width="180px">
+                                Approved By
+                            </th>
+                            <th width="150px">
+                                Approved On
+                            </th>
                             <th width="80px">
                                 Status
                             </th>
@@ -92,18 +98,18 @@
                     </thead>
                     <tbody *ngFor="let row of empleaveDT | groupBy:'idwithname'">
                         <tr class="tr-table">
-                            <th colspan="6">
+                            <th colspan="8">
                                 {{row.key.split(':')[1]}}
                             </th>
                         </tr>
                         <tr *ngFor="let eldrow of row.value" class="{{eldrow.color}}">
-                            <td width="200px">
+                            <td width="180px">
                                 {{eldrow.appldt}}
                             </td>
-                            <td width="150px">
+                            <td width="120px">
                                 {{eldrow.frmdt}} {{eldrow.frmtm == null ? '' : eldrow.frmtm}}
                             </td>
-                            <td width="150px">
+                            <td width="120px">
                                 {{eldrow.todt}} {{eldrow.totm == null ? '' : eldrow.totm}}
                             </td>
                             <td width="150px">
@@ -111,6 +117,12 @@
                             </td>
                             <td>
                                 {{eldrow.reason}}
+                            </td>
+                            <td width="180px">
+                                {{eldrow.apprvby}}
+                            </td>
+                            <td width="150px">
+                                {{eldrow.apprvdt}}
                             </td>
                             <td width="80px">
                                 {{eldrow.statusdesc}}

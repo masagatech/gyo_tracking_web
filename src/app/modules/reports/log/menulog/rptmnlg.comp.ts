@@ -105,7 +105,7 @@ export class MenuLogReportsComponent implements OnInit, OnDestroy {
         commonfun.loader("#menuModal");
 
         that._menuservice.getMenuLog({
-            "flag": "userwise", "logtime": row.lastdate, "uid": row.loginid, "menuid": row.menuid
+            "flag": "userwise", "logtime": row.lastdate, "menuid": row.menuid, "uid": row.loginid, "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
                 that.logdetailsDT = data.data;
@@ -138,7 +138,7 @@ export class MenuLogReportsComponent implements OnInit, OnDestroy {
             "flag": "export", "frmdt": that.frmdt, "todt": that.todt, "uid": that.uid, "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
-                this._autoservice.exportToCSV(data.data, "Menu Log Details");
+                that._autoservice.exportToCSV(data.data, "Menu Log Details");
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);

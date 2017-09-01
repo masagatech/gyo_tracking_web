@@ -29,9 +29,6 @@ export const routes = [
 
                     // Reports
                     { path: 'reports', loadChildren: './reports#ReportsModule' },
-
-                    // Setting
-                    { path: 'settings', loadChildren: './settings#SettingsModule' },
                 ]
             }
         ]

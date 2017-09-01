@@ -46,7 +46,7 @@
                         <div class="form-group">
                             <label>From Date</label>
                             <div class="form-line">
-                                <input type="date" [(ngModel)]="frmdt" class="form-control frmdt" tabindex="3">
+                                <input type="date" [(ngModel)]="frmdt" class="form-control frmdt" min="{{currdate}}" tabindex="3">
                             </div>
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                         <div class="form-group">
                             <label>Time</label>
                             <div class="form-line">
-                                <input type="time" [(ngModel)]="frmtm" class="form-control" tabindex="4">
+                                <input type="time" [(ngModel)]="frmtm" class="form-control frmtm" tabindex="4">
                             </div>
                         </div>
                     </div>
@@ -62,15 +62,15 @@
                         <div class="form-group">
                             <label>To Date</label>
                             <div class="form-line">
-                                <input type="date" [(ngModel)]="todt" class="form-control todt" tabindex="5">
+                                <input type="date" [(ngModel)]="todt" class="form-control todt" min="{{currdate}}" tabindex="5">
                             </div>
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <div class="form-group">
+                        <div class="form-group hide">
                             <label>Time</label>
                             <div class="form-line">
-                                <input type="time" [(ngModel)]="totm" class="form-control" tabindex="6">
+                                <input type="time" [(ngModel)]="totm" class="form-control totm" tabindex="6">
                             </div>
                         </div>
                     </div>

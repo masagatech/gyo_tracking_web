@@ -26,10 +26,6 @@ export class ModuleComponent implements OnDestroy {
             this._router.navigate(['/login']);
         }
 
-        // if (Cookie.get("_wsdetails_") == null && Cookie.get("_wsdetails_") == undefined) {
-        //     this._router.navigate(['/admin/workspace']);
-        // }
-
         if (Cookie.get("_enttdetails_") == null && Cookie.get("_enttdetails_") == undefined) {
             this._router.navigate(['/workspace/entity']);
         }

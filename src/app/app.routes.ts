@@ -12,6 +12,7 @@ export const ROUTES: Routes = [
   { path: '', loadChildren: './modules#ModuleModule' },
   { path: 'admin', loadChildren: './admin#AdminModule' },
   { path: 'workspace', loadChildren: './workspace#WorkspaceModule' },
+  { path: 'settings', loadChildren: './settings#SettingsModule' },
   
   { path: '**', component: NoContentComponent },
 ];

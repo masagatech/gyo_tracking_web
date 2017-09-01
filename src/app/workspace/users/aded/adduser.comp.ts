@@ -539,17 +539,17 @@ export class AddUserComponent implements OnInit {
         }
     }
 
-    // Get user Data
+    // Get User Data
 
     getUserDetails() {
         var that = this;
         commonfun.loader();
 
-        this.subscribeParameters = this._routeParams.params.subscribe(params => {
+        that.subscribeParameters = that._routeParams.params.subscribe(params => {
             if (params['id'] !== undefined) {
-                this.uid = params['id'];
+                that.uid = params['id'];
 
-                that._userservice.getUserDetails({ "flag": "edit", "id": this.uid, "wsautoid": that._wsdetails.wsautoid }).subscribe(data => {
+                that._userservice.getUserDetails({ "flag": "edit", "id": that.uid, "wsautoid": that._wsdetails.wsautoid }).subscribe(data => {
                     try {
                         that.uid = data.data[0].uid;
                         that.loginid = data.data[0].loginid;

@@ -19,8 +19,8 @@ export class ViewWorkspaceComponent implements OnInit {
     _wsdetails: any = [];
 
     autoWorkspaceDT: any = [];
-    autowsid: number = 0;
-    autowsname: any = [];
+    srcwsid: number = 0;
+    srcwsname: any = [];
 
     wsautoid: number = 0;
     wscode: string = "";
@@ -47,9 +47,9 @@ export class ViewWorkspaceComponent implements OnInit {
 
         this.getUploadConfig();
 
-        if (Cookie.get('_autowsnm_') != null) {
-            this.autowsid = parseInt(Cookie.get('_autowsid_'));
-            this.autowsname = Cookie.get('_autowsnm_');
+        if (Cookie.get('_srcwsnm_') != null) {
+            this.srcwsid = parseInt(Cookie.get('_srcwsid_'));
+            this.srcwsname = Cookie.get('_srcwsnm_');
         }
 
         this.getWorkspaceDetails();
@@ -107,10 +107,10 @@ export class ViewWorkspaceComponent implements OnInit {
     // Selected Workspace
 
     selectAutoWorkspaceData(event) {
-        this.autowsid = event.value;
+        this.srcwsid = event.value;
 
-        Cookie.set("_autowsid_", event.value);
-        Cookie.set("_autowsnm_", event.label);
+        Cookie.set("_srcwsid_", event.value);
+        Cookie.set("_srcwsnm_", event.label);
 
         this.getWorkspaceDetails();
     }
@@ -126,7 +126,8 @@ export class ViewWorkspaceComponent implements OnInit {
         commonfun.loader();
 
         that._wsservice.getWorkspaceDetails({
-            "flag": "userwise", "ucode": that.loginUser.ucode, "issysadmin": that.loginUser.issysadmin, "wsautoid": that.autowsid
+            "flag": "userwise", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
+            "issysadmin": that.loginUser.issysadmin, "wsautoid": that.loginUser.wsautoid, "srcwsid": that.srcwsid
         }).subscribe(data => {
             try {
                 that.workspaceDT = data.data; //.filter(a => a.issysadmin === false);
@@ -160,10 +161,10 @@ export class ViewWorkspaceComponent implements OnInit {
     }
 
     resetWorkspaceDetails() {
-        this.autowsid = 0;
-        this.autowsname = "";
-        Cookie.delete("_autowsid_");
-        Cookie.delete("_autowsnm_");
+        this.srcwsid = 0;
+        this.srcwsname = "";
+        Cookie.delete("_srcwsid_");
+        Cookie.delete("_srcwsnm_");
 
         this.getWorkspaceDetails();
     }

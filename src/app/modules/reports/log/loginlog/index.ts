@@ -8,6 +8,7 @@ import { AuthGuard } from '@services';
 import { LoginLogReportsComponent } from './rptlog.comp';
 import { UserService } from '@services/master';
 
+import { format } from '@pipe/format';
 import { LazyLoadEvent, DataTableModule, AutoCompleteModule } from 'primeng/primeng';
 
 export const routes = [
@@ -23,7 +24,8 @@ export const routes = [
 
 @NgModule({
   declarations: [
-    LoginLogReportsComponent
+    LoginLogReportsComponent,
+    format
   ],
 
   imports: [
