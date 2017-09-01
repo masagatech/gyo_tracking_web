@@ -13,7 +13,7 @@ declare var MarkerClusterer: any;
 @Component({
     templateUrl: './history.comp.html',
     providers: [TrackDashbord],
-    styleUrls: ['./style.css', '../../../../assets/css/b1njTimeline.css']
+    styleUrls: ['./style.css', '../../../../../assets/css/b1njTimeline.css']
 })
 
 export class HistoryComponent implements OnInit, OnDestroy {
