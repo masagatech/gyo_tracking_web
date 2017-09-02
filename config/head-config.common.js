@@ -4,7 +4,6 @@ var conf = {
     link: [
         { rel: 'stylesheet', href: 'assets/css/bootstrap.css?v=' + cssver },
         { rel: 'stylesheet', href: 'assets/css/multi-select.css' },
-        { rel: 'stylesheet', href: 'assets/css/login.css?v=' + cssver },
         { rel: 'stylesheet', href: 'assets/css/waves.css' },
         { rel: 'stylesheet', href: 'assets/css/animate.css' },
         { rel: 'stylesheet', href: 'assets/css/morris.css' },

@@ -8,6 +8,7 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 import { SelectItem, GMap } from 'primeng/primeng';
 import { ADHOST } from '@directives';
 import { HOSTComponent } from '@interface';
+
 import { TripsComponent } from './trips/trips.comp';
 import { InfoComponent } from './info/info.comp';
 import { HistoryComponent } from './history/history.comp';
@@ -98,7 +99,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
         setTimeout(function () {
             $.AdminBSB.islocked = true;
             $.AdminBSB.leftSideBar.Close();
-            $.AdminBSB.rightSideBar.closeonwindow = false;//do not close right bar on window click
+            $.AdminBSB.rightSideBar.closeonwindow = false; //do not close right bar on window click
             $(".enttname input").focus();
             $('.container-fluid').css('padding-left', '0px').css('padding-right', '0px');
         }, 100);

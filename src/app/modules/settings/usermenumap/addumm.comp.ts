@@ -11,7 +11,7 @@ import { UserService } from '@services/master';
 
 export class AddUserMenuMapComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
-    _enttdetails: any = [];
+    _wsdetails: any = [];
 
     usersDT: any = [];
     menuname: string = "";
@@ -36,8 +36,7 @@ export class AddUserMenuMapComponent implements OnInit, OnDestroy {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _autoservice: CommonService, private _userservice: UserService,
         private _loginservice: LoginService, public _menuservice: MenuService, private _msg: MessageService) {
         this.loginUser = this._loginservice.getUser();
-        this._enttdetails = Globals.getEntityDetails();
-        // this.getMenuDetails();
+        this._wsdetails = Globals.getWSDetails();
     }
 
     ngOnInit() {
@@ -65,12 +64,12 @@ export class AddUserMenuMapComponent implements OnInit, OnDestroy {
         let query = event.query;
 
         that._autoservice.getAutoData({
-            "flag": "users",
+            "flag": "formapuser",
             "uid": that.loginUser.uid,
             "ucode": that.loginUser.ucode,
             "utype": that.loginUser.utype,
             "issysadmin": that.loginUser.issysadmin,
-            "wsautoid": that._enttdetails.wsautoid,
+            "wsautoid": that._wsdetails.wsautoid,
             "search": query
         }).subscribe(data => {
             that.usersDT = data.data;

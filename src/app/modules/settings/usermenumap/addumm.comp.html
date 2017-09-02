@@ -55,7 +55,7 @@
                         <div class="block-header">
                             <h5>{{drow.key}}</h5>
                         </div>
-                        <div class="row clearfix" *ngFor="let actrow of drow.value">
+                        <div class="row clearfix" *ngFor="let actrow of drow.value" style="padding-left:20px;">
                             <div class="col-md-3">
                                 <input id="{{actrow.mid}}" name="menu{{i + 1}}" type="checkbox" value="{{actrow.mid}}" (change)="selectAndDeselectMenuWiseCheckboxes(actrow)" class="filled-in" />
                                 <label for="{{actrow.mid}}">{{actrow.mname}}</label>

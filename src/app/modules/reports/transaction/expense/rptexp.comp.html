@@ -111,14 +111,16 @@
                         <table id="tblpsngrtrprpt" class="table table-bordered table-responsive nested-table reports">
                             <thead>
                                 <tr>
-                                    <th width="50px">#</th>
+                                    <th width="30px">#</th>
                                     <th width="150px">Expense Head</th>
-                                    <th width="100px">Source</th>
+                                    <th width="70px">Source</th>
                                     <th align="left">Tag</th>
-                                    <th width="250px">Remark</th>
-                                    <th width="250px">Approval Remark</th>
-                                    <th width="130px" align="right">Send Amount</th>
-                                    <th width="140px" align="right">Approval Amount</th>
+                                    <th width="200px">Remark</th>
+                                    <th width="200px">Approval Remark</th>
+                                    <th width="90px" align="right">Send Amount</th>
+                                    <th width="110px" align="right">Approval Amount</th>
+                                    <th width="160px">Approved By</th>
+                                    <th width="130px">Approved On</th>
                                 </tr>
                             </thead>
                             <tbody *ngFor="let drow of row.details let i=index;">
@@ -146,6 +148,12 @@
                                     </td>
                                     <td align="right">
                                         {{drow.appramt == null ? 'Pending' : drow.appramt | _currency:loginUser.globsettings[0]}}
+                                    </td>
+                                    <td>
+                                        {{drow.apprvby}}
+                                    </td>
+                                    <td>
+                                        {{drow.apprvdt}}
                                     </td>
                                 </tr>
                             </tbody>

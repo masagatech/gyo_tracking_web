@@ -16,8 +16,7 @@ export const routes = [
             {
                 path: '',
                 children: [
-                    { path: 'usermenumap', loadChildren: './usermenumap#UserMenuMapModule' },
-                    { path: 'userworkspacemap', loadChildren: './userworkspacemap#UserWorkspaceMapModule' },
+                    { path: 'masterofmaster', loadChildren: './mom#MOMModule' },
                 ]
             }
         ]

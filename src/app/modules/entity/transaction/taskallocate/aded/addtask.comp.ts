@@ -188,7 +188,7 @@ export class AddTaskAllocateComponent implements OnInit {
 
         if (!duplicateTag) {
             that.tagList.push({
-                "tagid": that.tagid, "tagname": that.tagname
+                "tagid": that.tagid, "tagnm": that.tagname
             });
         }
 

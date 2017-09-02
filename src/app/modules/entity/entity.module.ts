@@ -26,6 +26,9 @@ export const routes = [
 
                     // Transaction
                     { path: 'transaction', loadChildren: './transaction#TransactionModule' },
+
+                    // Settings
+                    { path: 'settings', loadChildren: './settings#SettingsModule' },
                 ]
             }
         ]
