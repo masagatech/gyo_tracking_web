@@ -231,11 +231,6 @@ export class AddEmployeeLeaveComponent implements OnInit {
             $(".frmtm").focus();
             return false;
         }
-        else if (that.frmtm > that.totm) {
-            that._msg.Show(messageType.error, "Error", "Sholul Be To Time Greater Than From Time");
-            $(".totm").focus();
-            return false;
-        }
         else if (that.reason == "") {
             that._msg.Show(messageType.error, "Error", "Enter Reason");
             $(".reason").focus();
