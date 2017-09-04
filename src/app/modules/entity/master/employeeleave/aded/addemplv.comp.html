@@ -4,11 +4,13 @@
         <ul class="header-dropdown m-r--5">
             <li>
                 <a role="button" class="btn btn-theme btn-xs" (click)="saveEmployeeLeave()">
-                    <i class="material-icons">save</i></a>
+                    <i class="material-icons">save</i>
+                </a>
             </li>
             <li>
                 <a role="button" class="btn btn-theme btn-xs" (click)="backViewData()">
-                    <i class="material-icons">arrow_back</i></a>
+                    <i class="material-icons">arrow_back</i>
+                </a>
             </li>
         </ul>
     </div>
@@ -77,8 +79,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Reason</label>
                     <div class="form-line">
+                        <label class="control-label">Reason</label>
                         <textarea class="form-control reason" rows="5" [(ngModel)]="reason" tabindex="7"></textarea>
                     </div>
                 </div>

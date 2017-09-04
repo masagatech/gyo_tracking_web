@@ -29,6 +29,7 @@ export class AddEmployeeLeaveComponent implements OnInit {
     frmtm: any = "";
     todt: any = "";
     totm: any = "";
+
     leavetypeDT: string = "";
     restype: string = "";
     reason: string = "";
@@ -97,6 +98,8 @@ export class AddEmployeeLeaveComponent implements OnInit {
         this.frmtm = this.formatTime(date);
         this.totm = this.formatTime(date);
     }
+
+    // Auto Completed Employee
 
     getEmployeeData(event) {
         let query = event.query;
