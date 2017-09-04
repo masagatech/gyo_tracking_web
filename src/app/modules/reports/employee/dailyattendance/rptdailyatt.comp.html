@@ -1,0 +1,28 @@
+<div class="card">
+    <div class="header">
+        <div class="row clearfix">
+            <div class="col-md-2">
+                <h4>Today's Attendance</h4>
+            </div>
+            <div class="col-md-10">
+            </div>
+        </div>
+    </div>
+
+    <div class="body no-padding">
+        <div #dailyatt class="row clearfix">
+            <div class="col-md-12">
+                <p-dataTable [value]="attData">
+                    <p-column field="empname" header="Employee Name" [style]="{'text-align': 'left'}"></p-column>
+                    <p-column field="email1" header="Email" [style]="{'width': '200px', 'text-align': 'left'}"></p-column>
+                    <p-column field="mobileno1" header="Mobile No" [style]="{'width': '100px', 'text-align': 'left'}"></p-column>
+                    <p-column header="Status" [style]="{'width': '100px', 'text-align': 'left'}">
+                        <ng-template let-drow="rowData" pTemplate type="body">
+                            <span class="material-icons}}">{{drow.trptype}}</span>
+                        </ng-template>
+                    </p-column>
+                </p-dataTable>
+            </div>
+        </div>
+    </div>
+</div>

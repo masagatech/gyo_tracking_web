@@ -1,24 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
+import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
 import { LazyLoadEvent } from 'primeng/primeng';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 @Component({
-    templateUrl: 'viewstatus.comp.html',
-    providers: [MenuService]
+    templateUrl: 'viewstatus.comp.html'
 })
 
 export class ViewStatusComponent implements OnInit {
-    statusDT: any = [];
     loginUser: LoginUserModel;
+    _enttdetails: any = [];
 
-    _wsdetails: any = [];
-
-    entityDT: any = [];
-    enttid: number = 0;
-    enttname: any = [];
+    statusDT: any = [];
 
     global = new Globals();
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
@@ -26,56 +21,13 @@ export class ViewStatusComponent implements OnInit {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
         private _loginservice: LoginService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
-        this.viewStatusDataRights();
+        this._enttdetails = Globals.getEntityDetails();
+        
+        this.getStatusDetails();
     }
 
     public ngOnInit() {
 
-    }
-
-    // Auto Completed Entity
-
-    getEntityData(event) {
-        let query = event.query;
-
-        this._autoservice.getAutoData({
-            "flag": "entity",
-            "uid": this.loginUser.uid,
-            "ucode": this.loginUser.ucode,
-            "utype": this.loginUser.utype,
-            "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
-        }).subscribe((data) => {
-            this.entityDT = data.data;
-        }, err => {
-            this._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        });
-    }
-
-    // Selected Entity
-
-    selectEntityData(event) {
-        this.enttid = event.value;
-        
-        Cookie.set("_enttid_", event.value);
-        Cookie.set("_enttnm_", event.label);
-
-        this.getStatusDetails();
-    }
-
-    public viewStatusDataRights() {
-        var that = this;
-
-        if (Cookie.get('_enttnm_') != null) {
-            that.enttid = parseInt(Cookie.get('_enttid_'));
-            that.enttname.value = parseInt(Cookie.get('_enttid_'));
-            that.enttname.label = Cookie.get('_enttnm_');
-            that.getStatusDetails();
-        }
     }
 
     getStatusDetails() {
@@ -87,8 +39,8 @@ export class ViewStatusComponent implements OnInit {
         params = {
             "flag": "all",
             "group": "taskstatus",
-            "enttid": that.enttid,
-            "wsautoid": that._wsdetails.wsautoid
+            "enttid": that._enttdetails.enttid,
+            "wsautoid": that._enttdetails.wsautoid
         }
 
         that._autoservice.getMOM(params).subscribe(data => {

@@ -1,12 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
-import { AuthenticationService } from '../_services/auth-service';
 import { LoginService } from '@services';
-import { LoginUserModel } from '@models';
-
-declare var $: any;
-declare var loader: any;
+import { LoginUserModel, Globals } from '@models';
 
 @Component({
   templateUrl: 'admin.comp.html'
@@ -14,30 +10,37 @@ declare var loader: any;
 
 export class AdminComponent implements OnInit, OnDestroy {
   loginUser: LoginUserModel;
-  dispname: string = "";
+  _wsdetails: any = [];
+  _enttdetails: any = [];
 
-  constructor(private _router: Router, private _authservice: AuthenticationService, private _loginservice: LoginService) {
+  wsname: string = "";
+  wslogo: string = "";
+  enttname: string = "";
+
+  global = new Globals();
+
+  constructor(private _router: Router, private _loginservice: LoginService) {
     this.loginUser = this._loginservice.getUser();
-    this.dispname = this.loginUser.dispname;
+    this._wsdetails = Globals.getWSDetails();
+    this._enttdetails = Globals.getEntityDetails();
 
-    let sessionid = Cookie.get('_session_');
-    let _wsdetails = Cookie.get("_wsdetails_");
-
-    if (sessionid == null && sessionid == undefined) {
+    if (Cookie.get('_session_') == null && Cookie.get('_session_') == undefined) {
       this._router.navigate(['/login']);
     }
+
+    this.getHeaderDetails();
   }
 
   ngOnInit() {
 
   }
 
-  public ngAfterViewInit() {
-    loader.loadall();
-  }
-
-  logout() {
-    this._authservice.logout();
+  getHeaderDetails() {
+    if (Cookie.get('_session_') != null) {
+      this.wsname = this.loginUser.wsname;
+      this.wslogo = this.global.uploadurl + this.loginUser.wslogo;
+      this.enttname = Cookie.get('_wsdetails_') != null ? this._wsdetails.wsname : "";
+    }
   }
 
   ngOnDestroy() {

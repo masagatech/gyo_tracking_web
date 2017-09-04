@@ -51,9 +51,10 @@ export class AddWorkspaceComponent implements OnInit {
 
     mode: string = "";
 
-    uploadPhotoDT: any = [];
+    uploadLogoDT: any = [];
     global = new Globals();
     uploadconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
+    chooseLabel: string = "";
 
     private subscribeParameters: any;
 
@@ -68,7 +69,7 @@ export class AddWorkspaceComponent implements OnInit {
         this.fillAreaDropDown();
 
         if (!this.loginUser.issysadmin && this.loginUser.utype !== "admin") {
-            this._router.navigate(['/']);
+            this._router.navigate(['/workspace/entity']);
         }
     }
 
@@ -113,7 +114,7 @@ export class AddWorkspaceComponent implements OnInit {
         that._autoservice.getDropDownData({ "flag": "state" }).subscribe(data => {
             try {
                 that.stateDT = data.data;
-                setTimeout(function () { $.AdminBSB.select.refresh('state'); }, 100);
+                // setTimeout(function () { $.AdminBSB.select.refresh('state'); }, 100);
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -144,7 +145,7 @@ export class AddWorkspaceComponent implements OnInit {
         that._autoservice.getDropDownData({ "flag": "city", "sid": that.state }).subscribe(data => {
             try {
                 that.cityDT = data.data;
-                setTimeout(function () { $.AdminBSB.select.refresh('city'); }, 100);
+                // setTimeout(function () { $.AdminBSB.select.refresh('city'); }, 100);
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -173,7 +174,7 @@ export class AddWorkspaceComponent implements OnInit {
         that._autoservice.getDropDownData({ "flag": "area", "ctid": that.city, "sid": that.state }).subscribe(data => {
             try {
                 that.areaDT = data.data;
-                setTimeout(function () { $.AdminBSB.select.refresh('area'); }, 100);
+                // setTimeout(function () { $.AdminBSB.select.refresh('area'); }, 100);
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -211,15 +212,15 @@ export class AddWorkspaceComponent implements OnInit {
     onUpload(event) {
         var that = this;
         var imgfile = [];
-        that.uploadPhotoDT = [];
+        that.uploadLogoDT = [];
 
         imgfile = JSON.parse(event.xhr.response);
 
-        console.log(imgfile);
-
-        for (var i = 0; i < imgfile.length; i++) {
-            that.uploadPhotoDT.push({ "athurl": imgfile[i].path.replace(that.uploadconfig.filepath, "") })
-        }
+        setTimeout(function () {
+            for (var i = 0; i < imgfile.length; i++) {
+                that.uploadLogoDT.push({ "athurl": imgfile[i].path.replace(that.uploadconfig.filepath, "") })
+            }
+        }, 1000);
     }
 
     // Get File Size
@@ -247,8 +248,8 @@ export class AddWorkspaceComponent implements OnInit {
         return bytes;
     }
 
-    removeFileUpload() {
-        this.uploadPhotoDT.splice(0, 1);
+    removeLogoUpload() {
+        this.uploadLogoDT.splice(0, 1);
     }
 
     // Clear Fields
@@ -285,7 +286,8 @@ export class AddWorkspaceComponent implements OnInit {
         that.schpsngrrate = "0";
         that.schenttmaxno = 0;
 
-        that.uploadPhotoDT = [];
+        that.uploadLogoDT = [];
+        that.chooseLabel = "Upload Logo";
     }
 
     // Active / Deactive Data
@@ -458,7 +460,7 @@ export class AddWorkspaceComponent implements OnInit {
                 "loginid": that.loginid,
                 "wsname": that.wsname,
                 "wsdesc": that.wsdesc,
-                "wslogo": that.uploadPhotoDT.length > 0 ? that.uploadPhotoDT[0].athurl : "",
+                "wslogo": that.uploadLogoDT.length > 0 ? that.uploadLogoDT[0].athurl : "",
                 "wstype": _wstype,
                 "cmppsngrrate": that.cmppsngrrate,
                 "cmpenttmaxno": that.cmpenttmaxno,
@@ -523,7 +525,7 @@ export class AddWorkspaceComponent implements OnInit {
 
     getWorkspaceDetails() {
         var that = this;
-        that.uploadPhotoDT = [];
+        that.uploadLogoDT = [];
 
         commonfun.loader();
 
@@ -542,7 +544,11 @@ export class AddWorkspaceComponent implements OnInit {
                             that.wsname = data.data[0].wsname;
 
                             if (data.data[0].wslogo !== "") {
-                                that.uploadPhotoDT.push({ "athurl": data.data[0].wslogo });
+                                that.uploadLogoDT.push({ "athurl": data.data[0].wslogo });
+                                that.chooseLabel = "Change Logo";
+                            }
+                            else {
+                                that.chooseLabel = "Upload Logo";
                             }
 
                             that.wsdesc = data.data[0].wsdesc;
@@ -608,6 +614,6 @@ export class AddWorkspaceComponent implements OnInit {
     // Back For View Data
 
     backViewData() {
-        this._router.navigate(['/workspace']);
+        this._router.navigate(['/admin/workspace']);
     }
 }

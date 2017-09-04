@@ -3125,7 +3125,7 @@ section.content {
 
 .card .header .header-dropdown {
     position: absolute;
-    top: 5px;
+    top: 8px;
     right: 15px;
     list-style: none;
 }
@@ -3199,7 +3199,7 @@ section.content {
 .left-title {
     position: absolute;
     right: 0;
-    left: 65px;
+    left: 45px;
 }
 
 
@@ -5565,6 +5565,12 @@ section.content {
 .table-bordered thead tr th {
     padding: 10px;
     border: 1px solid #eee;
+}
+
+.nested-table thead tr th {
+    padding: 6px!important;
+    background-color: #eeeeee!important;
+    color: #000000!important;
 }
 
 
@@ -8772,7 +8778,7 @@ fieldset[disabled] .form-control {
 }
 
 .sidebar .user-info {
-    padding: 10px 15px 10px 5px;
+    padding: 10px 15px 5px 5px;
     white-space: nowrap;
     position: relative;
     border-bottom: 1px solid #e9e9e9;
@@ -9063,14 +9069,14 @@ fieldset[disabled] .form-control {
     background-color: #00BCD4;
     padding-left: 0;
     max-width: 360px;
-    margin: 5% auto;
-    /*overflow-x: hidden;*/
+    margin: 10% auto;
 }
 
 .login-page .login-box .msg {
-    color: #555;
+    color: yellow;
     margin-bottom: 30px;
     text-align: center;
+    font-size: 25px;
 }
 
 .login-page .login-box a {
@@ -9080,7 +9086,6 @@ fieldset[disabled] .form-control {
 }
 
 .login-page .login-box .logo {
-    /*margin-bottom: 20px;*/
     margin: 0;
 }
 
@@ -10423,31 +10428,19 @@ body.waitMe_body .waitMe_container.text>div {
     vertical-align: middle;
 }
 
-.pickdrop {
+.start,
+.complete {
     background-color: #8BC34A;
     color: #FFFFFF;
-    padding: 5px 8px;
+    padding: 2px;
     font-size: 10px;
     text-align: center;
     vertical-align: middle;
 }
 
-.pickbutnotdrop {
-    background: -webkit-linear-gradient(#8BC34A 50%, #E91E63 50%);
-    color: #FFFFFF;
-    padding: 5px 7px;
-    font-size: 11px;
-    text-align: center;
-    vertical-align: middle;
-}
-
-.dropbutnotpick {
-    background: -webkit-linear-gradient(#E91E63 50%, #8BC34A 50%);
-    color: #FFFFFF;
-    padding: 5px 7px;
-    font-size: 10px;
-    text-align: center;
-    vertical-align: middle;
+.start span,
+.complete span {
+    font-size: 15px;
 }
 
 .leave {
@@ -10479,22 +10472,15 @@ body.waitMe_body .waitMe_container.text>div {
     padding: 4px!important;
 }
 
-.P,
-.D,
-.PD {
-    background-color: #8BC34A;
-    color: #FFFFFF;
-    padding: 13px 13px;
-    margin-left: -5px;
+.reports td span {
     font-size: 10px;
-    vertical-align: middle;
 }
 
 .X {
     background-color: #FF5722;
     color: #FFFFFF;
-    padding: 13px 13px;
-    margin-left: -5px;
+    padding: 7px 14px;
+    margin: -12px -6px -7px;
     font-size: 8px;
     vertical-align: middle;
 }
@@ -10502,8 +10488,8 @@ body.waitMe_body .waitMe_container.text>div {
 .A {
     background-color: #E91E63;
     color: #FFFFFF;
-    padding: 13px 13px;
-    margin-left: -5px;
+    padding: 7px 14px;
+    margin: -12px -6px -7px;
     font-size: 10px;
     vertical-align: middle;
 }
@@ -10511,38 +10497,35 @@ body.waitMe_body .waitMe_container.text>div {
 .H {
     background-color: #03A9F4;
     color: #FFFFFF;
-    padding: 13px 13px;
-    margin-left: -5px;
+    padding: 7px 14px;
+    margin: -12px -6px -7px;
     font-size: 10px;
     vertical-align: middle;
 }
 
-.PA,
-.AP {
-    /* background: -webkit-linear-gradient(#E91E63, #8BC34A); */
-    background: -webkit-linear-gradient(#8BC34A 50%, #E91E63 50%);
+.started {
+    background-color: #4CAF50;
     color: #FFFFFF;
-    padding: 10px 10px;
-    margin-left: -5px;
+    padding: 7px 11px;
+    margin: -12px -4px -7px;
     font-size: 10px;
     vertical-align: middle;
 }
 
-.DA,
-.AD {
-    background: -webkit-linear-gradient(#E91E63 50%, #8BC34A 50%);
+.done {
+    background-color: #4CAF50;
     color: #FFFFFF;
-    padding: 10px 10px;
-    margin-left: -5px;
+    padding: 7px 11px;
+    margin: -12px -4px -7px;
+    font-size: 11px;
     vertical-align: middle;
-    font-size: 10px;
 }
 
 .L {
     background-color: #FF9800;
     color: #FFFFFF;
-    padding: 13px 13px;
-    margin-left: -5px;
+    padding: 7px 14px;
+    margin: -12px -6px -7px;
     font-size: 10px;
     vertical-align: middle;
 }
@@ -10573,10 +10556,6 @@ body.waitMe_body .waitMe_container.text>div {
 
 .pending {
     color: #FF9800;
-}
-
-.started {
-    color: #4CAF50;
 }
 
 .stopped {

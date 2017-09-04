@@ -1468,11 +1468,11 @@ hr {
     margin-top: 20px;
     margin-bottom: 20px;
     border: 0;
-    border-top: 1px solid #eee;
+    border-top: 1px solid #ccc;
 }
 
 .hr {
-    margin: 10px!important;
+    margin: 10px 0!important;
     border-top: 0!important;
 }
 
@@ -3209,6 +3209,7 @@ fieldset[disabled] .form-control {
 
 textarea.form-control {
     height: auto!important;
+    resize: none;
 }
 
 input[type="search"] {
@@ -5235,6 +5236,10 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
 }
 
 @media (max-width: 767px) {
+    .navbar-brand>span.title {
+        padding-left: 0!important;
+        font-size: 12px!important;
+    }
     .navbar-nav .open .dropdown-menu {
         position: static;
         float: none;

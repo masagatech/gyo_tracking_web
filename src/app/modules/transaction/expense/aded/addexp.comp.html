@@ -1,0 +1,70 @@
+<div class="card">
+    <div class="header">
+        <h4>Expense</h4>
+        <ul class="header-dropdown m-r--5">
+            <li>
+                <a role="button" class="btn btn-theme btn-xs" (click)="saveExpenseInfo()">
+                    <i class="material-icons">save</i></a>
+            </li>
+            <li>
+                <a role="button" class="btn btn-theme btn-xs" (click)="backViewData()">
+                    <i class="material-icons">arrow_back</i></a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Expense Code:</label>
+                    <div class="form-line">
+                        <input type="text" class="form-control" [(ngModel)]="expcd" tabindex="2">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Expense Name:</label>
+                    <div class="form-line">
+                        <input type="text" class="form-control" [(ngModel)]="expnm" tabindex="3">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Expense Type:</label>
+                    <div class="form-line">
+                        <select id="exptype" [(ngModel)]="exptype" class="form-control exptype" tabindex="4">
+							<option [value]="''">Select Expense Type</option>
+							<option *ngFor="let row of exptypeDT" [value]="row.key">
+								{{row.val}}
+							</option>
+						</select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Description:</label>
+                    <div class="form-line">
+                        <textarea class="form-control" rows="5" [(ngModel)]="expdesc" tabindex="5"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Amount:</label>
+                    <div class="form-line">
+                        <input type="text" class="form-control" [(ngModel)]="expamt" OnlyNumber="true" min="0" tabindex="6">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Amount Type:</label>
+                    <div class="form-line">
+                        <select id="amttype" [(ngModel)]="amttype" class="form-control amttype" tabindex="4">
+							<option [value]="''">Select Amount Type</option>
+							<option *ngFor="let row of amttypeDT" [value]="row.key">
+								{{row.val}}
+							</option>
+						</select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

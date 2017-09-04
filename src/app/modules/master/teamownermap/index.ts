@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AuthGuard } from '../../../_services/authguard-service';
+import { AuthGuard } from '@services';
 
 import { AddTeamOwnershipComponent } from './addtom.comp';
 import { TeamEmployeeMapService, TeamOwnershipMapService } from '@services/master';
@@ -14,7 +14,7 @@ export const routes = [
     path: '', children: [
       {
         path: '', component: AddTeamOwnershipComponent, canActivate: [AuthGuard],
-        data: { "module": "pentt", "submodule": "tom", "rights": "view", "urlname": "/teamownershipmap" }
+        data: { "module": "pentt", "submodule": "tmonr", "rights": "view", "urlname": "/teamownershipmap" }
       }
     ]
   },

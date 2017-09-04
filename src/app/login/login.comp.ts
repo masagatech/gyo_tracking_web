@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthenticationService } from '../_services/auth-service'
 import { LoginService } from '../_services/login/login-service';
 import { MessageService, messageType } from '../_services/messages/message-service';
@@ -11,7 +11,7 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
     providers: [AuthenticationService]
 })
 
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
     public errorMsg = '';
     public btnLoginText = 'Login';
     _user = new UserReq("", "");
@@ -49,11 +49,17 @@ export class LoginComponent implements OnInit {
                             that._loginservice.setUsers(userDetails);
 
                             if (userDetails.issysadmin) {
-                                that._router.navigate(['/workspace']);
+                                that._router.navigate(['/admin/workspace']);
                             }
                             else {
-                                Cookie.set("_wsdetails_", JSON.stringify(userDetails));
-                                that._router.navigate(['/']);
+                                if (userDetails.isemp) {
+                                    Cookie.set("_enttdetails_", JSON.stringify(userDetails));
+                                    that._router.navigate(['/']);
+                                }
+                                else {
+                                    Cookie.set("_wsdetails_", JSON.stringify(userDetails));
+                                    that._router.navigate(['/workspace/entity']);
+                                }
                             }
                         } else {
                             that._msg.Show(messageType.error, "Error", userDetails.errmsg);
@@ -64,7 +70,7 @@ export class LoginComponent implements OnInit {
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
             }
-            
+
             commonfun.loaderhide("#loginloader");
         }, err => {
             that._msg.Show(messageType.error, "Error", err);
@@ -75,6 +81,11 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit() {
-
+        $('body').addClass('backgroundImg');
     }
+
+    ngOnDestroy() {
+        $('body').removeClass('backgroundImg');
+    }
+
 }

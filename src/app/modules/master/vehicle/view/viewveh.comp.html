@@ -1,19 +1,10 @@
 <div class="card">
     <div class="header">
         <div class="row clearfix">
-            <div class="col-md-2">
+            <div class="col-md-2 col-xs-4">
                 <h4>Vehicle</h4>
             </div>
-            <div class="col-md-9 col-xs-9" *ngIf="actviewrights === 'view'">
-                <div class="form-group">
-                    <div class="form-line">
-                        <label class="control-label">Entity Name <strong>*</strong></label>
-                        <p-autoComplete id="enttname" name="enttname" [(ngModel)]="enttname" [tabindex]="1" (onSelect)="selectEntityData($event)" [suggestions]="entityDT" (completeMethod)="getEntityData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete entityname"></p-autoComplete>
-                        <span class="material-icons inputserachico">search</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-1 col-xs-1" align="right" *ngIf="actaddrights === 'add'">
+            <div class="col-md-10 col-xs-8" align="right">
                 <button type="button" class="btn btn-theme btn-xs" (click)="addVehicleForm()">
                     <i class="material-icons">add</i></button>
             </div>
@@ -31,11 +22,11 @@
                     <p-column field="vehiclefacility" header="Vehicle Facility" [style]="{'text-align':'left'}"></p-column>
                     <p-column field="mode" header="Status" [style]="{'width': '100px', 'text-align': 'left'}"></p-column>
                     <p-column [style]="{'width': '50px', 'align': 'left'}" *ngIf="acteditrights==='edit'">
-                        <template let-row="rowData" pTemplate type="body">
+                        <ng-template let-row="rowData" pTemplate type="body">
                             <button type="button" class="btn btn-theme btn-xs" (click)="editVehicleForm(row)">
                                 <i class="material-icons">edit</i>
                             </button>
-                        </template>
+                        </ng-template>
                     </p-column>
                 </p-dataTable>
             </div>

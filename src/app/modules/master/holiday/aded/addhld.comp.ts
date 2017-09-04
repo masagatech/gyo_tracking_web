@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
+import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
 import { HolidayService, TeamEmployeeMapService } from '@services/master';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
@@ -15,8 +15,7 @@ declare var commonfun: any;
 
 export class AddHolidayComponent implements OnInit {
     loginUser: LoginUserModel;
-
-    _wsdetails: any = [];
+    _enttdetails: any = [];
 
     hldid: number = 0;
     frmdt: any = "";
@@ -26,15 +25,11 @@ export class AddHolidayComponent implements OnInit {
     hldnm: string = "";
     hlddesc: string = "";
 
-    entityDT: any = [];
-    entityList: any = [];
-    enttid: number = 0;
-    enttname: any = [];
-
     teamDT: any = [];
     teamList: any = [];
+    tmdata: any = [];
     tmid: number = 0;
-    tmnm: any = [];
+    tmnm: string = "";
 
     purpose: string = "";
     remark: string = "";
@@ -47,7 +42,7 @@ export class AddHolidayComponent implements OnInit {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
         private _hldservice: HolidayService, private _temservice: TeamEmployeeMapService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
     }
 
     public ngOnInit() {
@@ -58,57 +53,6 @@ export class AddHolidayComponent implements OnInit {
         this.getHolidayDetails();
     }
 
-    // Auto Completed Entity
-
-    getEntityData(event) {
-        let query = event.query;
-
-        this._autoservice.getAutoData({
-            "flag": "entity",
-            "uid": this.loginUser.uid,
-            "ucode": this.loginUser.ucode,
-            "utype": this.loginUser.utype,
-            "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
-        }).subscribe((data) => {
-            this.entityDT = data.data;
-        }, err => {
-            this._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        });
-    }
-
-    // Selected Owners
-
-    selectEntityData(event) {
-        this.enttid = event.value;
-        
-        Cookie.set("_enttid_", event.value);
-        Cookie.set("_enttnm_", event.label);
-
-        this.addEntityList();
-        $(".enttname input").focus();
-    }
-
-    // Read Get Entity
-
-    addEntityList() {
-        var that = this;
-
-        that.entityList.push({
-            "schid": that.enttid, "schnm": that.enttname
-        });
-
-        that.enttid = 0;
-        that.enttname = "";
-    }
-
-    deleteEntity(row) {
-        this.entityList.splice(this.entityList.indexOf(row), 1);
-    }
-
     // Auto Completed Team
 
     getTeamData(event) {
@@ -116,7 +60,11 @@ export class AddHolidayComponent implements OnInit {
 
         this._autoservice.getAutoData({
             "flag": "team",
-            "wsautoid": this._wsdetails.wsautoid,
+            "uid": this.loginUser.uid,
+            "ucode": this.loginUser.ucode,
+            "utype": this.loginUser.utype,
+            "issysadmin": this.loginUser.issysadmin,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.teamDT = data.data;
@@ -131,6 +79,7 @@ export class AddHolidayComponent implements OnInit {
 
     selectTeamData(event) {
         this.tmid = event.value;
+        this.tmnm = event.label;
 
         this.addTeamList();
         $(".tmnm input").focus();
@@ -142,11 +91,12 @@ export class AddHolidayComponent implements OnInit {
         var that = this;
 
         that.teamList.push({
-            "tmid": that.tmnm.value, "tmnm": that.tmnm.label
+            "tmid": that.tmid, "tmnm": that.tmnm
         });
 
         that.tmid = 0;
-        that.tmnm = [];
+        that.tmnm = "";
+        that.tmdata = [];
     }
 
     deleteTeam(row) {
@@ -194,10 +144,8 @@ export class AddHolidayComponent implements OnInit {
         this.todt = "";
         this.hldnm = "";
         this.hlddesc = "";
-        this.enttid = 0;
-        this.enttname = "";
-
-        this.entityList = [];
+        this.tmid = 0;
+        this.tmnm = "";
         this.teamList = [];
     }
 
@@ -218,19 +166,12 @@ export class AddHolidayComponent implements OnInit {
             that._msg.Show(messageType.error, "Error", "Enter Holiday Title");
             $(".hldnm").focus();
         }
-        else if (that.entityList.length == 0) {
-            that._msg.Show(messageType.error, "Error", "Enter Entity");
-            $(".enttname input").focus();
-        }
         else if (that.teamList.length == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Team");
             $(".tmnm input").focus();
         }
         else {
             commonfun.loader();
-
-            var _entitylist: string[] = [];
-            _entitylist = Object.keys(that.entityList).map(function (k) { return that.entityList[k].schid });
 
             var _teamlist: string[] = [];
             _teamlist = Object.keys(that.teamList).map(function (k) { return that.teamList[k].tmid });
@@ -240,12 +181,12 @@ export class AddHolidayComponent implements OnInit {
                 "hldcd": that.hldcd,
                 "hldnm": that.hldnm,
                 "hlddesc": that.hlddesc,
-                "school": _entitylist,
                 "tmid": _teamlist,
                 "frmdt": that.frmdt,
                 "todt": that.todt,
+                "enttid": that._enttdetails.enttid,
+                "wsautoid": that._enttdetails.wsautoid,
                 "cuid": that.loginUser.ucode,
-                "wsautoid": that._wsdetails.wsautoid,
                 "isactive": that.isactive,
                 "mode": ""
             }
@@ -298,7 +239,7 @@ export class AddHolidayComponent implements OnInit {
                 that._hldservice.getHoliday({
                     "flag": "edit",
                     "id": that.hldid,
-                    "wsautoid": that._wsdetails.wsautoid
+                    "wsautoid": that._enttdetails.wsautoid
                 }).subscribe(data => {
                     try {
                         that.hldid = data.data[0].hldid;
@@ -309,7 +250,6 @@ export class AddHolidayComponent implements OnInit {
                         that.todt = data.data[0].todt;
                         that.isactive = data.data[0].isactive;
                         that.mode = data.data[0].mode;
-                        that.entityList = data.data[0].school !== null ? data.data[0].school : [];
                         that.teamList = data.data[0].team !== null ? data.data[0].team : [];
                     }
                     catch (e) {

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AuthGuard } from '../../../_services/authguard-service';
+import { AuthGuard } from '@services';
 
 import { AddTagComponent } from './aded/addtag.comp';
 import { ViewTagComponent } from './view/viewtag.comp';

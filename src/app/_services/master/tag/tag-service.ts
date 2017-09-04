@@ -14,11 +14,11 @@ export class TagService {
         return this._dataserver.post("saveTagInfo", req)
     }
 
-    getPushTagDetails(req: any) {
-        return this._dataserver.post("getPushTagDetails", req)
+    getTagEmployeeMap(req: any) {
+        return this._dataserver.post("getTagEmployeeMap", req)
     }
 
-    savePushTagInfo(req: any) {
-        return this._dataserver.post("savePushTagInfo", req)
+    saveTagEmployeeMap(req: any) {
+        return this._dataserver.post("saveTagEmployeeMap", req)
     }
 }

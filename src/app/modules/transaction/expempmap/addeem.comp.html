@@ -1,0 +1,42 @@
+<div class="card">
+    <div class="header">
+        <h4>Expense Employee Map</h4>
+        <ul class="header-dropdown m-r--5">
+            <li>
+                <a role="button" class="btn btn-theme btn-xs" (click)="saveExpenseEmployeeMap()">
+                    <i class="material-icons">save</i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="body">
+        <div class="row clearfix">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="form-line">
+                        <label class="control-label">Employee Name</label>
+                        <p-autoComplete id="empname" name="empname" [(ngModel)]="empname" [tabindex]="1" (onSelect)="selectEmployeeData($event, 1)" [suggestions]="employeeDT" (completeMethod)="getEmployeeData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete empname"></p-autoComplete>
+                        <span class="material-icons inputserachico">search</span>
+                    </div>
+                </div>
+                <div class="form-group" id="divExpesne">
+                    <div class="form-line">
+                        <label class="control-label">Expesne Name</label>
+                        <p-autoComplete id="expname" name="expname" [(ngModel)]="expname" [tabindex]="1" (onSelect)="selectExpenseData($event, 1)" [suggestions]="expenseDT" (completeMethod)="getExpenseData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete expname"></p-autoComplete>
+                        <span class="material-icons inputserachico">search</span>
+                    </div>
+                </div>
+
+                <div *ngIf="expenseList.length">
+                    <ul class="list-group">
+                        <li class="list-group-item" *ngFor="let row of expenseList">
+                            {{row.expnm}}
+                            <button type="button" class="btn btn-danger btn-xs pull-right" (click)="deleteExpense(row)">
+                                <i class="material-icons">delete</i></button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

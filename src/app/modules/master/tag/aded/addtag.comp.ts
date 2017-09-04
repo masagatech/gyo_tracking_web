@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
+import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
 import { TagService } from '@services/master';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
@@ -15,11 +15,7 @@ declare var commonfun: any;
 
 export class AddTagComponent implements OnInit {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
-
-    entityDT: any = [];
-    enttid: number = 0;
-    enttname: any = [];
+    _enttdetails: any = [];
 
     tagid: number = 0;
     tagnm: string = "";
@@ -35,7 +31,7 @@ export class AddTagComponent implements OnInit {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
         private _tagservice: TagService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
     }
 
     public ngOnInit() {
@@ -44,37 +40,6 @@ export class AddTagComponent implements OnInit {
         }, 100);
 
         this.getTagDetails();
-    }
-
-    // Auto Completed Entity
-
-    getEntityData(event) {
-        let query = event.query;
-
-        this._autoservice.getAutoData({
-            "flag": "entity",
-            "uid": this.loginUser.uid,
-            "ucode": this.loginUser.ucode,
-            "utype": this.loginUser.utype,
-            "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
-        }).subscribe((data) => {
-            this.entityDT = data.data;
-        }, err => {
-            this._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        });
-    }
-
-    // Selected Entity
-
-    selectEntityData(event) {
-        this.enttid = event.value;
-        
-        Cookie.set("_enttid_", event.value);
-        Cookie.set("_enttnm_", event.label);
     }
 
     // Clear Fields
@@ -92,11 +57,7 @@ export class AddTagComponent implements OnInit {
     saveTagInfo() {
         var that = this;
 
-        if (that.enttid == 0) {
-            that._msg.Show(messageType.error, "Error", "Enter Entity Name");
-            $(".enttname input").focus();
-        }
-        else if (that.tagnm == "") {
+        if (that.tagnm == "") {
             that._msg.Show(messageType.error, "Error", "Enter Tag Name");
             $(".tagnm").focus();
         }
@@ -111,12 +72,12 @@ export class AddTagComponent implements OnInit {
                 "tagid": that.tagid,
                 "tagnm": that.tagnm,
                 "tagtype": "p",
-                "enttid": that.enttid,
+                "enttid": that._enttdetails.enttid,
                 "remark1": that.remark1,
                 "remark2": that.remark2,
                 "remark3": that.remark3,
                 "cuid": that.loginUser.ucode,
-                "wsautoid": that._wsdetails.wsautoid,
+                "wsautoid": that._enttdetails.wsautoid,
                 "isactive": that.isactive,
                 "mode": ""
             }
@@ -171,16 +132,13 @@ export class AddTagComponent implements OnInit {
                 params = {
                     "flag": "edit",
                     "tagid": that.tagid,
-                    "wsautoid": that._wsdetails.wsautoid
+                    "wsautoid": that._enttdetails.wsautoid
                 }
 
                 that._tagservice.getTagDetails(params).subscribe(data => {
                     try {
                         that.tagid = data.data[0].tagid;
                         that.tagnm = data.data[0].tagnm;
-                        that.enttid = data.data[0].enttid;
-                        that.enttname.value = data.data[0].enttid;
-                        that.enttname.label = data.data[0].enttname;
                         that.remark1 = data.data[0].remark1;
                         that.remark2 = data.data[0].remark2;
                         that.remark3 = data.data[0].remark3;

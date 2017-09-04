@@ -38,6 +38,9 @@ export class ViewWorkspaceComponent implements OnInit {
     global = new Globals();
     uploadconfig = { uploadurl: "" };
 
+    isShowGrid: boolean = true;
+    isShowList: boolean = false;
+    
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
         private _wsservice: WorkspaceService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
@@ -58,6 +61,28 @@ export class ViewWorkspaceComponent implements OnInit {
     }
 
     public ngOnInit() {
+        this.refreshButtons();
+    }
+
+    isshWorkspace(viewtype) {
+        var that = this;
+        commonfun.loader("#divShow");
+
+        if (viewtype == "grid") {
+            that.isShowGrid = true;
+            that.isShowList = false;
+            commonfun.loaderhide("#divShow");
+        }
+        else {
+            that.isShowGrid = false;
+            that.isShowList = true;
+            commonfun.loaderhide("#divShow");
+        }
+
+        that.refreshButtons();
+    }
+
+    refreshButtons() {
         setTimeout(function () {
             commonfun.navistyle();
         }, 0);
@@ -146,11 +171,18 @@ export class ViewWorkspaceComponent implements OnInit {
     }
 
     public addWorkspaceForm() {
-        this._router.navigate(['/workspace/add']);
+        this._router.navigate(['/admin/workspace/add']);
     }
 
     public editWorkspaceForm(row) {
-        this._router.navigate(['/workspace/edit', row.wsautoid]);
+        this._router.navigate(['/admin/workspace/edit', row.wsautoid]);
+    }
+
+    public openDashboardForm(row) {
+        Cookie.delete("_wsdetails_");
+        Cookie.set("_wsdetails_", JSON.stringify(row));
+
+        this._router.navigate(['/admin/workspace']);
     }
 
     public openForm() {
@@ -164,23 +196,18 @@ export class ViewWorkspaceComponent implements OnInit {
         }
 
         Cookie.set("_wsdetails_", JSON.stringify(_wsdetails));
-
-        if (this.enttid !== 0) {
-            Cookie.set("_enttid_", this.enttid.toString());
-            Cookie.set("_enttnm_", this.enttnm);
-        }
-
-        this._router.navigate(['/']);
+        this._router.navigate(['/workspace/entity']);
     }
 
-    public getMainForm(row) {
+    public openEntityForm(row) {
+        Cookie.delete("_wsdetails_");
         Cookie.set("_wsdetails_", JSON.stringify(row));
 
-        if (row.enttid !== 0) {
-            Cookie.set("_enttid_", row.enttid.toString());
-            Cookie.set("_enttnm_", row.enttnm);
+        if (row.countentity !== "0") {
+            this._router.navigate(['/workspace/entity']);
         }
-
-        this._router.navigate(['/']);
+        else {
+            this._router.navigate(['/workspace/entity/add']);
+        }
     }
 }

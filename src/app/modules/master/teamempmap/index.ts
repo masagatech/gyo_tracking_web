@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AuthGuard } from '../../../_services/authguard-service';
+import { AuthGuard, SharedComponentModule } from '@services';
 
 import { AddTeamEmployeeMapComponent } from './addtem.comp';
 import { TeamEmployeeMapService } from '@services/master';
@@ -14,7 +14,7 @@ export const routes = [
     path: '', children: [
       {
         path: '', component: AddTeamEmployeeMapComponent, canActivate: [AuthGuard],
-        data: { "module": "pentt", "submodule": "tem", "rights": "view", "urlname": "/teamemployeepmap" }
+        data: { "module": "pentt", "submodule": "tmemp", "rights": "view", "urlname": "/teamemployeepmap" }
       }
     ]
   },
@@ -26,7 +26,7 @@ export const routes = [
   ],
 
   imports: [
-    CommonModule, FormsModule, RouterModule.forChild(routes), DataTableModule, AutoCompleteModule, FileUploadModule
+    CommonModule, FormsModule, RouterModule.forChild(routes), SharedComponentModule, DataTableModule, AutoCompleteModule, FileUploadModule
   ],
 
   providers: [AuthGuard, TeamEmployeeMapService]

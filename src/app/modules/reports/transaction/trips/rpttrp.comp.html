@@ -1,0 +1,120 @@
+<div class="card">
+    <div class="header">
+        <div class="row clearfix">
+            <div class="col-md-2 col-xs-2">
+                <h4>Employee Trips</h4>
+            </div>
+            <div class="col-md-4 col-xs-8">
+                <div class="form-group">
+                    <div class="form-line">
+                        <label class="control-label">Employee Name <strong>*</strong></label>
+                        <p-autoComplete id="empname" name="empname" [(ngModel)]="empdata" [tabindex]="1" (onSelect)="selectEmployeeData($event)" [suggestions]="employeeDT" (completeMethod)="getEmployeeData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete empname"></p-autoComplete>
+                        <span class="material-icons inputserachico">search</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1 col-xs-2" style="padding-top: 20px;">
+                <div class="form-group">
+                    <button type="button" class="btn btn-theme btn-xs" (click)="getTripSummary()">
+                        <span class="material-icons">subdirectory_arrow_right</span>
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-5" style="padding-top: 20px;" align="right">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Export <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a role="button" (click)="exportToCSV()"><i class="fa fa-file-excel-o"></i> CSV</a></li>
+                        <li><a role="button" (click)="exportToPDF()"><i class="fa fa-file-pdf-o"></i> PDF</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="body no-padding">
+        <div #emptrips class="row clearfix">
+            <div class="col-md-12">
+                <p-dataTable [value]="tripSummaryDT">
+                    <p-column field="trpdate" header="Trip Date" [style]="{'text-align': 'left'}"></p-column>
+                    <p-column field="strlat" header="Start Latitude" [style]="{'width': '130px', 'text-align': 'right'}"></p-column>
+                    <p-column field="endlat" header="End Latitude" [style]="{'width': '130px', 'text-align': 'right'}"></p-column>
+                    <p-column field="strlng" header="Start Longitude" [style]="{'width': '130px', 'text-align': 'right'}"></p-column>
+                    <p-column field="endlng" header="End Longitude" [style]="{'width': '130px', 'text-align': 'right'}"></p-column>
+                    <p-column field="chkin" header="Check In" [style]="{'width': '100px', 'text-align': 'left'}"></p-column>
+                    <p-column field="chkout" header="Check Out" [style]="{'width': '100px', 'text-align': 'left'}"></p-column>
+                    <p-column header="Stops" [style]="{'width': '60px', 'text-align': 'left'}">
+                        <ng-template let-row="rowData" pTemplate type="body">
+                            <a role="button" (click)="getTripDetails('stops', row)">{{row.stops}}</a>
+                        </ng-template>
+                    </p-column>
+                    <p-column header="Task" [style]="{'width': '60px', 'text-align': 'left'}">
+                        <ng-template let-row="rowData" pTemplate type="body">
+                            <a role="button" (click)="getTripDetails('task', row)">{{row.task}}</a>
+                        </ng-template>
+                    </p-column>
+                    <p-column field="kilometer" header="Kilometer" [style]="{'width': '130px', 'text-align': 'right'}"></p-column>
+                    <p-column header="Map" [style]="{'width': '100px', 'text-align': 'left'}">
+                        <ng-template let-row="rowData" pTemplate type="body">
+                            <a role="button" (click)="getLatLonWiseMap(row)">View Map</a>
+                        </ng-template>
+                    </p-column>
+                </p-dataTable>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="stopsModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width: 1200px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="largeModalLabel">
+                    {{triptype}} Details
+                </h4>
+            </div>
+            <div class="modal-body" id="tripdetails">
+                <p-dataTable [value]="tripDetailsDT">
+                    <p-column *ngIf="triptype == 'Stops'" header="" [style]="{'width':'60px','text-align':'center'}">
+                        <ng-template let-row="rowData" pTemplate type="body">
+                            <!-- <a target="_blank" href="{{global.uploadurl + row.stpimg}}"> -->
+                            <a role="button" (click)="downloadImage(row)" id="row.id">
+                                <img alt="{{row.name}}" src="{{global.uploadurl + row.stpimg}}" onerror="this.src='assets/img/location.png';" height="40px" width="40px">
+                            </a>
+                        </ng-template>
+                    </p-column>
+                    <p-column field="name" header="{{triptype}} Name" [style]="{'text-align': 'left'}"></p-column>
+                    <p-column *ngIf="triptype == 'Task'" field="tntype" header="Task Type" [style]="{'width': '150px', 'text-align': 'left'}"></p-column>
+                    <p-column *ngIf="triptype == 'Task'" field="tstype" header="Task Status" [style]="{'width': '150px', 'text-align': 'left'}"></p-column>
+                    <p-column field="strtm" header="Start Time" [style]="{'width': '200px', 'text-align': 'right'}"></p-column>
+                    <p-column field="endtm" header="End Time" [style]="{'width': '200px', 'text-align': 'right'}"></p-column>
+                    <p-column field="status" header="Status" [style]="{'width': '120px', 'text-align': 'left'}"></p-column>
+                </p-dataTable>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="mapModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width: 1200px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="largeModalLabel">
+                    Map
+                </h4>
+            </div>
+            <div class="modal-body" id="mapdetails">
+                <p-gmap #gmap [style]="{'width':'100%','height':'500px'}" (onMapClick)="handleMapClick($event)" [options]="options" [overlays]="overlays"></p-gmap>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

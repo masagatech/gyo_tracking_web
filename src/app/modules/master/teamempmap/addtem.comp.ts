@@ -14,68 +14,31 @@ declare var google: any;
 
 export class AddTeamEmployeeMapComponent implements OnInit {
     loginUser: LoginUserModel;
+    _enttdetails: any = [];
 
     temid: number = 0;
 
-    entityDT: any = [];
-    enttid: number = 0;
-    enttname: any = [];
-
     employeeDT: any = [];
-    employeeList: any = [];
+    empdata: any = [];
     empid: number = 0;
-    empname: any = [];
+    empname: string = "";
+    employeeList: any = [];
 
     teamDT: any = [];
+    tmdata: any = [];
     tmid: number = 0;
-    tmnm: any = [];
+    tmnm: string = "";
 
-    _wsdetails: any = [];
     private subscribeParameters: any;
 
     constructor(private _temservice: TeamEmployeeMapService, private _routeParams: ActivatedRoute, private _router: Router,
         private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
     }
 
     public ngOnInit() {
-        setTimeout(function () {
-            $(".enttname input").focus();
-        }, 100);
-
         this.getTeamEmployeeMap();
-    }
-
-    // Auto Completed Entity
-
-    getEntityData(event) {
-        let query = event.query;
-
-        this._autoservice.getAutoData({
-            "flag": "entity",
-            "uid": this.loginUser.uid,
-            "ucode": this.loginUser.ucode,
-            "utype": this.loginUser.utype,
-            "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
-        }).subscribe((data) => {
-            this.entityDT = data.data;
-        }, err => {
-            this._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        });
-    }
-
-    // Selected Entity
-
-    selectEntityData(event) {
-        this.enttid = event.value;
-        
-        Cookie.set("_enttid_", event.value);
-        Cookie.set("_enttnm_", event.label);
     }
 
     // Auto Completed Team
@@ -88,9 +51,9 @@ export class AddTeamEmployeeMapComponent implements OnInit {
             "uid": this.loginUser.uid,
             "ucode": this.loginUser.ucode,
             "utype": this.loginUser.utype,
-            "enttid": this.enttid,
+            "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.teamDT = data.data;
@@ -118,9 +81,9 @@ export class AddTeamEmployeeMapComponent implements OnInit {
             "uid": this.loginUser.uid,
             "ucode": this.loginUser.ucode,
             "utype": this.loginUser.utype,
-            "enttid": this.enttid,
+            "enttid": this._enttdetails.enttid,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.employeeDT = data.data;
@@ -168,15 +131,15 @@ export class AddTeamEmployeeMapComponent implements OnInit {
         if (!duplicateEmployee) {
             that.employeeList.push({
                 "temid": that.temid,
-                "enttid": that.enttid, "enttname": that.enttname,
-                "tmid": that.tmnm.value, "tmnm": that.tmnm.label,
-                "empid": that.empname.value, "empname": that.empname.label,
-                "wsautoid": that._wsdetails.wsautoid, "isactive": true
+                "enttid": that._enttdetails.enttid, "enttname": that._enttdetails.enttname,
+                "tmid": that.tmid, "tmnm": that.tmnm, "empid": that.empid, "empname": that.empname,
+                "wsautoid": that._enttdetails.wsautoid, "isactive": true
             });
         }
 
         that.empid = 0;
-        that.empname = [];
+        that.empname = "";
+        that.empdata = [];
         $(".empname input").focus();
         commonfun.loaderhide("#divEmployee");
     }
@@ -184,7 +147,7 @@ export class AddTeamEmployeeMapComponent implements OnInit {
     // Delete Employee
 
     deleteEmployee(row) {
-        this.employeeList.splice(this.employeeList.indexOf(row), 1);
+        // this.employeeList.splice(this.employeeList.indexOf(row), 1);
         row.isactive = false;
     }
 
@@ -194,9 +157,11 @@ export class AddTeamEmployeeMapComponent implements OnInit {
         var that = this;
 
         that.tmid = 0;
-        that.tmnm = [];
+        that.tmnm = "";
+        that.tmdata = [];
         that.empid = 0;
-        that.empname = [];
+        that.empname = "";
+        that.empdata = [];
         that.employeeList = [];
     }
 
@@ -205,13 +170,9 @@ export class AddTeamEmployeeMapComponent implements OnInit {
     saveTeamEmployeeMap() {
         var that = this;
 
-        if (that.enttid == 0) {
-            that._msg.Show(messageType.error, "Error", "Select Entity");
-            $(".enttid").focus();
-        }
-        else if (that.tmid == 0) {
+        if (that.tmid == 0) {
             that._msg.Show(messageType.error, "Error", "Enter Team Name");
-            $(".tmnm").focus();
+            $(".tmnm input").focus();
         }
         else if (that.employeeList.length == 0) {
             that._msg.Show(messageType.error, "Error", "Enter atleast 1 Employee");
@@ -261,9 +222,9 @@ export class AddTeamEmployeeMapComponent implements OnInit {
 
         that._temservice.getTeamEmployeeMap({
             "flag": "edit",
-            "enttid": that.enttid,
             "tmid": that.tmid,
-            "wsautoid": that._wsdetails.wsautoid
+            "enttid": that._enttdetails.enttid,
+            "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
                 that.employeeList = data.data;

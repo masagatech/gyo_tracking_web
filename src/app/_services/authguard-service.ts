@@ -36,7 +36,7 @@ export class AuthGuard implements CanActivate, CanLoad, CanActivateChild {
           if (e) {
             observer.next(true);
           } else {
-            that._router.navigate(['/no-page']);
+            that._router.navigate(['/']);
             observer.next(true);
           }
         })
@@ -47,7 +47,7 @@ export class AuthGuard implements CanActivate, CanLoad, CanActivateChild {
               if (e) {
                 observer.next(true);
               } else {
-                that._router.navigate(['/no-page']);
+                that._router.navigate(['/']);
                 observer.next(true);
               }
             });
@@ -73,6 +73,7 @@ export class AuthGuard implements CanActivate, CanLoad, CanActivateChild {
       var submodule = maindata["submodule"];
 
       var params = {
+        "loginid": userdetails.loginid,
         "uid": userdetails.uid,
         "ucode": userdetails.ucode,
         "utype": userdetails.utype,
@@ -83,8 +84,6 @@ export class AuthGuard implements CanActivate, CanLoad, CanActivateChild {
         "sessionid": userdetails.sessiondetails.sessionid,
         "url": segments
       };
-
-      console.log(params);
 
       this.authser.checkmenuaccess(params).subscribe(d => {
         if (d.data) {

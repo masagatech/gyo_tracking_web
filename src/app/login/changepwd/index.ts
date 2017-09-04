@@ -1,11 +1,10 @@
 import { NgModule, Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AuthGuard } from '../../_services/authguard-service';
-import { LoginService } from '../../_services/login/login-service';
+import { MessageService, messageType, LoginService, CommonService, AuthenticationService } from '@services';
+import { LoginUserModel, Globals } from '@models';
+import { AuthGuard } from '@services';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AuthenticationService } from '../../_services/auth-service';
-import { LoginUserModel } from '../../_model/user_model'
 import { Router } from '@angular/router';
 
 @Component({

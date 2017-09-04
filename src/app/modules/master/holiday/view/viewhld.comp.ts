@@ -1,28 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
-import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
+import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
 import { HolidayService } from '@services/master';
 
 @Component({
     templateUrl: 'viewhld.comp.html',
-    providers: [MenuService, CommonService]
+    providers: [CommonService]
 })
 
 export class ViewHolidayComponent implements OnInit {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
+    _enttdetails: any = [];
 
     entityDT: any = [];
+    enttdata: any = [];
     enttid: number = 0;
-    enttname: any = [];
+    enttname: string = "";
 
     holidayDT: any = [];
-
-    actaddrights: string = "";
-    acteditrights: string = "";
-    actviewrights: string = "";
 
     private events: any[];
     private header: any;
@@ -32,10 +29,10 @@ export class ViewHolidayComponent implements OnInit {
     isShowGrid: any = true;
     isShowCalendar: any = false;
 
-    constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, public _menuservice: MenuService,
+    constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
         private _loginservice: LoginService, private _holidayervice: HolidayService, private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
 
         this.getDefaultDate();
         this.viewHolidayDataRights();
@@ -93,7 +90,7 @@ export class ViewHolidayComponent implements OnInit {
             "ucode": this.loginUser.ucode,
             "utype": this.loginUser.utype,
             "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
+            "wsautoid": this._enttdetails.wsautoid,
             "search": query
         }).subscribe((data) => {
             this.entityDT = data.data;
@@ -120,55 +117,30 @@ export class ViewHolidayComponent implements OnInit {
 
         if (Cookie.get('_enttnm_') != null) {
             that.enttid = parseInt(Cookie.get('_enttid_'));
-            that.enttname.value = parseInt(Cookie.get('_enttid_'));
-            that.enttname.label = Cookie.get('_enttnm_');
-
-            that.getHolidayGrid();
+            that.enttname = Cookie.get('_enttnm_');
         }
+        else {
+            that.enttid = that._enttdetails.enttid;
+            that.enttname = that._enttdetails.enttname;
+        }
+
+        that.enttdata.value = that.enttid;
+        that.enttdata.label = that.enttname;
+
+        that.getHolidayGrid();
     }
 
     getHolidayGrid() {
         var that = this;
 
-        if (that.actviewrights === "view") {
-            commonfun.loader();
-
-            that._holidayervice.getHoliday({
-                "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
-                "issysadmin": that.loginUser.issysadmin, "schid": that.enttid, "wsautoid": that._wsdetails.wsautoid
-            }).subscribe(data => {
-                try {
-                    that.holidayDT = data.data;
-                }
-                catch (e) {
-                    that._msg.Show(messageType.error, "Error", e);
-                }
-
-                commonfun.loaderhide();
-            }, err => {
-                that._msg.Show(messageType.error, "Error", err);
-                console.log(err);
-                commonfun.loaderhide();
-            }, () => {
-
-            })
-        }
-    }
-
-    fetchEvents(eventData) {
-
-    }
-
-    getHolidayCalendar(row) {
-        var that = this;
         commonfun.loader();
 
         that._holidayervice.getHoliday({
-            "flag": "calendar", "uid": that.loginUser.uid, "utype": that.loginUser.utype,
-            "schid": 1, "monthname": row.view.title
+            "flag": "all", "uid": that.loginUser.uid, "ucode": that.loginUser.ucode, "utype": that.loginUser.utype,
+            "issysadmin": that.loginUser.issysadmin, "enttid": that._enttdetails.enttid, "wsautoid": that._enttdetails.wsautoid
         }).subscribe(data => {
             try {
-                that.events = data.data;
+                that.holidayDT = data.data;
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -177,12 +149,11 @@ export class ViewHolidayComponent implements OnInit {
             commonfun.loaderhide();
         }, err => {
             that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
             commonfun.loaderhide();
         }, () => {
 
         })
-
-        that.refreshButtons();
     }
 
     isshHoliday(viewtype) {

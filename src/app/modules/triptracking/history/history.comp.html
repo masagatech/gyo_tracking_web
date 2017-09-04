@@ -1,25 +1,22 @@
 <div class="row clearfix">
     <div *ngIf="isplayerShow">
-
         <div class="col-md-12" class="backholder">
-            <a class="backarrow" (click)="hidePlayer();" role="button">  <i class="material-icons">chevron_left</i>
-                <span>Back to Search</span> </a>
+            <a class="backarrow" (click)="hidePlayer();" role="button">
+                <i class="material-icons">chevron_left</i><span>Back to Search</span>
+            </a>
         </div>
         <div class="col-md-12">
-
             <div class="row player">
                 <div class="playholder">
-                    <a (click)="playPause()" class="play" role="button"><i class="material-icons">{{ isplay == true ? 'pause_circle_outline' : 'play_circle_outline'}}</i></a>
+                    <a (click)="playPause()" class="play" role="button"><i class="material-icons">
+                        {{ isplay == true ? 'pause_circle_outline' : 'play_circle_outline'}}</i>
+                    </a>
                     <span class="vhbatr">
-                <span class="vhbtrper">{{btr | _currency:{'decimals':0, 'currsym': '' }  }}%</span>
-                    <span class="btr" style="border:1px solid #000;">
-                    <span class="btr-line" title="{{btr}}%" [ngStyle]="{'width': btr+'%'}"></span>
-                    </span>
-
+                    <span class="vhbtrper">{{btr | _currency:{'decimals':0, 'currsym': '' }  }}%</span>
+                    <span class="btr" style="border:1px solid #000;"><span class="btr-line" title="{{btr}}%" [ngStyle]="{'width': btr+'%'}"></span></span>
                     </span>
                 </div>
                 <div style=" margin-left: 56px; margin-right: 12px;">
-
                     <p-slider [(ngModel)]="val" [animate]="true" [max]="maxrange" (mousedown)="mousedown()" [style]="{'margin-top': '6px'}" (onChange)="onSliderChnage($event)"></p-slider>
                     <span class="timer">{{servertimer}}</span>
                     <p-slider [(ngModel)]="speedval" [animate]="true" [min]="1" [max]="10" [step]="1" styleClass="speed" (onChange)="onSpeedSliderChnage($event)"></p-slider>
@@ -27,68 +24,66 @@
                 </div>
             </div>
             <div class="col-md-12">
-                <ng-template ADHOST></ng-template>
-
-
+                <!-- <ng-template ADHOST></ng-template> -->
+                <div class="qa-message-list">
+                    <div class="message-item" *ngFor="let row of taskstopsDT">
+                        <div class="message-inner">
+                            <div class="message-head clearfix">
+                                <!-- <i class="material-icons status {{'stat'+l.st}}">{{ l.st == 0 ? 'access_time' : l.st == 1 ? 'beenhere' : 'do_not_disturb_alt' }}</i>
+                                <span class="status textstatus {{'stat'+l.st}}">{{ l.st == 0 ? 'no action' : l.st == 1 ? (l.pd === 'p' ? 'picked up': 'dropped') : 'absent' }}</span>
+                                <div class="avatar pull-left"><img src="{{global.uploadurl + l.ico}}" onerror="this.src='assets/img/no.jpg';"></div> -->
+                                <div class="user-detail">
+                                    <div class="post-meta">
+                                        <div class="asker-meta">
+                                            <span class="qa-message-what">{{row.name}}</span>
+                                            <span class="qa-message-when">
+												<span class="qa-message-when-data">{{row.createdon ? (row.createdon | format :{'format':'DD-MMM-YYYY hh:mm:ss A'}) : 'No Action Taken'}}</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
     <div *ngIf="!isplayerShow">
         <div class="header">
             <h6>Search Older History(60 days)</h6>
         </div>
-        <!-- <button (click)="getTripDelta()">Start Trip</button>  -->
         <div class="col-md-6">
             <div class="form-group">
-                <p-calendar [(ngModel)]="dateFromValue" [readonlyInput]="true" placeholder="From Date" inputStyleClass="form-control form-control-bordered"
-                    dateFormat="dd-mm-yy" [showTime]="true"></p-calendar>
+                <p-calendar [(ngModel)]="dateFromValue" [readonlyInput]="true" placeholder="From Date" inputStyleClass="form-control form-control-bordered" dateFormat="dd-mm-yy" [showTime]="true"></p-calendar>
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                <p-calendar [(ngModel)]="dateToValue" [showTime]="true" [readonlyInput]="true" placeholder="To Date" inputStyleClass="form-control form-control-bordered"
-                    dateFormat="dd-mm-yy"></p-calendar>
+                <p-calendar [(ngModel)]="dateToValue" [showTime]="true" [readonlyInput]="true" placeholder="To Date" inputStyleClass="form-control form-control-bordered" dateFormat="dd-mm-yy"></p-calendar>
             </div>
         </div>
         <div class="col-md-12 text-center">
-            <button (click)="searchData()" class="btn btn-success btn-xs">Search For Trips</button>
+            <button (click)="getTripData()" class="btn btn-success btn-xs">Search For Trips</button>
         </div>
         <div class="col-md-12 text-center">
             <br/>
         </div>
-        <div class="col-md-12">
-            <div *ngFor="let row of historyDt" class="def-box" style="position:relative">
-                <div class="trptype">
-                    <span>{{row.pdtyp}}</span>
-                </div>
-                <div class="detailBlock">
-                    <a class="slideright" (click)="showPlayer(row);" role="button">  <i class="material-icons"> chevron_right</i></a>
+        <div id="loaderbody" class="col-md-12">
+            <div *ngFor="let row of historyDt | groupBy: 'strdt'" class="def-box" style="position:relative">
+                <b>{{row.key}}</b>
+                <div *ngFor="let drow of row.value" class="tripsLines">
+                    <a class="slideright" (click)="showPlayer(drow);" role="button"> <i class="material-icons"> chevron_right</i></a>
                     <div class="row clearfix">
-                        <div class="col-md-12">
-                            <b>{{  row.stdt | format :{'format':'DD-MMM-YYYY hh:mm A'} : '' }}</b>
+                        <div class="col-md-6">
+                            <span class="material-icons ico-specify">pin_drop</span> {{ drow.strtm | format :{'format':'hh:mm:ss A'} }}
                         </div>
-                        <div class="col-md-12 leftmar">
-                            <span class="material-icons ico-specify">pin_drop</span>{{ row.stpdt ? (row.stpdt | format :{'format':'DD-MMM-YYYY
-                            hh:mm A'}) : 'Trip In Progress' }}
-                        </div>
-                        <div class="col-md-12 leftmar">
-                            <!-- <span class="material-icons ico-specify">place</span>{{row.addr}} -->
-
+                        <div class="col-md-6 font-white">
+                            {{drow.endtm ? (drow.endtm | format :{'format':'hh:mm:ss A'}) : 'Trip In Progress'}}
                         </div>
                     </div>
-
-                </div>
-                <div class="statusicon" align="right">
-
-                    <span class="material-icons">
-                                {{row.st == "2" ? "beenhere" : "access_time"}}
-                            </span>
                 </div>
             </div>
         </div>
-
-        <!-- <button (click)="getTripDelta()">Start Trip</button> -->
-
     </div>
 </div>

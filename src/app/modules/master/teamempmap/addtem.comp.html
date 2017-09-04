@@ -12,31 +12,24 @@
     <div class="body">
         <div class="row clearfix">
             <div class="col-md-6 border">
-                <div class="form-group">
-                    <div class="form-line">
-                        <label class="control-label">Entity Name <strong>*</strong></label>
-                        <p-autoComplete id="enttname" name="enttname" [(ngModel)]="enttname" [tabindex]="1" (onSelect)="selectEntityData($event)" [suggestions]="entityDT" (completeMethod)="getEntityData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete enttname"></p-autoComplete>
-                        <span class="material-icons inputserachico">search</span>
-                    </div>
-                </div>
                 <div class="form-group" id="divTeam">
                     <div class="form-line">
                         <label class="control-label">Team Name <strong>*</strong></label>
-                        <p-autoComplete id="tmnm" name="tmnm" [(ngModel)]="tmnm" [tabindex]="1" (onSelect)="selectTeamData($event)" [suggestions]="teamDT" (completeMethod)="getTeamData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete tmnm"></p-autoComplete>
+                        <p-autoComplete id="tmnm" name="tmnm" [(ngModel)]="tmdata" [tabindex]="1" (onSelect)="selectTeamData($event)" [suggestions]="teamDT" (completeMethod)="getTeamData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete tmnm"></p-autoComplete>
                         <span class="material-icons inputserachico">search</span>
                     </div>
                 </div>
                 <div class="form-group" id="divEmployee">
                     <div class="form-line">
                         <label class="control-label">Employee Name <strong>*</strong></label>
-                        <p-autoComplete id="empname" name="empname" [(ngModel)]="empname" [tabindex]="1" (onSelect)="selectEmployeeData($event)" [suggestions]="employeeDT" (completeMethod)="getEmployeeData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete empname"></p-autoComplete>
+                        <p-autoComplete id="empname" name="empname" [(ngModel)]="empdata" [tabindex]="1" (onSelect)="selectEmployeeData($event)" [suggestions]="employeeDT" (completeMethod)="getEmployeeData($event)" field="label" [minLength]="1" [size]="30" class="form-controlAutoComplete empname"></p-autoComplete>
                         <span class="material-icons inputserachico">search</span>
                     </div>
                 </div>
 
                 <div *ngIf="employeeList.length">
                     <ul class="list-group">
-                        <li class="list-group-item" *ngFor="let row of employeeList">
+                        <li class="list-group-item" *ngFor="let row of employeeList | filterBy: {'isactive': true}">
                             {{row.empname}}
                             <button type="button" class="btn btn-danger btn-xs pull-right" (click)="deleteEmployee(row)">
                                 <i class="material-icons">delete</i></button>

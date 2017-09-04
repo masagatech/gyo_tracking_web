@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MessageService, messageType, MenuService, LoginService, CommonService } from '@services';
+import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 
@@ -14,13 +14,8 @@ declare var commonfun: any;
 
 export class AddStatusComponent implements OnInit {
     loginUser: LoginUserModel;
-
-    entityDT: any = [];
-    enttid: number = 0;
-    enttname: any = [];
-
-    _wsdetails: any = [];
-
+    _enttdetails: any = [];
+    
     statusid: number = 0;
     statusnm: string = "";
     ordno: number = 0;
@@ -34,7 +29,7 @@ export class AddStatusComponent implements OnInit {
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService, private _loginservice: LoginService,
         private _autoservice: CommonService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
+        this._enttdetails = Globals.getEntityDetails();
     }
 
     public ngOnInit() {
@@ -54,37 +49,6 @@ export class AddStatusComponent implements OnInit {
         this.remark = "";
     }
 
-    // Auto Completed Entity
-
-    getEntityData(event) {
-        let query = event.query;
-
-        this._autoservice.getAutoData({
-            "flag": "entity",
-            "uid": this.loginUser.uid,
-            "ucode": this.loginUser.ucode,
-            "utype": this.loginUser.utype,
-            "issysadmin": this.loginUser.issysadmin,
-            "wsautoid": this._wsdetails.wsautoid,
-            "search": query
-        }).subscribe((data) => {
-            this.entityDT = data.data;
-        }, err => {
-            this._msg.Show(messageType.error, "Error", err);
-        }, () => {
-
-        });
-    }
-
-    // Selected Entity
-
-    selectEntityData(event) {
-        this.enttid = event.value;
-        
-        Cookie.set("_enttid_", event.value);
-        Cookie.set("_enttnm_", event.label);
-    }
-
     // Save Data
 
     saveStatusInfo() {
@@ -102,14 +66,14 @@ export class AddStatusComponent implements OnInit {
             commonfun.loader();
 
             var saveStatus = {
-                "autoid": that.statusid,
+                "id": that.statusid,
                 "key": that.statusnm,
                 "val": that.statusnm,
                 "ordno": that.ordno,
                 "group": "taskstatus",
                 "cuid": that.loginUser.ucode,
-                "enttid": that.enttid,
-                "wsautoid": that._wsdetails.wsautoid,
+                "enttid": that._enttdetails.enttid,
+                "wsautoid": that._enttdetails.wsautoid,
                 "isactive": that.isactive,
                 "mode": ""
             }
@@ -161,18 +125,8 @@ export class AddStatusComponent implements OnInit {
             if (params['id'] !== undefined) {
                 that.statusid = params['id'];
 
-                params = {
-                    "flag": "id",
-                    "group": "taskstatus",
-                    "id": that.statusid,
-                    "wsautoid": that._wsdetails.wsautoid
-                }
-
-                that._autoservice.getMOM(params).subscribe(data => {
+                that._autoservice.getMOM({ "flag": "id", "id": that.statusid }).subscribe(data => {
                     try {
-                        that.enttid = data.data[0].enttid;
-                        that.enttname.value = data.data[0].enttid;
-                        that.enttname.label = data.data[0].enttname;
                         that.statusid = data.data[0].autoid;
                         that.statusnm = data.data[0].val;
                         that.ordno = data.data[0].ordno;

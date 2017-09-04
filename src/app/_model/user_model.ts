@@ -18,6 +18,9 @@ export interface LoginUserModel {
   fullname: string;
   utypename: string;
   uphoto: string;
+  enttid: number;
+  enttname: string;
+  schlogo: string;
   wsautoid: number;
   wscode: string;
   wsname: string;
@@ -26,6 +29,7 @@ export interface LoginUserModel {
   login: string,
   status: boolean,
   issysadmin: boolean,
+  isemp: boolean,
   errcode: string,
   errmsg: string,
   sessiondetails: any;
