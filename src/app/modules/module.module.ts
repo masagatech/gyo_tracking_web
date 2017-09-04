@@ -16,21 +16,10 @@ export const routes = [
             {
                 path: '',
                 children: [
-                    { path: '', loadChildren: './dashboard#DashboardModule' },
-
-                    // Trip Tracking
-                    { path: 'triptracking', loadChildren: './triptracking#TripTrackingModule' },
-
-                    // Master
-                    { path: 'master', loadChildren: './master#MasterModule' },
-
-                    // Transaction
-                    { path: 'transaction', loadChildren: './transaction#TransactionModule' },
-
-                    // Reports
+                    { path: '', loadChildren: './entity#EntityModule' },
+                    { path: 'admin', loadChildren: './admin#AdminModule' },
                     { path: 'reports', loadChildren: './reports#ReportsModule' },
-
-                    // Setting
+                    { path: 'workspace', loadChildren: './workspace#WorkspaceModule' },
                     { path: 'settings', loadChildren: './settings#SettingsModule' },
                 ]
             }

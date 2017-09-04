@@ -253,6 +253,7 @@ export class TripReportsComponent implements OnInit, OnDestroy {
 
     public exportToCSV() {
         var that = this;
+        commonfun.loader("#divExport");
 
         if (that.empid == 0) {
             that._msg.Show(messageType.info, "Info", "Please Enter Employee Name");
@@ -278,11 +279,11 @@ export class TripReportsComponent implements OnInit, OnDestroy {
                     that._msg.Show(messageType.error, "Error", e);
                 }
 
-                commonfun.loaderhide();
+                commonfun.loaderhide("#divExport");
             }, err => {
                 that._msg.Show(messageType.error, "Error", err);
                 console.log(err);
-                commonfun.loaderhide();
+                commonfun.loaderhide("#divExport");
             }, () => {
 
             })

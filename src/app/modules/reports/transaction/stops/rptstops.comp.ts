@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
 import { StopsReportsService } from '@services/master';
-import jsPDF from 'jspdf'
+import jsPDF from 'jspdf';
 
 @Component({
     templateUrl: 'rptstops.comp.html',

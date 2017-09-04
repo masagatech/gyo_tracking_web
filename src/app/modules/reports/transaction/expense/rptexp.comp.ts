@@ -5,6 +5,7 @@ import { LoginUserModel, Globals } from '@models';
 import { ExpenseService } from '@services/master';
 import { LazyLoadEvent } from 'primeng/primeng';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
+import jsPDF from 'jspdf';
 
 @Component({
     templateUrl: 'rptexp.comp.html',
@@ -32,7 +33,7 @@ export class ExpenseReportsComponent implements OnInit, OnDestroy {
 
     @ViewChild('Expense') stops: ElementRef;
 
-    allocateExpenseDT: any = [];
+    expenseDT: any = [];
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
         private _loginservice: LoginService, private _autoservice: CommonService, private _expservice: ExpenseService) {
@@ -159,7 +160,7 @@ export class ExpenseReportsComponent implements OnInit, OnDestroy {
             "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
         }).subscribe(data => {
             try {
-                that.allocateExpenseDT = data.data;
+                that.expenseDT = data.data;
             }
             catch (e) {
                 that._msg.Show(messageType.error, "Error", e);
@@ -223,6 +224,47 @@ export class ExpenseReportsComponent implements OnInit, OnDestroy {
         this.taglist = [];
 
         this.getExpenseReports();
+    }
+
+    // Export
+
+    public exportToCSV() {
+        var that = this;
+        var exportData = [];
+        var params = {};
+
+        var tags = that.taglist.length !== 0 ? that.taglist.map(function (val) { return val.tagname; }).join(',') : "";
+        
+        params = {
+            "flag": "export", "frmdt": that.frmdt, "todt": that.todt, "empid": that.empid, "tag": tags,
+            "uid": that.loginUser.uid, "utype": that.loginUser.utype, "enttid": that._enttdetails.enttid,
+            "wsautoid": that._enttdetails.wsautoid, "issysadmin": that.loginUser.issysadmin
+        }        
+
+        that._expservice.getExpenseReports(params).subscribe(data => {
+            try {
+                exportData = data.data;
+                that._autoservice.exportToCSV(exportData, "Expense Details");
+            }
+            catch (e) {
+                that._msg.Show(messageType.error, "Error", e);
+            }
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+        }, () => {
+
+        })
+    }
+
+    public exportToPDF() {
+        let pdf = new jsPDF('l', 'pt', 'a4');
+        let options = {
+            pagesplit: true
+        };
+        pdf.addHTML(this.stops.nativeElement, 0, 0, options, () => {
+            pdf.save("Stops.pdf");
+        });
     }
 
     public ngOnDestroy() {

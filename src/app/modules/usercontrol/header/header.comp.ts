@@ -40,8 +40,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   uploadconfig = { server: "", serverpath: "", uploadurl: "", method: "post", maxFilesize: "", acceptedFiles: "" };
 
   mastersMenuDT: any = [];
-  reportsMenuDT: any = [];
   settingsMenuDT: any = [];
+  reportsMenuDT: any = [];
 
   private themes: any = [
     { nm: 'red', disp: 'Red' },
@@ -114,6 +114,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       "flag": "topmenu", "uid": that.loginUser.uid, "utype": that.loginUser.utype, "issysadmin": that.loginUser.issysadmin
     }).subscribe(data => {
       that.mastersMenuDT = data.data.filter(a => a.mptype === "master");
+      that.settingsMenuDT = data.data.filter(a => a.mptype === "settings");
       that.reportsMenuDT = data.data.filter(a => a.mptype === "reports");
     }, err => {
       that._msg.Show(messageType.error, "Error", err);

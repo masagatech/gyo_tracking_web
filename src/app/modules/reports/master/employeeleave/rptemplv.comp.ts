@@ -106,31 +106,19 @@ export class EmployeeLeaveReportsComponent implements OnInit, OnDestroy {
         that.empname = event.label;
     }
 
-    // Export
-
-    public exportToCSV() {
-        this._autoservice.exportToCSV(this.empleaveDT, "Employee Leave Details");
-    }
-
-    public exportToPDF() {
-        let pdf = new jsPDF('l', 'pt', 'a4');
-        let options = {
-            pagesplit: true
-        };
-        pdf.addHTML(this.rptemplv.nativeElement, 0, 0, options, () => {
-            pdf.save("EmployeeTrips.pdf");
-        });
-    }
-
     getEmployeeLeaveReports() {
         var that = this;
+        var params = {};
+
         commonfun.loader();
 
-        that._emplvservice.getEmployeeLeaveReports({
-            "flag": "reports", "frmdt": that.frmdt, "todt": that.todt, "empid": that.empid,
+        params = {
+            "flag": "all", "frmdt": that.frmdt, "todt": that.todt, "empid": that.empid,
             "uid": that.loginUser.uid, "utype": that.loginUser.utype, "issysadmin": that.loginUser.issysadmin,
-            "status": that.status, "enttid": that._enttdetails.enttid, "wsautoid": that._enttdetails.wsautoid,
-        }).subscribe(data => {
+            "status": that.status, "enttid": that._enttdetails.enttid, "wsautoid": that._enttdetails.wsautoid
+        }
+
+        that._emplvservice.getEmployeeLeave(params).subscribe(data => {
             try {
                 that.empleaveDT = data.data;
             }
@@ -156,6 +144,48 @@ export class EmployeeLeaveReportsComponent implements OnInit, OnDestroy {
         this.status = -1;
 
         this.getEmployeeLeaveReports();
+    }
+
+    // Export
+
+    public exportToCSV() {
+        var that = this;
+        var params = {};
+
+        commonfun.loader("#divExport");
+
+        params = {
+            "flag": "export", "frmdt": that.frmdt, "todt": that.todt, "empid": that.empid,
+            "uid": that.loginUser.uid, "utype": that.loginUser.utype, "issysadmin": that.loginUser.issysadmin,
+            "status": that.status, "enttid": that._enttdetails.enttid, "wsautoid": that._enttdetails.wsautoid
+        }
+
+        that._emplvservice.getEmployeeLeave(params).subscribe(data => {
+            try {
+                that._autoservice.exportToCSV(data.data, "Employee Leave Details");
+            }
+            catch (e) {
+                that._msg.Show(messageType.error, "Error", e);
+            }
+
+            commonfun.loaderhide("#divExport");
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+            commonfun.loaderhide("#divExport");
+        }, () => {
+
+        })
+    }
+
+    public exportToPDF() {
+        let pdf = new jsPDF('l', 'pt', 'a4');
+        let options = {
+            pagesplit: true
+        };
+        pdf.addHTML(this.rptemplv.nativeElement, 0, 0, options, () => {
+            pdf.save("EmployeeTrips.pdf");
+        });
     }
 
     public ngOnDestroy() {
