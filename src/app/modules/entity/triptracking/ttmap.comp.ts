@@ -14,9 +14,11 @@ import { InfoComponent } from './info/info.comp';
 import { HistoryComponent } from './history/history.comp';
 
 declare var google: any;
+declare var CustomMarker: any;
 
 @Component({
     templateUrl: 'ttmap.comp.html',
+    styleUrls: ['track.css'],
     providers: [CommonService, SocketService, TrackDashbord]
 })
 
@@ -70,7 +72,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
     trafficLayer: any = new google.maps.TrafficLayer();
 
     markerOptions = {
-        showinfo: false,
+        showinfo: true,
         hidelive: false,
         showtrafic: false
     }
@@ -145,7 +147,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
         }).subscribe((data) => {
             try {
                 that.employeeDT = data.data;
-                
+
                 for (var k = 0; k < that.employeeDT.length; k++) {
                     var el = that.employeeDT[k];
                     el.uid = el.empid;
@@ -189,13 +191,13 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
             var _d = data;
             console.log(_d);
             if (_d["evt"] == "regreq") {
-                if (that.empIds.length > 0) { 
-                   
+                if (that.empIds.length > 0) {
+
                     that._socketservice.sendMessage("reg_v", that.empIds.join(','));
                 }
             }
             else if (_d["evt"] == "registered") {
-                
+
                 that.connectmsg = "Registered...";
                 setTimeout(function () {
                     that.connectmsg = "Waiting for data..";
@@ -329,9 +331,9 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
         if (mrk !== undefined) {
             let bear = 0;
 
-            let _ico = mrk.getIcon().ico;
+            //let _ico = mrk.getIcon().ico;
             // mrk.setIcon({ url: 'assets/img/map/' + _ico + '_' + bear + '.png?v=1', ico: _ico })
-            mrk.setIcon({ url: 'assets/img/map/0.png?v=1', ico: _ico })
+            //mrk.setIcon({ url: 'assets/img/map/0.png?v=1', ico: _ico })
             mrk.setPosition(new google.maps.LatLng(loc[0], loc[1]));
 
             if (this.selectedFlwEmp.uid !== undefined && this.selectedFlwEmp.uid == empid) {
@@ -367,17 +369,17 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.removemarker(emp.uid);
             }
         }
-        
+
         e.preventDefault();
     }
 
     //get bound
-    
+
     private boundtomap() {
         if (this.selectedEmp.length <= 0) {
             return;
         }
-        
+
         var bounds = new google.maps.LatLngBounds();
 
         for (let i = 0; i < this.selectedEmp.length; i++) {
@@ -393,9 +395,11 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
             let el = this.selectedEmp[i];
             let mr = this.vhmarkers[el];
             if (this.markerOptions.showinfo) {
-                mr.info.open(this.map, mr);
+                //mr.info.open(this.map, mr);
+                mr.showTitle();
             } else {
-                mr.info.close();
+                mr.hideTitle();
+                //mr.info.close();
             }
         }
     }
@@ -410,6 +414,12 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
             }
             else {
                 mr.setMap(this.map);
+                if (this.markerOptions.showinfo) {
+                    //mr.info.open(this.map, mr);
+                    setTimeout(function () {
+                        mr.showTitle();
+                    }, 100);
+                }
             }
         }
     }
@@ -442,33 +452,38 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
 
     private addmarker(emp) {
         let bearing = 0;//commonfun.getbearing((emp.bearing || 0));
-        let imagePath = 'assets/img/map/0.png?v=1';
+        let imagePath = this.global.uploadurl + emp.empph;
         let image = {
             url: imagePath,
             ico: emp.empph
         };
 
-        let vhmarker = new google.maps.Marker({
-            position: {
-                lat: emp.loc[1], lng: emp.loc[0]
-            },
-            strokeColor: 'red',
-            strokeWeight: 3,
-            scale: 6,
-            icon: image,
-            animation: google.maps.Animation.BOUNCE,
-            title: emp.empname + ' (' + emp.empcode + ')',
-        });
+        // let vhmarker = new google.maps.Marker({
+        //     position: {
+        //         lat: emp.loc[1], lng: emp.loc[0]
+        //     },
+        //     strokeColor: 'red',
+        //     strokeWeight: 3,
+        //     scale: 6,
+        //     icon: image,
+        //     animation: google.maps.Animation.BOUNCE,
+        //     title: emp.empname + ' (' + emp.empcode + ')',
+        // });
 
-        vhmarker.info = new google.maps.InfoWindow({
-            content: vhmarker.title
-        });
-
+        let vhmarker = new CustomMarker(new google.maps.LatLng(emp.loc[1], emp.loc[0]), this.map, imagePath, emp.empname + ' (' + emp.empcode + ')')
+        //vhmarker.setTitle(emp.empname + ' (' + emp.empcode + ')');
+        // vhmarker.info = new google.maps.InfoWindow({
+        //     content: emp.empname + ' (' + emp.empcode + ')'
+        // });
+        vhmarker.setMap(this.map);
         if (this.markerOptions.showinfo) {
-            vhmarker.info.open(this.map, vhmarker);
+            //vhmarker.info.open(this.map, vhmarker);
+            setTimeout(function () {
+                vhmarker.showTitle();
+            }, 100);
         }
 
-        vhmarker.setMap(this.map);
+
         this.vhmarkers[emp.uid] = vhmarker;
     }
 
@@ -477,6 +492,7 @@ export class TripTrackingComponent implements OnInit, OnDestroy, AfterViewInit {
 
         if (mrkr != null) {
             mrkr.setMap(null);
+            mrkr.remove();
             delete this.vhmarkers[empid];
         }
     }

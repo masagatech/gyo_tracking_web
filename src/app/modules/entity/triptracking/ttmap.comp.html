@@ -7,7 +7,7 @@
                         <div class="titlewrap">
                             <div class="vhchkbx">
                                 <input type="checkbox" id="{{row.empid}}" [(ngModel)]="row.sel" data-md-icheck (change)="onchange($event, row)" class="filled-in">
-                                <label for="{{row.empid}}"></label>
+                                <label for="{{row.empid}}"></label>                       
                                 <img src="{{global.uploadurl + row.empph}}" onerror="this.src='assets/img/default.gif';" height="40px" />
                             </div>
                             <span class="vhbatr pull-right" *ngIf="row.isshow">
