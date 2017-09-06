@@ -108,7 +108,6 @@ export class ApprovalEmployeeLeaveComponent implements OnInit, OnDestroy {
         commonfun.loader();
 
         that.selectedlvrow = row;
-        // that.headertitle = "Voucher No : " + row.expid + " (" + row.countvcr + ")";
 
         that.subscribeParameters = that._routeParams.params.subscribe(params => {
             if (params['empid'] !== undefined) {
@@ -122,11 +121,14 @@ export class ApprovalEmployeeLeaveComponent implements OnInit, OnDestroy {
                 that._emplvservice.getEmployeeLeave(params).subscribe(data => {
                     try {
                         that.empLeaveDetailsDT = data.data;
-                        that.elid = that.empLeaveDetailsDT[0].elid;
-                        that.frmdt = that.empLeaveDetailsDT[0].frmdt;
-                        that.todt = that.empLeaveDetailsDT[0].todt;
-                        that.lvtype = that.empLeaveDetailsDT[0].lvtype;
-                        that.reason = that.empLeaveDetailsDT[0].reason;
+
+                        if (that.empLeaveDetailsDT.length > 0) {
+                            that.elid = that.empLeaveDetailsDT[0].elid;
+                            that.frmdt = that.empLeaveDetailsDT[0].frmdt;
+                            that.todt = that.empLeaveDetailsDT[0].todt;
+                            that.lvtype = that.empLeaveDetailsDT[0].lvtype;
+                            that.reason = that.empLeaveDetailsDT[0].reason;
+                        }
                     }
                     catch (e) {
                         that._msg.Show(messageType.error, "Error", e);
