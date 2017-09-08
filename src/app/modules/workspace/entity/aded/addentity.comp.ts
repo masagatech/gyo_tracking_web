@@ -356,12 +356,13 @@ export class AddEntityComponent implements OnInit {
 
     getUploadConfig() {
         var that = this;
+        
+        that.uploadconfig.server = that.global.serviceurl + "uploads";
+        that.uploadconfig.serverpath = that.global.serviceurl;
+        that.uploadconfig.uploadurl = that.global.uploadurl;
+        that.uploadconfig.filepath = that.global.filepath;
 
         that._autoservice.getMOM({ "flag": "filebyid", "id": "29" }).subscribe(data => {
-            that.uploadconfig.server = that.global.serviceurl + "uploads";
-            that.uploadconfig.serverpath = that.global.serviceurl;
-            that.uploadconfig.uploadurl = that.global.uploadurl;
-            that.uploadconfig.filepath = that.global.filepath;
             that.uploadconfig.maxFilesize = data.data[0]._filesize;
             that.uploadconfig.acceptedFiles = data.data[0]._filetype;
         }, err => {

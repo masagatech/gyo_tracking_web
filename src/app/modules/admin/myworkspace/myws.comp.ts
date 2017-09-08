@@ -33,6 +33,7 @@ export class MyWorkspaceComponent implements OnInit {
         this._enttdetails = Globals.getEntityDetails();
 
         this.getWorkspaceDetails();
+        this.getWorkspaceEntity();
     }
 
     public ngOnInit() {
@@ -93,7 +94,6 @@ export class MyWorkspaceComponent implements OnInit {
             commonfun.loaderhide("#users");
         }, err => {
             that._msg.Show(messageType.error, "Error", err);
-            console.log(err);
             commonfun.loaderhide("#users");
         }, () => {
 
@@ -110,6 +110,13 @@ export class MyWorkspaceComponent implements OnInit {
         else {
             this._router.navigate(['/workspace/entity/add']);
         }
+    }
+
+    public openMainForm(row) {
+        Cookie.delete("_enttdetails_");
+
+        Cookie.set("_enttdetails_", JSON.stringify(row));
+        this._router.navigate(['/']);
     }
 
     public addUserForm() {

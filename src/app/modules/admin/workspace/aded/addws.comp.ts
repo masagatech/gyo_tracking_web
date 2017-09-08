@@ -164,11 +164,12 @@ export class AddWorkspaceComponent implements OnInit {
     getUploadConfig() {
         var that = this;
 
+        that.uploadconfig.server = that.global.serviceurl + "uploads";
+        that.uploadconfig.serverpath = that.global.serviceurl;
+        that.uploadconfig.uploadurl = that.global.uploadurl;
+        that.uploadconfig.filepath = that.global.filepath;
+
         that._autoservice.getMOM({ "flag": "filebyid", "id": "29" }).subscribe(data => {
-            that.uploadconfig.server = that.global.serviceurl + "uploads";
-            that.uploadconfig.serverpath = that.global.serviceurl;
-            that.uploadconfig.uploadurl = that.global.uploadurl;
-            that.uploadconfig.filepath = that.global.filepath;
             that.uploadconfig.maxFilesize = data.data[0]._filesize;
             that.uploadconfig.acceptedFiles = data.data[0]._filetype;
         }, err => {
@@ -498,7 +499,7 @@ export class AddWorkspaceComponent implements OnInit {
 
                             that.empperrate = data.data[0].empperrate;
                             that.maxenttcount = data.data[0].maxenttcount;
-                            
+
                             that.mode = data.data[0].mode;
                         }
                         else {

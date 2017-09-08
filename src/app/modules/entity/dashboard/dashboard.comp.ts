@@ -11,7 +11,6 @@ import { Cookie } from 'ng2-cookies/ng2-cookies';
 
 export class DashboardComponent implements OnInit, OnDestroy {
     loginUser: LoginUserModel;
-    _wsdetails: any = [];
     _enttdetails: any = [];
 
     dashboardDT: any = [];
@@ -19,20 +18,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     constructor(private _autoservice: CommonService, private _loginservice: LoginService, private _routeParams: ActivatedRoute,
         private _router: Router, private _msg: MessageService) {
         this.loginUser = this._loginservice.getUser();
-        this._wsdetails = Globals.getWSDetails();
         this._enttdetails = Globals.getEntityDetails();
-
-        let _wsdetails = Cookie.get("_wsdetails_");
-        let _enttdetails = Cookie.get("_enttdetails_");
-
-        if (_wsdetails == null && _wsdetails == undefined) {
-            this._router.navigate(['/admin/workspace']);
-        }
-        else {
-            if (_enttdetails == null && _enttdetails == undefined) {
-                this._router.navigate(['/workspace/entity']);
-            }
-        }
 
         this.getDashboard();
     }

@@ -348,11 +348,12 @@ export class AddUserComponent implements OnInit {
     getPhotoUploadConfig() {
         var that = this;
 
+        that.uploadphotoconfig.server = that.global.serviceurl + "uploads";
+        that.uploadphotoconfig.serverpath = that.global.serviceurl;
+        that.uploadphotoconfig.uploadurl = that.global.uploadurl;
+        that.uploadphotoconfig.filepath = that.global.filepath;
+        
         that._autoservice.getMOM({ "flag": "filebyid", "id": "29" }).subscribe(data => {
-            that.uploadphotoconfig.server = that.global.serviceurl + "uploads";
-            that.uploadphotoconfig.serverpath = that.global.serviceurl;
-            that.uploadphotoconfig.uploadurl = that.global.uploadurl;
-            that.uploadphotoconfig.filepath = that.global.filepath;
             that.uploadphotoconfig.maxFilesize = data.data[0]._filesize;
             that.uploadphotoconfig.acceptedFiles = data.data[0]._filetype;
         }, err => {
@@ -624,8 +625,8 @@ export class AddUserComponent implements OnInit {
                         that.isactive = data.data[0].isactive;
                         that.mode = data.data[0].mode;
 
-                        if (data.data[0].FilePath !== "") {
-                            that.uploadPhotoDT.push({ "athurl": data.data[0].FilePath });
+                        if (data.data[0].uphoto !== "") {
+                            that.uploadPhotoDT.push({ "athurl": data.data[0].uphoto });
                             that.chooseLabel = "Change Photo";
                         }
                         else {

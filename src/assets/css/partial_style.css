@@ -2658,3 +2658,63 @@ li.vehicle {
     padding: 0 20px;
     margin-bottom: 17px;
 }
+
+.customMarker {
+    position: absolute;
+    cursor: pointer;
+    background: #ffffff;
+    width: 60px;
+    height: 60px;
+    margin-left: -31px;
+    margin-top: -73px;
+    border-radius: 10px;
+    padding: 0px;
+    border: 4px solid #1693ff;
+    text-align: center;
+}
+
+.customMarker:after {
+    content: "";
+    position: absolute;
+    bottom: -14px;
+    left: 18px;
+    border-width: 10px 10px 0;
+    border-style: solid;
+    border-color: #1693ff transparent;
+    display: block;
+    width: 0;
+}
+
+.customMarker img {
+    width: 60px;
+    /* height: 50px; */
+    margin: 5px;
+    /* border-radius: 10px; */
+    margin: 0;
+}
+
+.customMarker .innerDivHolder {
+    height: 54px;
+    width: 54px;
+    border-radius: 7px;
+    overflow: hidden;
+    margin-top: -1px;
+    margin-left: -1px;
+}
+
+.customMarker .titlename {
+    position: absolute;
+    display: block;
+    width: 153px;
+    background-color: rgba(0, 0, 0, 0.62);
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 10px;
+    margin-left: -51px;
+    margin-top: -20px;
+    overflow: hidden;
+    height: 14px;
+    /* box-shadow: -1px 3px 7px 0px #676767; */
+    display: none;
+}

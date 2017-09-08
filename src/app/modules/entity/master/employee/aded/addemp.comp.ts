@@ -263,11 +263,12 @@ export class AddEmployeeComponent implements OnInit {
     getUploadConfig() {
         var that = this;
 
+        that.uploadconfig.server = that.global.serviceurl + "uploads";
+        that.uploadconfig.serverpath = that.global.serviceurl;
+        that.uploadconfig.uploadurl = that.global.uploadurl;
+        that.uploadconfig.filepath = that.global.filepath;
+        
         that._autoservice.getMOM({ "flag": "filebyid", "id": "29" }).subscribe(data => {
-            that.uploadconfig.server = that.global.serviceurl + "uploads";
-            that.uploadconfig.serverpath = that.global.serviceurl;
-            that.uploadconfig.uploadurl = that.global.uploadurl;
-            that.uploadconfig.filepath = that.global.filepath;
             that.uploadconfig.maxFilesize = data.data[0]._filesize;
             that.uploadconfig.acceptedFiles = data.data[0]._filetype;
         }, err => {
@@ -473,8 +474,8 @@ export class AddEmployeeComponent implements OnInit {
                         that.emppwd = _empdata[0].emppwd;
                         that.empname = _empdata[0].empname;
 
-                        if (data.data[0].FilePath !== "") {
-                            that.uploadPhotoDT.push({ "athurl": data.data[0].FilePath });
+                        if (data.data[0].empphoto !== "") {
+                            that.uploadPhotoDT.push({ "athurl": data.data[0].empphoto });
                             that.chooseLabel = "Change Employee Photo";
                         }
                         else {
