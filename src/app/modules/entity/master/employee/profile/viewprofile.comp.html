@@ -1,16 +1,16 @@
-<div class="hovercard" *ngFor="let row of usersDT">
+<div id="employee" class="hovercard" *ngFor="let row of employeeDT">
     <div class="card">
         <div class="body">
             <img src="assets/img/coverphoto.png" onerror="this.src='assets/img/default.gif';" class="cover-img">
 
             <div class="avatar">
-                <img alt="{{row.fullname}}" src="{{global.uploadurl + row.uphoto}}" onerror="this.src='assets/img/default.gif';" height="100px">
+                <img alt="{{row.empname}}" src="{{global.uploadurl + row.uphoto}}" onerror="this.src='assets/img/default.gif';" height="100px">
                 <div class="title">
-                    {{row.fullname}}
+                    {{row.empname}}
                 </div>
 
                 <div class="bottom">
-                    <a class="btn btn-primary btn-twitter btn-sm" (click)="editUserForm(row)">
+                    <a class="btn btn-primary btn-twitter btn-sm" (click)="editEmployeeForm(row)">
                         <i class="material-icons">edit</i>
                     </a>
                 </div>
@@ -20,16 +20,16 @@
                     <b>Role : </b>{{row.utypename}}
                 </div>
                 <div class="desc">
-                    <b>Mobile : </b>{{row.mobile}}
+                    <b>Mobile : </b>{{row.mobileno1}}
                 </div>
                 <div class="desc" *ngIf="row.altmobile !== ''">
-                    <b>Alternate Mobile : </b>{{row.altmobile}}
+                    <b>Alternate Mobile : </b>{{row.mobileno2}}
                 </div>
                 <div class="desc">
-                    <b>Email : </b>{{row.email}}
+                    <b>Email : </b>{{row.email1}}
                 </div>
                 <div class="desc" *ngIf="row.altemail !== ''">
-                    <b>Alternate Email : </b>{{row.altemail}}
+                    <b>Alternate Email : </b>{{row.email2}}
                 </div>
                 <div class="desc" *ngIf="row.address !== ''">
                     <b>Address : </b>{{row.address}}

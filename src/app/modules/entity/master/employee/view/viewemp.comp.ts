@@ -97,4 +97,8 @@ export class ViewEmployeeComponent implements OnInit {
     public editEmployeeForm(row) {
         this._router.navigate(['/master/employee/edit', row.empid]);
     }
+
+    public viewEmployeeProfile(row) {
+        this._router.navigate(['/master/employee/profile', row.empid]);
+    }
 }

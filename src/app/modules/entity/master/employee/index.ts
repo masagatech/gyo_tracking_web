@@ -6,6 +6,7 @@ import { AuthGuard } from '@services';
 
 import { AddEmployeeComponent } from './aded/addemp.comp';
 import { ViewEmployeeComponent } from './view/viewemp.comp';
+import { ViewProfileComponent } from './profile/viewprofile.comp';
 
 import { EmployeeService } from '@services/master';
 
@@ -14,9 +15,9 @@ import { LazyLoadEvent, DataTableModule, DataGridModule, PanelModule, AutoComple
 export const routes = [
   {
     path: '', children: [
-      { path: '', component: ViewEmployeeComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "emp", "rights": "view", "urlname": "/Employee" } },
+      { path: '', component: ViewEmployeeComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "emp", "rights": "view", "urlname": "/employee" } },
+      { path: 'profile/:id', component: ViewProfileComponent, canActivate: [AuthGuard], data: { "module": "mst", "submodule": "emp", "rights": "view", "urlname": "/employee" } },
       { path: 'add', component: AddEmployeeComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "emp", "rights": "add", "urlname": "/add" } },
-      { path: 'details/:id', component: AddEmployeeComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "emp", "rights": "edit", "urlname": "/edit" } },
       { path: 'edit/:id', component: AddEmployeeComponent, canActivate: [AuthGuard], data: { "module": "pentt", "submodule": "emp", "rights": "edit", "urlname": "/edit" } }
     ]
   },
@@ -25,7 +26,8 @@ export const routes = [
 @NgModule({
   declarations: [
     AddEmployeeComponent,
-    ViewEmployeeComponent
+    ViewEmployeeComponent,
+    ViewProfileComponent
   ],
 
   imports: [

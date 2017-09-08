@@ -13,6 +13,7 @@ declare var adminloader: any;
 
 export class AddUserComponent implements OnInit {
     loginUser: LoginUserModel;
+    _wsdetails: any = [];
 
     utypeDT: any = [];
     utype: string = "";
@@ -41,8 +42,6 @@ export class AddUserComponent implements OnInit {
     mode: string = "";
     remark1: string = "";
 
-    _wsdetails: any = [];
-
     isAllEnttRights: boolean = true;
     entityDT: any = [];
     entityList: any = [];
@@ -59,12 +58,18 @@ export class AddUserComponent implements OnInit {
 
     private subscribeParameters: any;
 
+    uploadPhotoDT: any = [];
+    global = new Globals();
+    uploadphotoconfig = { server: "", serverpath: "", uploadurl: "", filepath: "", method: "post", maxFilesize: "", acceptedFiles: "" };
+    chooseLabel: string = "";
+
     constructor(private _userservice: UserService, private _loginservice: LoginService, private _autoservice: CommonService,
         private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService) {
         this.loginUser = this._loginservice.getUser();
         this._wsdetails = Globals.getWSDetails();
-        this.fillUserTypeDropDown();
 
+        this.getPhotoUploadConfig();
+        this.fillUserTypeDropDown();
         this.fillStateDropDown();
         this.fillCityDropDown();
         this.fillAreaDropDown();
@@ -338,6 +343,43 @@ export class AddUserComponent implements OnInit {
         this.vehtypeList.splice(this.vehtypeList.indexOf(row), 1);
     }
 
+    // User Photo Upload
+
+    getPhotoUploadConfig() {
+        var that = this;
+
+        that._autoservice.getMOM({ "flag": "filebyid", "id": "29" }).subscribe(data => {
+            that.uploadphotoconfig.server = that.global.serviceurl + "uploads";
+            that.uploadphotoconfig.serverpath = that.global.serviceurl;
+            that.uploadphotoconfig.uploadurl = that.global.uploadurl;
+            that.uploadphotoconfig.filepath = that.global.filepath;
+            that.uploadphotoconfig.maxFilesize = data.data[0]._filesize;
+            that.uploadphotoconfig.acceptedFiles = data.data[0]._filetype;
+        }, err => {
+            console.log("Error");
+        }, () => {
+            console.log("Complete");
+        })
+    }
+
+    onPhotoUpload(event) {
+        var that = this;
+        var imgfile = [];
+        that.uploadPhotoDT = [];
+
+        imgfile = JSON.parse(event.xhr.response);
+
+        setTimeout(function () {
+            for (var i = 0; i < imgfile.length; i++) {
+                that.uploadPhotoDT.push({ "athurl": imgfile[i].path.replace(that.uploadphotoconfig.filepath, "") })
+            }
+        }, 1000);
+    }
+
+    removePhotoUpload() {
+        this.uploadPhotoDT.splice(0, 1);
+    }
+
     // Active / Deactive Data
 
     active_deactiveUserInfo() {
@@ -402,6 +444,9 @@ export class AddUserComponent implements OnInit {
 
         that.entityList = [];
         that.vehtypeList = [];
+
+        that.uploadPhotoDT = [];
+        that.chooseLabel = "Upload Photo";
     }
 
     // Save Data
@@ -460,7 +505,7 @@ export class AddUserComponent implements OnInit {
                     that.workspaceList.push({
                         "wsautoid": that._wsdetails.wsautoid, "wsname": that._wsdetails.wsname
                     });
-                    
+
                     _wslist = Object.keys(that.workspaceList).map(function (k) { return that.workspaceList[k].wsautoid });
                 }
 
@@ -481,6 +526,7 @@ export class AddUserComponent implements OnInit {
                 "upwd": that.upwd,
                 "fname": that.fname,
                 "lname": that.lname,
+                "filepath": that.uploadPhotoDT.length > 0 ? that.uploadPhotoDT[0].athurl : "",
                 "wsrights": _wslist,
                 "school": _enttlist,
                 "vehicle": _vehlist,
@@ -502,11 +548,11 @@ export class AddUserComponent implements OnInit {
                 "mode": ""
             }
 
-            this._userservice.saveUserInfo(saveuser).subscribe(data => {
+            that._userservice.saveUserInfo(saveuser).subscribe(data => {
                 try {
-                    var dataResult = data.data;
-                    var msg = dataResult[0].funsave_userinfo.msg;
-                    var msgid = dataResult[0].funsave_userinfo.msgid;
+                    var dataResult = data.data[0].funsave_userinfo;
+                    var msg = dataResult.msg;
+                    var msgid = dataResult.msgid;
 
                     if (msgid !== "-1") {
                         that._msg.Show(messageType.success, "Success", msg);
@@ -520,17 +566,14 @@ export class AddUserComponent implements OnInit {
                     }
                     else {
                         that._msg.Show(messageType.error, "Error", "Error 101 : " + msg);
-                        console.log("Error 101 : " + msg);
                     }
 
                     commonfun.loaderhide();
                 }
                 catch (e) {
                     that._msg.Show(messageType.error, "Error", "Error 102 : " + e);
-                    console.log("Error 102 : " + e);
                 }
             }, err => {
-                console.log("Error 103 : " + err);
                 that._msg.Show(messageType.error, "Error", "Error 103 : " + err);
                 commonfun.loaderhide();
             }, () => {
@@ -543,6 +586,8 @@ export class AddUserComponent implements OnInit {
 
     getUserDetails() {
         var that = this;
+        that.uploadPhotoDT = [];
+
         commonfun.loader();
 
         that.subscribeParameters = that._routeParams.params.subscribe(params => {
@@ -557,7 +602,6 @@ export class AddUserComponent implements OnInit {
                         that.upwd = data.data[0].upwd;
                         that.fname = data.data[0].fname;
                         that.lname = data.data[0].lname;
-                        that.utype = data.data[0].utype;
                         that.utype = data.data[0].utype;
                         that.workspaceList = data.data[0].workspace !== null ? data.data[0].workspace : [];
                         that.isAllEnttRights = data.data[0].isallenttrights;
@@ -579,6 +623,15 @@ export class AddUserComponent implements OnInit {
                         that.remark1 = data.data[0].remark1;
                         that.isactive = data.data[0].isactive;
                         that.mode = data.data[0].mode;
+
+                        if (data.data[0].FilePath !== "") {
+                            that.uploadPhotoDT.push({ "athurl": data.data[0].FilePath });
+                            that.chooseLabel = "Change Photo";
+                        }
+                        else {
+                            that.uploadPhotoDT = [];
+                            that.chooseLabel = "Upload Photo";
+                        }
                     }
                     catch (e) {
                         that._msg.Show(messageType.error, "Error", e);

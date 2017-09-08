@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
@@ -25,6 +25,12 @@ export class AddEmployeeComponent implements OnInit {
     empcode: string = "";
     emppwd: string = "";
     empname: string = "";
+
+    genderDT: any = [];
+    gender: string = "";
+    
+    currdate: any = "";
+    dob: any = "";
     aadharno: string = "";
     licenseno: string = "";
     mobileno1: string = "";
@@ -32,6 +38,8 @@ export class AddEmployeeComponent implements OnInit {
     email1: string = "";
     email2: string = "";
     address: string = "";
+    lat: string = "";
+    lon: string = "";
     country: string = "India";
     state: number = 0;
     city: number = 0;
@@ -52,12 +60,13 @@ export class AddEmployeeComponent implements OnInit {
     private subscribeParameters: any;
 
     constructor(private _empservice: EmployeeService, private _routeParams: ActivatedRoute, private _router: Router,
-        private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService) {
+        private _loginservice: LoginService, private _msg: MessageService, private _autoservice: CommonService, private cdRef: ChangeDetectorRef) {
         this.loginUser = this._loginservice.getUser();
         this._enttdetails = Globals.getEntityDetails();
 
         this.getUploadConfig();
 
+        this.fillGenderDropDown();
         this.fillStateDropDown();
         this.fillCityDropDown();
         this.fillAreaDropDown();
@@ -69,6 +78,66 @@ export class AddEmployeeComponent implements OnInit {
         }, 100);
 
         this.getEmployeeDetails();
+    }
+
+    // Format Date Time
+
+    formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
+
+    // get lat and long by address form google map
+
+    getLatAndLong() {
+        var that = this;
+        commonfun.loader("#address");
+
+        var geocoder = new google.maps.Geocoder();
+
+        geocoder.geocode({ 'address': that.address }, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                that.lat = results[0].geometry.location.lat();
+                that.lon = results[0].geometry.location.lng();
+            }
+            else {
+                that._msg.Show(messageType.error, "Error", "Couldn't find your Location");
+            }
+
+            commonfun.loaderhide("#address");
+            that.cdRef.detectChanges();
+        });
+    }
+
+    // Get Gender DropDown
+
+    fillGenderDropDown() {
+        var that = this;
+        commonfun.loader();
+
+        that._empservice.getEmployeeDetails({ "flag": "dropdown" }).subscribe(data => {
+            try {
+                that.genderDT = data.data;
+            }
+            catch (e) {
+                that._msg.Show(messageType.error, "Error", e);
+            }
+
+            commonfun.loaderhide();
+        }, err => {
+            that._msg.Show(messageType.error, "Error", err);
+            console.log(err);
+            commonfun.loaderhide();
+        }, () => {
+
+        })
     }
 
     // Get State DropDown
@@ -260,12 +329,16 @@ export class AddEmployeeComponent implements OnInit {
         that.empcode = "";
         that.emppwd = "";
         that.empname = "";
-        that.aadharno = "";
+        that.gender = "";
+        that.licenseno = "";
+        that.remark1 = "";
         that.mobileno1 = "";
         that.mobileno2 = "";
         that.email1 = "";
         that.email2 = "";
         that.address = "";
+        that.lat = "";
+        that.lon = "";
         that.country = "India";
         that.state = 0;
         that.city = 0;
@@ -288,8 +361,12 @@ export class AddEmployeeComponent implements OnInit {
             $(".emppwd").focus();
         }
         else if (that.empname == "") {
-            that._msg.Show(messageType.error, "Error", "Enter emp Name");
+            that._msg.Show(messageType.error, "Error", "Enter Employee Name");
             $(".empname").focus();
+        }
+        else if (that.gender == "") {
+            that._msg.Show(messageType.error, "Error", "Select Gender");
+            $(".gender").focus();
         }
         else if (that.mobileno1 == "") {
             that._msg.Show(messageType.error, "Error", "Enter Mobile No");
@@ -308,6 +385,8 @@ export class AddEmployeeComponent implements OnInit {
                 "empcode": that.empcode,
                 "emppwd": that.emppwd,
                 "empname": that.empname,
+                "gender": that.gender,
+                "dob": that.dob,
                 "aadharno": that.aadharno,
                 "licenseno": that.licenseno,
                 "filepath": that.uploadPhotoDT.length > 0 ? that.uploadPhotoDT[0].athurl : "",
@@ -316,6 +395,7 @@ export class AddEmployeeComponent implements OnInit {
                 "email1": that.email1,
                 "email2": that.email2,
                 "address": that.address,
+                "geoloc": that.lat + "," + that.lon,
                 "country": that.country,
                 "state": that.state,
                 "city": that.city,
@@ -371,6 +451,10 @@ export class AddEmployeeComponent implements OnInit {
         var that = this;
         commonfun.loader();
 
+        var date = new Date();
+        var _currdate = new Date(date.getFullYear() - 18, date.getMonth(), date.getDate());
+        this.currdate = this.formatDate(_currdate);
+
         that.subscribeParameters = that._routeParams.params.subscribe(params => {
             if (params['id'] !== undefined) {
                 that.empid = params['id'];
@@ -397,6 +481,8 @@ export class AddEmployeeComponent implements OnInit {
                             that.chooseLabel = "Upload Employee Photo";
                         }
 
+                        that.gender = _empdata[0].gender;
+                        that.dob = _empdata[0].dob;
                         that.aadharno = _empdata[0].aadharno;
                         that.licenseno = _empdata[0].licenseno;
                         that.email1 = _empdata[0].email1;
@@ -404,6 +490,8 @@ export class AddEmployeeComponent implements OnInit {
                         that.mobileno1 = _empdata[0].mobileno1;
                         that.mobileno2 = _empdata[0].mobileno2;
                         that.address = _empdata[0].address;
+                        that.lat = _empdata[0].lat;
+                        that.lon = _empdata[0].lon;
                         that.country = _empdata[0].country;
                         that.state = _empdata[0].state;
                         that.fillCityDropDown();
@@ -429,6 +517,8 @@ export class AddEmployeeComponent implements OnInit {
                 })
             }
             else {
+                this.dob = this.formatDate(_currdate);
+
                 that.resetEmployeeFields();
                 commonfun.loaderhide();
             }

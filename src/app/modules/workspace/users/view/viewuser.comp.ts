@@ -243,4 +243,8 @@ export class ViewUserComponent implements OnInit {
     public editUserForm(row) {
         this._router.navigate(['/workspace/user/edit', row.uid]);
     }
+
+    public viewUserProfile(row) {
+        this._router.navigate(['/workspace/user/profile', row.uid]);
+    }
 }

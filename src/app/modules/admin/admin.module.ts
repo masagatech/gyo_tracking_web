@@ -16,7 +16,14 @@ export const routes = [
             {
                 path: '',
                 children: [
+                    // Workspace
                     { path: 'workspace', loadChildren: './workspace#WorkspaceModule' },
+
+                    // My Workspace
+                    { path: 'myworkspace', loadChildren: './myworkspace#MyWorkspaceModule' },
+
+                    // My Profile
+                    { path: 'myprofile', loadChildren: './myprofile#MyProfileModule' },
                 ]
             }
         ]
