@@ -224,7 +224,6 @@ export class TripReportsComponent implements OnInit, OnDestroy {
 
     getLatLonWiseMap(row) {
         $("#mapModal").modal('show');
-        commonfun.loader("#mapModal");
 
         this.options = {
             center: { lat: row.strlat, lng: row.endlng },
@@ -240,8 +239,6 @@ export class TripReportsComponent implements OnInit, OnDestroy {
             this.marker.setPosition(latlng);
             this._gmap.getMap().setCenter(latlng);
         }
-
-        commonfun.loaderhide("#mapModal");
     }
 
     handleMapClick(e) {

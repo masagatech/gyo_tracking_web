@@ -3,7 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, messageType, LoginService, CommonService } from '@services';
 import { LoginUserModel, Globals } from '@models';
 import { StopsReportsService } from '@services/master';
+import { GMap } from 'primeng/primeng';
 import jsPDF from 'jspdf';
+
+declare var google: any;
 
 @Component({
     templateUrl: 'rptstops.comp.html',
@@ -30,6 +33,14 @@ export class StopsReportsComponent implements OnInit, OnDestroy {
     stopsDT: any = [];
 
     @ViewChild('stops') stops: ElementRef;
+
+    marker: any;
+    @ViewChild("gmap")
+    _gmap: GMap;
+
+    private options: any;
+    private overlays: any[];
+    private map: any;
 
     constructor(private _routeParams: ActivatedRoute, private _router: Router, private _msg: MessageService,
         private _loginservice: LoginService, private _stopservice: StopsReportsService,
@@ -156,6 +167,32 @@ export class StopsReportsComponent implements OnInit, OnDestroy {
         }, () => {
 
         })
+    }
+
+    // Map View Lat Lon Wise
+
+    getLatLonWiseMap(row) {
+        $("#mapModal").modal('show');
+
+        this.options = {
+            center: { lat: row.lat, lng: row.lng },
+            zoom: 18
+        };
+
+        this.marker = new google.maps.Marker({ position: { lat: row.lat, lng: row.lng }, title: "", draggable: true });
+        this.overlays = [this.marker];
+
+        if (row.lat.toString() != "0" && row.lat.toString() != "") {
+            var latlng = new google.maps.LatLng(Number(row.lat), Number(row.lng));
+            console.log(latlng);
+            this.marker.setPosition(latlng);
+            // this._gmap.getMap().setCenter(latlng);
+        }
+    }
+
+    handleMapClick(e) {
+        var latlng = new google.maps.LatLng(e.latLng.lat(), e.latLng.lng());
+        this.marker.setPosition(latlng);
     }
 
     // Export

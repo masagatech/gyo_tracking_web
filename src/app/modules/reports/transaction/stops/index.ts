@@ -8,7 +8,7 @@ import { AuthGuard } from '@services';
 import { StopsReportsComponent } from './rptstops.comp';
 import { StopsReportsService } from '@services/master';
 
-import { LazyLoadEvent, DataTableModule, AutoCompleteModule } from 'primeng/primeng';
+import { LazyLoadEvent, DataTableModule, AutoCompleteModule, GMapModule } from 'primeng/primeng';
 
 export const routes = [
   {
@@ -27,7 +27,8 @@ export const routes = [
   ],
 
   imports: [
-    CommonModule, FormsModule, SharedComponentModule, RouterModule.forChild(routes), DataTableModule, AutoCompleteModule
+    CommonModule, FormsModule, SharedComponentModule, RouterModule.forChild(routes),
+    DataTableModule, AutoCompleteModule, GMapModule
   ],
 
   providers: [AuthGuard, StopsReportsService]

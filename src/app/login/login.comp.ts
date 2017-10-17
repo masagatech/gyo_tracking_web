@@ -49,7 +49,13 @@ export class LoginComponent implements OnInit, OnDestroy {
                             that._loginservice.setUsers(userDetails);
 
                             if (userDetails.issysadmin) {
-                                that._router.navigate(['/admin/workspace']);
+                                if (userDetails.utype == "admin") {
+                                    that._router.navigate(['/admin/workspace']);
+                                }
+                                else {
+                                    Cookie.set("_wsdetails_", JSON.stringify(userDetails));
+                                    that._router.navigate(['/workspace/entity']);
+                                }
                             }
                             else {
                                 if (userDetails.isemp) {
@@ -57,7 +63,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                                     that._router.navigate(['/']);
                                 }
                                 else {
-                                    Cookie.set("_wsdetails_", JSON.stringify(userDetails));
+                                    Cookie.set("_enttdetails_", JSON.stringify(userDetails));
                                     that._router.navigate(['/workspace/entity']);
                                 }
                             }

@@ -79,7 +79,30 @@
                             <span *ngFor="let trow of row.tag">{{trow.tag}} | </span>
                         </ng-template>
                     </p-column>
+                    <p-column header="Map" [style]="{'width': '100px', 'text-align': 'left'}">
+                        <ng-template let-row="rowData" pTemplate type="body">
+                            <a role="button" (click)="getLatLonWiseMap(row)">View Map</a>
+                        </ng-template>
+                    </p-column>
                 </p-dataTable>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="mapModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width: 1200px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="largeModalLabel">
+                    Map
+                </h4>
+            </div>
+            <div class="modal-body" id="mapdetails">
+                <p-gmap #gmap [style]="{'width':'100%','height':'500px'}" (onMapClick)="handleMapClick($event)" [options]="options" [overlays]="overlays"></p-gmap>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

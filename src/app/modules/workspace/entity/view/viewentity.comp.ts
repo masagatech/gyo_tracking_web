@@ -104,8 +104,6 @@ export class ViewEntityComponent implements OnInit, OnDestroy {
             "enttid": that.enttid
         }
 
-        console.log(params);
-
         that._entityservice.getEntityDetails(params).subscribe(data => {
             try {
                 that.entityDT = data.data;

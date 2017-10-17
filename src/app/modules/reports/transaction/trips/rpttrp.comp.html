@@ -41,8 +41,8 @@
                 <p-dataTable [value]="tripSummaryDT">
                     <p-column field="trpdate" header="Trip Date" [style]="{'text-align': 'left'}"></p-column>
                     <p-column field="strlat" header="Start Latitude" [style]="{'width': '130px', 'text-align': 'right'}"></p-column>
-                    <p-column field="endlat" header="End Latitude" [style]="{'width': '130px', 'text-align': 'right'}"></p-column>
                     <p-column field="strlng" header="Start Longitude" [style]="{'width': '130px', 'text-align': 'right'}"></p-column>
+                    <p-column field="endlat" header="End Latitude" [style]="{'width': '130px', 'text-align': 'right'}"></p-column>
                     <p-column field="endlng" header="End Longitude" [style]="{'width': '130px', 'text-align': 'right'}"></p-column>
                     <p-column field="chkin" header="Check In" [style]="{'width': '100px', 'text-align': 'left'}"></p-column>
                     <p-column field="chkout" header="Check Out" [style]="{'width': '100px', 'text-align': 'left'}"></p-column>
@@ -61,11 +61,13 @@
                             {{row.strlat == '0.00000000' || row.endlat == '0.00000000' || row.strlng == '0.00000000' || row.endlng == '0.00000000' ? '0.00' : row.kilometer}}
                         </ng-template>
                     </p-column>
-                    <!-- <p-column header="Map" [style]="{'width': '100px', 'text-align': 'left'}">
+                    <p-column header="Map" [style]="{'width': '100px', 'text-align': 'left'}">
                         <ng-template let-row="rowData" pTemplate type="body">
-                            <a role="button" (click)="getLatLonWiseMap(row)">View Map</a>
+                            <a role="button" (click)="getLatLonWiseMap(row)">
+                                {{row.strlat == '0.00000000' || row.endlat == '0.00000000' || row.strlng == '0.00000000' || row.endlng == '0.00000000' ? '' : 'View Map'}}
+                            </a>
                         </ng-template>
-                    </p-column> -->
+                    </p-column>
                 </p-dataTable>
             </div>
         </div>
